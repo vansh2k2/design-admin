@@ -20,6 +20,10 @@ export function humanizeKey(key: string) {
   if (key === "ctaBannerImage") return "CTA Banner Background Artwork (Upload)";
   if (key === "footBgImage") return "Footer Background Texture (Upload)";
   if (key === "highlightedWord") return "Highlighted Accent Word";
+  if (key === "highlightedText") return "Highlighted Accent Text";
+  if (key === "quote") return "Motivational Quote / Statement";
+  if (key === "emptyTitle") return "No Openings: Title";
+  if (key === "emptyDescription") return "No Openings: Description";
   if (key === "missionTitle") return "Mission Title";
   if (key === "missionContent") return "Mission Content";
   if (key === "visionTitle") return "Vision Title";

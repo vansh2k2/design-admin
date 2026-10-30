@@ -154,6 +154,9 @@ export function SectionItemsEditor({
     if (sectionId === "beyond-exhibition") return "Add Excellence Award Category";
     if (sectionId === "sponsorship-categories") return "Add Sponsorship Package Tier";
     if (sectionId === "buyer-seller-meet") return "Add B2B Matchmaking Feature";
+    if (sectionId === "career-hero") return "Add Hero Highlight";
+    if (sectionId === "why-work-with-us") return "Add Value Card";
+    if (sectionId === "life-at-design-house") return "Add Workplace Photo";
     if (sectionId === "footer") return "Add Footer Link / Information";
     return "Add New Section Block";
   };
@@ -202,6 +205,9 @@ export function SectionItemsEditor({
     if (sectionId === "expo-categories") return `Sector ${index + 1}`;
     if (sectionId === "beyond-exhibition") return `Award Category ${index + 1}`;
     if (sectionId === "sponsorship-categories") return `Sponsorship Tier ${index + 1}`;
+    if (sectionId === "career-hero") return item.label || item.title ? `Highlight: ${String(item.label || item.title).replace(/\n/g, " ")}` : `Highlight ${index + 1}`;
+    if (sectionId === "why-work-with-us") return item.title ? String(item.title) : `Value Card ${index + 1}`;
+    if (sectionId === "life-at-design-house") return item.title ? String(item.title) : `Workplace Photo ${index + 1}`;
     if (sectionId === "navbar" || sectionId === "footer") return `Link ${index + 1}`;
     return `Block ${index + 1}`;
   };
@@ -212,6 +218,9 @@ export function SectionItemsEditor({
         <div className="flex items-center gap-[6px]">
           <span className="text-[11px] font-bold text-[#1e40af]">
             {sectionId === "hero" ? "Hero Carousel Slides" :
+              sectionId === "career-hero" ? "Hero Highlight Points (Icons & Labels)" :
+              sectionId === "why-work-with-us" ? "Why Work With Us Cards (Icons, Titles & Texts)" :
+              sectionId === "life-at-design-house" ? "Workplace Photo Gallery (Photos & Alt Tags)" :
               sectionId === "navbar" ? "Header Navigation Links" :
               sectionId === "what-we-do" ? "Turnkey Service Cards" :
               sectionId === "our-achievements" || sectionId === "achievements" ? "Key Achievement Stat Cards" :
@@ -676,29 +685,39 @@ export function SectionItemsEditor({
                                                 ? "Feature Label (e.g. Exhibitors Expected)"
                                                 : sectionId === "nominate-hero" && key === "title"
                                                   ? "Feature Label (e.g. Expertise)"
-                                                  : humanizeKey(key)}
+                                                  : sectionId === "career-hero" && key === "label"
+                                                    ? "Highlight Label (e.g. Innovative Work)"
+                                                    : sectionId === "why-work-with-us" && key === "title"
+                                                      ? "Card Title (e.g. Purpose-Driven Work)"
+                                                      : sectionId === "why-work-with-us" && key === "text"
+                                                        ? "Card Description Text"
+                                                        : sectionId === "life-at-design-house" && key === "title"
+                                                          ? "Photo Caption / Title"
+                                                          : humanizeKey(key)}
                             </FieldLabel>
                           )}
 
                           {key === "icon" && sectionId !== "journey-glimpse" ? (
                             String(value).includes("/") || /\.(png|webp|jpe?g|svg)$/i.test(String(value)) ? (
                               <div className="flex flex-col gap-1 w-full">
-                                <ImageUploadField
-                                  value={String(value)}
-                                  onChange={(next) => onChangeItem(index, key, next)}
+                                <ImageWithAltField
+                                  label={
+                                    sectionId === "career-hero"
+                                      ? "Highlight Icon (Upload / URL)"
+                                      : sectionId === "why-work-with-us"
+                                        ? "Card Icon (Upload / URL)"
+                                        : "Icon Image (Upload / URL)"
+                                  }
+                                  image={String(value)}
+                                  alt={String(item.iconAlt ?? item.alt ?? "")}
+                                  onImageChange={(next) => onChangeItem(index, key, next)}
+                                  onAltChange={(next) => {
+                                    onChangeItem(index, "iconAlt", next);
+                                    onChangeItem(index, "alt", next);
+                                  }}
+                                  altLabel="Alt Tag"
+                                  altPlaceholder={`e.g. ${item.title || item.name || item.label || "Service"} Icon`}
                                 />
-                                <div className="mt-1">
-                                  <FieldLabel>Alt Tag</FieldLabel>
-                                  <TextInput
-                                    value={String(item.iconAlt ?? item.alt ?? "")}
-                                    onChange={(next) => {
-                                      onChangeItem(index, "iconAlt", next);
-                                      onChangeItem(index, "alt", next);
-                                    }}
-                                    placeholder={`e.g. ${item.title || item.name || item.label || "Service"} Icon`}
-                                    hideLimit={true}
-                                  />
-                                </div>
                                 <button
                                   type="button"
                                   onClick={() => onChangeItem(index, key, "Users")}
@@ -779,7 +798,15 @@ export function SectionItemsEditor({
                           ) : isImageKey ? (
                             <div className="col-span-2 w-full">
                               <ImageWithAltField
-                                label={humanizeKey(key)}
+                                label={
+                                  sectionId === "life-at-design-house" && (key === "image" || key === "img")
+                                    ? "Workplace Photo (Upload / URL)"
+                                    : sectionId === "career-hero" && (key === "icon" || key === "iconImage")
+                                      ? "Highlight Icon (Upload / URL)"
+                                      : sectionId === "why-work-with-us" && (key === "icon" || key === "iconImage")
+                                        ? "Card Icon (Upload / URL)"
+                                        : humanizeKey(key)
+                                }
                                 image={String(value)}
                                 alt={String(
                                   item[`${key}Alt`] ??

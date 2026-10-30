@@ -374,6 +374,7 @@ export function SectionFieldsEditor({
                     onFieldChange("alt1", next);
                   }}
                   altLabel="Alt Tag"
+                  layout="stacked"
                 />
               </div>
               <div>
@@ -387,6 +388,7 @@ export function SectionFieldsEditor({
                     onFieldChange("alt2", next);
                   }}
                   altLabel="Alt Tag"
+                  layout="stacked"
                 />
               </div>
               <div>
@@ -400,6 +402,7 @@ export function SectionFieldsEditor({
                     onFieldChange("alt3", next);
                   }}
                   altLabel="Alt Tag"
+                  layout="stacked"
                 />
               </div>
               <div>
@@ -413,6 +416,7 @@ export function SectionFieldsEditor({
                     onFieldChange("alt4", next);
                   }}
                   altLabel="Alt Tag"
+                  layout="stacked"
                 />
               </div>
             </div>
@@ -498,7 +502,7 @@ export function SectionFieldsEditor({
             <span>Footer Brand & Company Overview</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
+            <div className="md:col-span-2">
               <ImageWithAltField
                 label="Main Company Logo"
                 image={String(section.logoImage || "")}
@@ -511,7 +515,7 @@ export function SectionFieldsEditor({
                 altLabel="Alt Tag"
               />
             </div>
-            <div>
+            <div className="md:col-span-2">
               <ImageWithAltField
                 label="Footer Background Texture"
                 image={String(section.footBgImage || "")}
@@ -829,19 +833,21 @@ export function SectionFieldsEditor({
                     ? "Background Image (Upload)"
                     : (section.key === "msme-pms-banner" || section.name === "MsmePmsBanner") && key === "imageAlt"
                       ? "Background Image Alt Text"
-                      : (section.key === "careers-hero" || section.key === "careers-bottom-banner") && key === "image"
-                        ? "Background Image (Upload)"
-                      : (section.key === "careers-hero" || section.key === "careers-bottom-banner") && key === "imageAlt"
-                        ? "Background Image Alt Text"
-                      : section.key === "careers-hero" && key === "title"
+                      : (section.key === "career-hero" || section.key === "careers-hero" || section.key === "career-cta" || section.key === "careers-bottom-banner") && key === "image"
+                        ? "Banner Artwork / Background Image (Upload)"
+                      : (section.key === "career-hero" || section.key === "careers-hero" || section.key === "career-cta" || section.key === "careers-bottom-banner") && key === "imageAlt"
+                        ? "Banner Image Alt Text"
+                      : (section.key === "career-hero" || section.key === "careers-hero") && key === "title"
                         ? "H1 Title"
-                      : section.key === "careers-hero" && key === "badgeText"
-                        ? "Green Badge Text (bottom right)"
-                      : section.key === "careers-openings" && key === "emptyTitle"
+                      : (section.key === "career-hero" || section.key === "careers-hero") && key === "badgeText"
+                        ? "Badge Text"
+                      : (section.key === "current-openings" || section.key === "careers-openings") && key === "quote"
+                        ? "Motivational Quote"
+                      : (section.key === "current-openings" || section.key === "careers-openings") && key === "emptyTitle"
                         ? "No Openings: Title"
-                      : section.key === "careers-openings" && key === "emptyDescription"
+                      : (section.key === "current-openings" || section.key === "careers-openings") && key === "emptyDescription"
                         ? "No Openings: Description"
-                      : section.key === "careers-openings" && key === "emptyNote"
+                      : (section.key === "current-openings" || section.key === "careers-openings") && key === "emptyNote"
                         ? "No Openings: Note"
                       : section.key === "introduction-section" && key === "title"
                         ? "H1 Title"

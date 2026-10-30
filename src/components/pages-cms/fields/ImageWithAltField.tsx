@@ -20,6 +20,7 @@ export interface ImageWithAltFieldProps {
   required?: boolean;
   folder?: string;
   helperText?: string;
+  layout?: "row" | "stacked" | "auto";
 }
 
 export function ImageWithAltField({
@@ -34,6 +35,7 @@ export function ImageWithAltField({
   required = false,
   folder = "design-house/content",
   helperText,
+  layout = "auto",
 }: ImageWithAltFieldProps) {
   const [uploading, setUploading] = useState(false);
 
@@ -95,9 +97,16 @@ export function ImageWithAltField({
         : `/${image}`
       : "";
 
+  const isStacked = layout === "stacked";
+  const gridClass = isStacked
+    ? "grid grid-cols-1 gap-2.5 items-start"
+    : layout === "row"
+    ? "grid grid-cols-1 md:grid-cols-2 gap-3 items-start"
+    : "grid grid-cols-1 @[480px]:grid-cols-2 md:grid-cols-2 gap-3 items-start";
+
   return (
-    <div className="p-2.5 bg-[#f8fafc] border border-[#e2e8f0] rounded-[7px] shadow-2xs">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
+    <div className="@container p-2.5 bg-[#f8fafc] border border-[#e2e8f0] rounded-[7px] shadow-2xs">
+      <div className={gridClass}>
         {/* LEFT COLUMN: Image URL, Upload & Thumbnail */}
         <div className="flex flex-col gap-1.5 min-w-0">
           <div className="flex items-center justify-between min-h-[16px]">
@@ -115,7 +124,7 @@ export function ImageWithAltField({
             ) : null}
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 flex-nowrap min-w-0">
             {/* Compact Thumbnail Preview */}
             {directUrl ? (
               <a
@@ -141,7 +150,7 @@ export function ImageWithAltField({
               </div>
             )}
 
-            <div className="flex-1 min-w-[100px]">
+            <div className="flex-1 min-w-0">
               <TextInput
                 value={image}
                 onChange={onImageChange}
@@ -150,7 +159,7 @@ export function ImageWithAltField({
               />
             </div>
 
-            <label className="flex shrink-0 cursor-pointer items-center gap-1 rounded border border-[#0f766e] bg-[#f0fdf4] px-2.5 py-1.5 text-[9px] font-bold text-[#0f766e] hover:bg-[#dcfce7] transition-colors shadow-2xs">
+            <label className="flex shrink-0 cursor-pointer items-center gap-1 rounded border border-[#0f766e] bg-[#f0fdf4] px-2.5 py-1.5 text-[9px] font-bold text-[#0f766e] hover:bg-[#dcfce7] transition-colors shadow-2xs whitespace-nowrap">
               <Upload className="h-3 w-3" />
               {uploading ? "..." : "Upload"}
               <input
