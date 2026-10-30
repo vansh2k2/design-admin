@@ -160,7 +160,27 @@ export function PageSectionsPanel({
                             previous.map((sec, i) => {
                               if (i !== sectionIndex) return sec;
                               const slides = [...(sec.slides ?? [])];
-                              slides[itemIndex] = { ...slides[itemIndex], [key]: value };
+                              const currentSlide = slides[itemIndex] || {};
+                              const updatedSlide = { ...currentSlide, [key]: value };
+                              if (key === "image") updatedSlide.img = value;
+                              if (key === "img") updatedSlide.image = value;
+                              if (key === "headingLine1") updatedSlide.titlePrimary = value;
+                              if (key === "titlePrimary") updatedSlide.headingLine1 = value;
+                              if (key === "headingLine2") updatedSlide.titleSecondary = value;
+                              if (key === "titleSecondary") updatedSlide.headingLine2 = value;
+                              if (key === "headingLine3") updatedSlide.titleTertiary = value;
+                              if (key === "titleTertiary") updatedSlide.headingLine3 = value;
+                              if (key === "desc") updatedSlide.description = value;
+                              if (key === "description") updatedSlide.desc = value;
+                              if (key === "button1Text") updatedSlide.buttonLabel = value;
+                              if (key === "buttonLabel") updatedSlide.button1Text = value;
+                              if (key === "button1Href") updatedSlide.buttonHref = value;
+                              if (key === "buttonHref") updatedSlide.button1Href = value;
+                              if (key === "button2Text") updatedSlide.secondaryButtonLabel = value;
+                              if (key === "secondaryButtonLabel") updatedSlide.button2Text = value;
+                              if (key === "button2Href") updatedSlide.secondaryButtonHref = value;
+                              if (key === "secondaryButtonHref") updatedSlide.button2Href = value;
+                              slides[itemIndex] = updatedSlide;
                               return { ...sec, slides };
                             }),
                           );
@@ -171,14 +191,58 @@ export function PageSectionsPanel({
                               if (i !== sectionIndex) return sec;
                               const slides = [...(sec.slides ?? [])];
                               const blank = {
-                                title: "NEW HERO SLIDE",
-                                description: "Enter slide description...",
-                                image: "",
-                                alt: "Hero Banner Slide",
-                                buttonLabel: "Book Your Stall",
-                                buttonHref: "/registration/book-a-stand",
-                                secondaryButtonLabel: "Register as Visitor",
-                                secondaryButtonHref: "/registration/visitor-registration",
+                                navLabel: `Slide ${slides.length + 1}`,
+                                alt: "Design House interior and display solutions banner",
+                                image: "/images/slider-1.jpg",
+                                img: "/images/slider-1.jpg",
+                                tagline: "Design • Manufacturing • Execution",
+                                headingLine1: "Crafting Spaces",
+                                headingLine1Accent: false,
+                                headingLine2: "That Inspire",
+                                headingLine2Accent: true,
+                                headingLine3: "Brand Excellence.",
+                                headingLine3Accent: false,
+                                titlePrimary: "Crafting Spaces",
+                                titleSecondary: "That Inspire",
+                                titleTertiary: "Brand Excellence.",
+                                desc: "<p>Innovative retail, corporate and commercial interiors designed and executed to perfection across India.</p>",
+                                description: "<p>Innovative retail, corporate and commercial interiors designed and executed to perfection across India.</p>",
+                                button1Text: "Discuss Your Project",
+                                button1Href: "/contact",
+                                button2Text: "Explore Our Work",
+                                button2Href: "/portfolio",
+                                buttonLabel: "Discuss Your Project",
+                                buttonHref: "/contact",
+                                secondaryButtonLabel: "Explore Our Work",
+                                secondaryButtonHref: "/portfolio",
+                                underline: true,
+                                uppercaseTitle: false,
+                                compact: true,
+                                badge: "",
+                                layout: "default",
+                                feature1Label: "",
+                                feature1Icon: "",
+                                feature2Label: "",
+                                feature2Icon: "",
+                                feature3Label: "",
+                                feature3Icon: "",
+                                feature4Label: "",
+                                feature4Icon: "",
+                                service1Label: "Retail\nInteriors",
+                                service1Href: "/services/retail-interior",
+                                service1Icon: "/assets/icon/icon1.png",
+                                service2Label: "Display\nSolutions",
+                                service2Href: "/services/retail-kiosk",
+                                service2Icon: "/assets/icon/icon2.png",
+                                service3Label: "Corporate\nInteriors",
+                                service3Href: "/services/corporate-interior",
+                                service3Icon: "/assets/icon/icon3.png",
+                                service4Label: "Exhibition\nStalls",
+                                service4Href: "/services/exhibitions",
+                                service4Icon: "/assets/icon/icon4.png",
+                                service5Label: "Manufacturing\n& Execution",
+                                service5Href: "/services",
+                                service5Icon: "/assets/icon/icon5.png",
                               };
                               return { ...sec, slides: [...slides, blank] };
                             }),

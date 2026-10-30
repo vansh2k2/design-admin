@@ -1,7 +1,9 @@
-import { FieldLabel, ImageUploadField, PdfUploadField, TextInput, Textarea, Toggle, VideoUploadField } from "../fields";
+import { FieldLabel, ImageUploadField, ImageWithAltField, PdfUploadField, TextInput, Textarea, Toggle, VideoUploadField } from "../fields";
+import RichTextEditor from "@/components/RichTextEditor";
 import {
   IMAGE_KEY_PATTERN,
   LONG_TEXT_KEY_PATTERN,
+  RICH_TEXT_KEY_PATTERN,
   SECTION_SKIP_KEYS,
   VIDEO_KEY_PATTERN,
   humanizeKey,
@@ -15,70 +17,526 @@ export function SectionFieldsEditor({
   section: CmsRecord;
   onFieldChange: (key: string, value: unknown) => void;
 }) {
-  if (section.key === "footer" || section.name === "Footer & Social Links") {
+  if (section.key === "topbar" || section.name === "Topbar & Header Contact") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Topbar Brand, Contact & Ensis Logo Settings</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="md:col-span-2">
+            <FieldLabel>Company Title</FieldLabel>
+            <TextInput
+              value={String(section.title || "Design House India Pvt. Ltd.")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Design House India Pvt. Ltd."
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Marquee Text</FieldLabel>
+            <TextInput
+              value={String(section.marqueeText || "")}
+              onChange={(next) => onFieldChange("marqueeText", next)}
+              placeholder="5000+ PROJECTS DELIVERED • PAN-INDIA EXECUTION • RETAIL | RESTAURANT | KIOSK | CORPORATE | EXHIBITION EXPERTS"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Phone Number</FieldLabel>
+            <TextInput
+              value={String(section.phoneNumber || "")}
+              onChange={(next) => onFieldChange("phoneNumber", next)}
+              placeholder="+91 96549 00525"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Contact Email</FieldLabel>
+            <TextInput
+              value={String(section.contactEmail || "")}
+              onChange={(next) => onFieldChange("contactEmail", next)}
+              placeholder="info@designhouse.co.in"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2 border-t border-gray-100 pt-2.5">
+            <ImageWithAltField
+              label="Ensis Logo (Upload Image)"
+              image={String(section.ensisLogo || section.logoImage || "/ensis.jpeg")}
+              alt={String(section.ensisLogoAlt || section.logoAlt || "Ensis Spa and Panchkarma Furniture")}
+              onImageChange={(next) => {
+                onFieldChange("ensisLogo", next);
+                onFieldChange("logoImage", next);
+              }}
+              onAltChange={(next) => {
+                onFieldChange("ensisLogoAlt", next);
+                onFieldChange("logoAlt", next);
+              }}
+              altLabel="Alt Tag"
+              altPlaceholder="e.g. Ensis Spa and Wellness Furniture Solutions"
+            />
+          </div>
+          <div>
+            <FieldLabel>Ensis Partner Website URL</FieldLabel>
+            <TextInput
+              value={String(section.externalLinkUrl || "https://ensis.in/")}
+              onChange={(next) => onFieldChange("externalLinkUrl", next)}
+              placeholder="https://ensis.in/"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Ensis Tooltip / Sub-label</FieldLabel>
+            <TextInput
+              value={String(section.externalLinkText || "Panchkarma Solution")}
+              onChange={(next) => onFieldChange("externalLinkText", next)}
+              placeholder="Panchkarma Solution"
+              hideLimit={true}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (
+    section.key === "clients-marquee" ||
+    section.key === "clients" ||
+    section.key === "partners-brands" ||
+    section.name === "Our Clients (Logo Strip)"
+  ) {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Our Clients Section Settings</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <FieldLabel>Section Eyebrow</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "OUR CLIENTS")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="OUR CLIENTS"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Title (Prefix)</FieldLabel>
+            <TextInput
+              value={String(section.title || "Trusted by")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Trusted by"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Highlighted Accent Word</FieldLabel>
+            <TextInput
+              value={String(section.highlightedWord || "Leading Brands")}
+              onChange={(next) => onFieldChange("highlightedWord", next)}
+              placeholder="Leading Brands"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Button Text</FieldLabel>
+            <TextInput
+              value={String(section.buttonLabel || "VIEW ALL CLIENTS")}
+              onChange={(next) => onFieldChange("buttonLabel", next)}
+              placeholder="VIEW ALL CLIENTS"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Button Link</FieldLabel>
+            <TextInput
+              value={String(section.buttonHref || "/clients")}
+              onChange={(next) => onFieldChange("buttonHref", next)}
+              placeholder="/clients"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel required>Section Description / Sub-heading (e.g. Partnering with industry leaders...)</FieldLabel>
+            <RichTextEditor
+              value={String(section.description || "Partnering with industry leaders to create exceptional spaces")}
+              onChange={(next) => onFieldChange("description", next)}
+              minHeight="100px"
+              placeholder="Partnering with industry leaders to create exceptional spaces"
+            />
+          </div>
+          <div>
+            <FieldLabel>Stat 1 Value</FieldLabel>
+            <TextInput
+              value={String(section.stat1Value || "850+")}
+              onChange={(next) => onFieldChange("stat1Value", next)}
+              placeholder="850+"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Stat 1 Label</FieldLabel>
+            <TextInput
+              value={String(section.stat1Label || "Happy Clients")}
+              onChange={(next) => onFieldChange("stat1Label", next)}
+              placeholder="Happy Clients"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Stat 2 Value</FieldLabel>
+            <TextInput
+              value={String(section.stat2Value || "5000+")}
+              onChange={(next) => onFieldChange("stat2Value", next)}
+              placeholder="5000+"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Stat 2 Label</FieldLabel>
+            <TextInput
+              value={String(section.stat2Label || "Projects Completed")}
+              onChange={(next) => onFieldChange("stat2Label", next)}
+              placeholder="Projects Completed"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Stat 3 Value</FieldLabel>
+            <TextInput
+              value={String(section.stat3Value || "22+")}
+              onChange={(next) => onFieldChange("stat3Value", next)}
+              placeholder="22+"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Stat 3 Label</FieldLabel>
+            <TextInput
+              value={String(section.stat3Label || "Years Experience")}
+              onChange={(next) => onFieldChange("stat3Label", next)}
+              placeholder="Years Experience"
+              hideLimit={true}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (
+    section.key === "about" ||
+    section.key === "about-us" ||
+    section.name === "About Us" ||
+    section.name === "About"
+  ) {
+    // If title has "Since" glued into it (e.g. "Crafting Exceptional SpacesSince 19822"), extract title and highlight
+    let currentTitle = String(section.title || "Crafting Exceptional Spaces");
+    let currentHighlight = String(section.highlightedWord || "");
+    if (currentTitle.includes("Since") && (!currentHighlight || currentHighlight === "Since 2004")) {
+      const parts = currentTitle.split(/(?=Since)/i);
+      currentTitle = parts[0].trim();
+      currentHighlight = parts.slice(1).join("").trim();
+    }
+
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>About Us Section Settings</span>
+          <span className="text-[10px] text-gray-500 font-normal">Headline, Highlight Accent & Overview</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <FieldLabel>Section Eyebrow</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "ABOUT US")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="ABOUT US"
+              hideLimit={true}
+            />
+          </div>
+
+          <div>
+            <FieldLabel required>Main Title (Headline)</FieldLabel>
+            <TextInput
+              value={currentTitle}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Crafting Exceptional Spaces"
+              hideLimit={true}
+            />
+          </div>
+
+          <div className="md:col-span-2 bg-gradient-to-r from-amber-50 to-orange-50 border border-orange-200/80 p-3 rounded-[6px]">
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-1.5">
+                <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#DE802B]"></span>
+                <span className="text-[11px] font-bold text-amber-950 uppercase tracking-wide">
+                  Highlight Content / Accent Text (Alag Se Highlight)
+                </span>
+              </div>
+              <span className="text-[9px] font-semibold text-[#DE802B] bg-white px-2 py-0.5 rounded border border-orange-200">
+                Accent Highlight
+              </span>
+            </div>
+            <TextInput
+              value={currentHighlight}
+              onChange={(next) => onFieldChange("highlightedWord", next)}
+              placeholder="Since 1982"
+              hideLimit={true}
+            />
+            <p className="text-[10px] text-amber-900/80 mt-1.5 leading-relaxed">
+              Ye content main title ke aage stylish orange / accent color me alag se display hota hai (jaise: <strong>Since 1982</strong> ya <strong>Since 2004</strong>). Isko title me mix karne ki zaroorat nahi hai.
+            </p>
+          </div>
+
+          <div className="md:col-span-2">
+            <FieldLabel required>Company Story & Overview (Description)</FieldLabel>
+            <RichTextEditor
+              value={String(section.description || "")}
+              onChange={(next) => onFieldChange("description", next)}
+              minHeight="140px"
+              placeholder="Enter comprehensive company background, credentials, and achievements..."
+            />
+          </div>
+
+          <div>
+            <FieldLabel>Mission Box Title</FieldLabel>
+            <TextInput
+              value={String(section.missionTitle || "Our Mission")}
+              onChange={(next) => onFieldChange("missionTitle", next)}
+              placeholder="Our Mission"
+              hideLimit={true}
+            />
+          </div>
+
+          <div>
+            <FieldLabel>Vision Box Title</FieldLabel>
+            <TextInput
+              value={String(section.visionTitle || "Our Vision")}
+              onChange={(next) => onFieldChange("visionTitle", next)}
+              placeholder="Our Vision"
+              hideLimit={true}
+            />
+          </div>
+
+          <div className="md:col-span-1">
+            <FieldLabel>Mission Content</FieldLabel>
+            <RichTextEditor
+              value={String(section.missionContent || "")}
+              onChange={(next) => onFieldChange("missionContent", next)}
+              minHeight="100px"
+              placeholder="Deliver innovative designs that exceed expectations..."
+            />
+          </div>
+
+          <div className="md:col-span-1">
+            <FieldLabel>Vision Content</FieldLabel>
+            <RichTextEditor
+              value={String(section.visionContent || "")}
+              onChange={(next) => onFieldChange("visionContent", next)}
+              minHeight="100px"
+              placeholder="To be the most trusted interior design partner..."
+            />
+          </div>
+
+          <div>
+            <FieldLabel>Button Label</FieldLabel>
+            <TextInput
+              value={String(section.buttonLabel || "Know More")}
+              onChange={(next) => onFieldChange("buttonLabel", next)}
+              placeholder="Know More"
+              hideLimit={true}
+            />
+          </div>
+
+          <div>
+            <FieldLabel>Button Link URL</FieldLabel>
+            <TextInput
+              value={String(section.buttonHref || "/about")}
+              onChange={(next) => onFieldChange("buttonHref", next)}
+              placeholder="/about"
+              hideLimit={true}
+            />
+          </div>
+
+          <div className="md:col-span-2 border-t border-gray-100 pt-2">
+            <span className="text-[11px] font-bold text-slate-800 block mb-2">About Collage Grid Images (4 Photos)</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
+              <div>
+                <ImageWithAltField
+                  label="Photo 1"
+                  image={String(section.image1 || "")}
+                  alt={String(section.image1Alt || section.alt1 || "Design House Turnkey Interior 1")}
+                  onImageChange={(next) => onFieldChange("image1", next)}
+                  onAltChange={(next) => {
+                    onFieldChange("image1Alt", next);
+                    onFieldChange("alt1", next);
+                  }}
+                  altLabel="Alt Tag"
+                />
+              </div>
+              <div>
+                <ImageWithAltField
+                  label="Photo 2"
+                  image={String(section.image2 || "")}
+                  alt={String(section.image2Alt || section.alt2 || "Design House Office Space 2")}
+                  onImageChange={(next) => onFieldChange("image2", next)}
+                  onAltChange={(next) => {
+                    onFieldChange("image2Alt", next);
+                    onFieldChange("alt2", next);
+                  }}
+                  altLabel="Alt Tag"
+                />
+              </div>
+              <div>
+                <ImageWithAltField
+                  label="Photo 3"
+                  image={String(section.image3 || "")}
+                  alt={String(section.image3Alt || section.alt3 || "Design House Retail Display 3")}
+                  onImageChange={(next) => onFieldChange("image3", next)}
+                  onAltChange={(next) => {
+                    onFieldChange("image3Alt", next);
+                    onFieldChange("alt3", next);
+                  }}
+                  altLabel="Alt Tag"
+                />
+              </div>
+              <div>
+                <ImageWithAltField
+                  label="Photo 4"
+                  image={String(section.image4 || "")}
+                  alt={String(section.image4Alt || section.alt4 || "Design House Exhibition Stall 4")}
+                  onImageChange={(next) => onFieldChange("image4", next)}
+                  onAltChange={(next) => {
+                    onFieldChange("image4Alt", next);
+                    onFieldChange("alt4", next);
+                  }}
+                  altLabel="Alt Tag"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (section.key === "footer" || section.name === "Footer & Contact Band" || section.name === "Footer & Social Links") {
     return (
       <div className="flex flex-col gap-4">
-        {/* Description (About Design House in Footer Left Column) */}
-        <div className="flex flex-col gap-1.5 bg-white p-3 border border-[#e2e8f0] rounded-[6px]">
-          <FieldLabel required>Footer Description</FieldLabel>
-          <Textarea
-            value={
-              section.description !== undefined && !section.description.startsWith("Showcasing certified products")
-                ? String(section.description)
-                : "A global platform uniting over 100+ exhibitors from across the organic value chain, showcasing certified products, advanced agritech, sustainable practices, and the rich heritage of traditional wellness. Discover organic living with conferences and B2B opportunities."
-            }
-            onChange={(next) => onFieldChange("description", next)}
-            rows={4}
-            noLimit={true}
-            placeholder="A global platform uniting over 100+ exhibitors from across the organic value chain..."
-          />
-        </div>
-
-        {/* 5 Image Uploads with Previews & Reset */}
+        {/* CTA BAND (Top Banner in Footer) */}
         <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
-          <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center gap-2">
-            <span>Footer Images & Decorations</span>
+          <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+            <span>Call To Action (CTA) Collaboration Band</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <FieldLabel>Main Logo Image</FieldLabel>
-              <ImageUploadField
-                value={String(section.logoImage || "")}
-                onChange={(next) => onFieldChange("logoImage", next)}
+              <FieldLabel>CTA Eyebrow</FieldLabel>
+              <TextInput
+                value={String(section.ctaEyebrow || "")}
+                onChange={(next) => onFieldChange("ctaEyebrow", next)}
+                placeholder="LET'S COLLABORATE"
+                hideLimit={true}
               />
             </div>
             <div>
-              <FieldLabel>Left Leaf Decoration Image</FieldLabel>
-              <ImageUploadField
-                value={String(section.leafImage || "")}
-                onChange={(next) => onFieldChange("leafImage", next)}
+              <FieldLabel>CTA Headline</FieldLabel>
+              <TextInput
+                value={String(section.ctaTitle || "")}
+                onChange={(next) => onFieldChange("ctaTitle", next)}
+                placeholder="READY TO BUILD YOUR NEXT BIG IDEA?"
+                hideLimit={true}
               />
             </div>
             <div>
-              <FieldLabel>Down / Mandala Pattern Image</FieldLabel>
-              <ImageUploadField
-                value={String(section.downImage || "")}
-                onChange={(next) => onFieldChange("downImage", next)}
+              <FieldLabel>CTA Button Label</FieldLabel>
+              <TextInput
+                value={String(section.ctaButtonLabel || "")}
+                onChange={(next) => onFieldChange("ctaButtonLabel", next)}
+                placeholder="SCHEDULE A CONSULTATION"
+                hideLimit={true}
               />
             </div>
             <div>
-              <FieldLabel>Organised By Logo Image</FieldLabel>
-              <ImageUploadField
-                value={String(section.organisedByLogo || "")}
-                onChange={(next) => onFieldChange("organisedByLogo", next)}
+              <FieldLabel>CTA Button Link</FieldLabel>
+              <TextInput
+                value={String(section.ctaButtonHref || "")}
+                onChange={(next) => onFieldChange("ctaButtonHref", next)}
+                placeholder="/contact"
+                hideLimit={true}
               />
             </div>
             <div className="md:col-span-2">
-              <FieldLabel>Bottom Nature / Event Banner Image</FieldLabel>
-              <ImageUploadField
-                value={String(section.bottomBannerImage || "")}
-                onChange={(next) => onFieldChange("bottomBannerImage", next)}
+              <ImageWithAltField
+                label="CTA Banner Background Artwork"
+                image={String(section.ctaBannerImage || "")}
+                alt={String(section.ctaBannerImageAlt || section.ctaBannerAlt || "Design House India CTA Banner")}
+                onImageChange={(next) => onFieldChange("ctaBannerImage", next)}
+                onAltChange={(next) => {
+                  onFieldChange("ctaBannerImageAlt", next);
+                  onFieldChange("ctaBannerAlt", next);
+                }}
+                altLabel="Alt Tag"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <FieldLabel>CTA Description</FieldLabel>
+              <RichTextEditor
+                value={String(section.ctaDescription || "")}
+                onChange={(next) => onFieldChange("ctaDescription", next)}
+                minHeight="110px"
+                placeholder="Connect with our turnkey interior, retail, and experiential design experts..."
               />
             </div>
           </div>
         </div>
 
-        {/* Contact Information (GET IN TOUCH) */}
+        {/* MAIN FOOTER BRAND & DESCRIPTION */}
+        <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+          <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+            <span>Footer Brand & Company Overview</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <ImageWithAltField
+                label="Main Company Logo"
+                image={String(section.logoImage || "")}
+                alt={String(section.logoAlt || section.logoImageAlt || "Design House India Pvt Ltd Logo")}
+                onImageChange={(next) => onFieldChange("logoImage", next)}
+                onAltChange={(next) => {
+                  onFieldChange("logoAlt", next);
+                  onFieldChange("logoImageAlt", next);
+                }}
+                altLabel="Alt Tag"
+              />
+            </div>
+            <div>
+              <ImageWithAltField
+                label="Footer Background Texture"
+                image={String(section.footBgImage || "")}
+                alt={String(section.footBgImageAlt || section.footBgAlt || "Design House Footer Background Pattern")}
+                onImageChange={(next) => onFieldChange("footBgImage", next)}
+                onAltChange={(next) => {
+                  onFieldChange("footBgImageAlt", next);
+                  onFieldChange("footBgAlt", next);
+                }}
+                altLabel="Alt Tag"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <FieldLabel required>Company Summary / About Description</FieldLabel>
+              <RichTextEditor
+                value={String(section.description || "")}
+                onChange={(next) => onFieldChange("description", next)}
+                minHeight="120px"
+                placeholder="Design House India Private Limited is a premier design, fabrication..."
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* CONTACT INFORMATION */}
         <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
           <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center gap-2">
             <span>Get In Touch (Contact Information)</span>
@@ -90,6 +548,15 @@ export function SectionFieldsEditor({
                 value={String(section.phoneNumber || "")}
                 onChange={(next) => onFieldChange("phoneNumber", next)}
                 placeholder="+91 96549 00525"
+                hideLimit={true}
+              />
+            </div>
+            <div>
+              <FieldLabel>Alternative Phone / Helpline</FieldLabel>
+              <TextInput
+                value={String(section.altPhoneNumber || "")}
+                onChange={(next) => onFieldChange("altPhoneNumber", next)}
+                placeholder="+91 98183 53841"
                 hideLimit={true}
               />
             </div>
@@ -111,31 +578,19 @@ export function SectionFieldsEditor({
                 hideLimit={true}
               />
             </div>
-            <div>
-              <FieldLabel>Conference Helpline (Phone)</FieldLabel>
-              <TextInput
-                value={String(section.conferenceHelpline || section.altPhoneNumber || "")}
-                onChange={(next) => {
-                  onFieldChange("conferenceHelpline", next);
-                  onFieldChange("altPhoneNumber", next);
-                }}
-                placeholder="+91 98183 53841"
-                hideLimit={true}
-              />
-            </div>
             <div className="md:col-span-2">
-              <FieldLabel required>Contact Address</FieldLabel>
+              <FieldLabel required>Office & Works Address</FieldLabel>
               <TextInput
                 value={String(section.contactAddress || "")}
                 onChange={(next) => onFieldChange("contactAddress", next)}
-                placeholder="Hall 12, Pragati Maidan, New Delhi, India 110001"
+                placeholder="12/29, Site-II, Loni Road Industrial Area, Mohan Nagar, Ghaziabad, UP – 201007"
                 hideLimit={true}
               />
             </div>
           </div>
         </div>
 
-        {/* CONNECT WITH US (Social Media Links) */}
+        {/* SOCIAL MEDIA CHANNELS */}
         <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
           <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center gap-2">
             <span>Connect With Us (Social Media Links)</span>
@@ -316,16 +771,19 @@ export function SectionFieldsEditor({
         return false;
       }
       if (
-        (section.key === "topbar" || section.name === "Topbar & Header Contact") &&
-        (key === "title" || key === "marqueeText")
-      ) {
-        return false;
-      }
-      if (
         (section.key === "msme-pms-banner" || section.name === "MsmePmsBanner") &&
         (key === "logoImage" || key === "secondaryImage")
       ) {
         return false;
+      }
+      if (/alt$/i.test(key)) {
+        const baseKey = key.replace(/alt$/i, "");
+        if (baseKey && (baseKey in section || `${baseKey}Image` in section)) {
+          return false;
+        }
+        if (key === "imageAlt" && ("image" in section || "img" in section)) {
+          return false;
+        }
       }
       return typeof value === "string" || typeof value === "boolean";
     },
@@ -467,10 +925,12 @@ export function SectionFieldsEditor({
                           ? "Background Image Alt Text"
                           : humanizeKey(key);
 
+        const isRich = RICH_TEXT_KEY_PATTERN.test(key);
+
         return (
           <div
             key={key}
-            className={isLong || isImage || isVideo || isPdf || typeof value === "boolean" || /^keyPoint/i.test(key) || /alt/i.test(key) ? "col-span-2" : ""}
+            className={isRich || isLong || isImage || isVideo || isPdf || typeof value === "boolean" || /^keyPoint/i.test(key) || /alt/i.test(key) ? "col-span-2" : ""}
           >
             <FieldLabel>{label}</FieldLabel>
 
@@ -482,9 +942,22 @@ export function SectionFieldsEditor({
                 onChange={(next: string) => onFieldChange(key, next)}
               />
             ) : isImage ? (
-              <ImageUploadField
-                value={String(value)}
-                onChange={(next: string) => onFieldChange(key, next)}
+              <ImageWithAltField
+                image={String(value)}
+                alt={String(
+                  section[`${key}Alt`] ??
+                    (key === "image" ? (section.imageAlt ?? section.alt ?? "") : (section[`${key}Alt`] ?? ""))
+                )}
+                onImageChange={(next: string) => onFieldChange(key, next)}
+                onAltChange={(next: string) => {
+                  onFieldChange(`${key}Alt`, next);
+                  if (key === "image" || key === "img") {
+                    onFieldChange("imageAlt", next);
+                    onFieldChange("alt", next);
+                  }
+                }}
+                altLabel="Alt Tag"
+                altPlaceholder={`e.g. ${section.title || section.name || "Design House"} ${label}`}
               />
             ) : isPdf ? (
               <PdfUploadField
@@ -505,6 +978,13 @@ export function SectionFieldsEditor({
                 />
                 <span className="text-[10px] text-[#64748b]">Select date and time for live countdown timer</span>
               </div>
+            ) : isRich ? (
+              <RichTextEditor
+                value={String(value || "")}
+                onChange={(next: string) => onFieldChange(key, next)}
+                minHeight="130px"
+                placeholder={`Enter ${label.toLowerCase()}...`}
+              />
             ) : isLong ? (
               <>
                 <Textarea

@@ -44,13 +44,19 @@ import type { SectionsDraft } from "./types";
  * of its own yet, or as the base that saved data gets merged onto.
  */
 export function resolveDefaultSectionsForPage(page: CmsPage): SectionsDraft {
-  // Design House website pages
-  const dhSections = page.configKey ? DH_DEFAULT_SECTIONS[page.configKey] : undefined;
-  if (dhSections) return dhSections;
-
   const key = (page.configKey || "").toLowerCase();
   const title = (page.title || "").toLowerCase();
   const slug = (page.slug || "").toLowerCase();
+
+  // Design House website pages
+  const dhSections = page.configKey
+    ? (DH_DEFAULT_SECTIONS[page.configKey] || DH_DEFAULT_SECTIONS[key])
+    : undefined;
+  if (dhSections) return dhSections;
+
+  if (key === "home" || key === "landingpage" || slug === "/" || title === "home" || page.type === "home") {
+    return DH_DEFAULT_SECTIONS.landingPage;
+  }
 
   if (key === "careerspage" || slug === "/careers") return defaultCareersSections;
   if (key === "msmeeligibilitycheckpage" || slug.includes("eligibility-check")) return defaultMsmeEligibilityCheckSections;
@@ -99,12 +105,19 @@ export function resolveDefaultSectionsForPage(page: CmsPage): SectionsDraft {
  * unified, to avoid changing existing reset behavior.
  */
 export function resolveResetDefaultsForPage(page: CmsPage): SectionsDraft {
-  const dhSections = page.configKey ? DH_DEFAULT_SECTIONS[page.configKey] : undefined;
-  if (dhSections) return dhSections;
-
   const key = (page.configKey || "").toLowerCase();
   const title = (page.title || "").toLowerCase();
   const slug = (page.slug || "").toLowerCase();
+
+  const dhSections = page.configKey
+    ? (DH_DEFAULT_SECTIONS[page.configKey] || DH_DEFAULT_SECTIONS[key])
+    : undefined;
+  if (dhSections) return dhSections;
+
+  if (key === "home" || key === "landingpage" || slug === "/" || title === "home" || page.type === "home") {
+    return DH_DEFAULT_SECTIONS.landingPage;
+  }
+
   let defaults = defaultLandingSections;
   if (key === "careerspage" || slug === "/careers") defaults = defaultCareersSections;
   else if (key === "msmeeligibilitycheckpage" || slug.includes("eligibility-check")) defaults = defaultMsmeEligibilityCheckSections;

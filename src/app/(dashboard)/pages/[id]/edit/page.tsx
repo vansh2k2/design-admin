@@ -603,6 +603,88 @@ export default function CmsEditPage() {
           };
           return { ...section, items: [...items, blankItem] };
         }
+        if (section.key === "featured-services") {
+          const blankService = {
+            title: "New Featured Service",
+            description: "Detailed service description covering design, fabrication, and execution...",
+            image: "/images/service-1.jpg",
+            href: "/services",
+          };
+          return { ...section, items: [...items, blankService] };
+        }
+        if (section.key === "how-we-work") {
+          const blankStep = {
+            step: `0${items.length + 1}`,
+            title: "New Process Step",
+            description: "Description of this workflow milestone...",
+            icon: "DraftingCompass",
+          };
+          return { ...section, items: [...items, blankStep] };
+        }
+        if (section.key === "stats-counter") {
+          const blankStat = {
+            value: 100,
+            suffix: "+",
+            label: "Achievement Milestone",
+            description: "Details regarding this metric and scale",
+          };
+          return { ...section, items: [...items, blankStat] };
+        }
+        if (section.key === "clients-marquee") {
+          const blankClient = {
+            name: "Client Partner",
+            image: "/images/partner-1.png",
+            href: "#",
+          };
+          return { ...section, items: [...items, blankClient] };
+        }
+        if (section.key === "testimonials-carousel") {
+          const blankTestimonial = {
+            quote: "Working with Design House India has been an outstanding experience. Their craftsmanship and attention to detail transformed our retail space.",
+            author: "Client Representative",
+            role: "Project Director",
+            company: "Brand Partner",
+            rating: 5,
+            avatar: "/images/avatar-1.jpg",
+          };
+          return { ...section, items: [...items, blankTestimonial] };
+        }
+        if (section.key === "faqs") {
+          const blankFaq = {
+            question: "What turnkey services do you provide?",
+            answer: "We offer end-to-end design, project management, fabrication, and on-site contracting across retail, exhibition, and corporate interiors.",
+          };
+          return { ...section, items: [...items, blankFaq] };
+        }
+        if (section.key === "recent-articles") {
+          const blankArticle = {
+            title: "Innovations in Retail Interior Design",
+            excerpt: "Discover the latest trends and materials shaping modern retail and exhibition environments.",
+            date: "March 2026",
+            author: "Design House Team",
+            category: "Insights",
+            image: "/images/blog-1.jpg",
+            href: "/blog/retail-interior-trends",
+          };
+          return { ...section, items: [...items, blankArticle] };
+        }
+        if (section.key === "locations") {
+          const blankLocation = {
+            city: "New Office",
+            address: "Office address, city, state, pin",
+            phone: "+91 96549 00525",
+            email: "info@designhouse.co.in",
+            isHeadquarters: false,
+          };
+          return { ...section, items: [...items, blankLocation] };
+        }
+        if (section.key === "navbar") {
+          const blankNavLink = {
+            label: "New Nav Link",
+            href: "/services",
+          };
+          return { ...section, items: [...items, blankNavLink] };
+        }
         if (section.key === "footer") {
           const blankLink = {
             label: "New Link",

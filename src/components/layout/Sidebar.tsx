@@ -69,9 +69,8 @@ function SidebarContent({
             type="button"
             onClick={() => setOpenGroups((g) => ({ ...g, [item.label]: !open }))}
             aria-expanded={open}
-            className={`flex h-[31px] w-full items-center gap-[6px] rounded-[7px] px-[9px] text-left text-[12px] font-medium transition-all duration-150 ${
-              childActive ? "text-white" : "text-[#F2F5F7] hover:bg-white/[0.07] hover:text-white"
-            }`}
+            className={`flex h-[31px] w-full items-center gap-[6px] rounded-[7px] px-[9px] text-left text-[12px] font-medium transition-all duration-150 ${childActive ? "text-white" : "text-[#F2F5F7] hover:bg-white/[0.07] hover:text-white"
+              }`}
           >
             <span className="grid h-[21px] w-[21px] shrink-0 place-items-center">
               <Icon className="h-[15px] w-[15px]" strokeWidth={1.8} />
@@ -327,7 +326,7 @@ function SidebarContent({
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logobg.png"
+            src="/logoland.png"
             alt="Design House India Pvt. Ltd. Admin"
             className="
               h-full

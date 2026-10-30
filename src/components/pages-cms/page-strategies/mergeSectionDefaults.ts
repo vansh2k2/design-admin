@@ -19,6 +19,285 @@ export function mergeSectionWithSavedData(
       }))
     ) : undefined,
   };
+
+  if (Array.isArray(fallbackItem.slides)) {
+    const savedSlides = Array.isArray(savedItem?.slides) && savedItem.slides.length > 0 ? savedItem.slides : fallbackItem.slides;
+    merged.slides = savedSlides.map((slide: CmsRecord, idx: number) => {
+      const fallbackSlide = fallbackItem.slides?.[idx] || fallbackItem.slides?.[0] || {};
+      const combined = { ...fallbackSlide, ...slide };
+      if (combined.image && !combined.img) combined.img = combined.image;
+      if (combined.img && !combined.image) combined.image = combined.img;
+      if (combined.description && !combined.desc) combined.desc = combined.description;
+      if (combined.desc && !combined.description) combined.description = combined.desc;
+      if (combined.titlePrimary && !combined.headingLine1) combined.headingLine1 = combined.titlePrimary;
+      if (combined.titleSecondary && !combined.headingLine2) combined.headingLine2 = combined.titleSecondary;
+      if (combined.titleTertiary && !combined.headingLine3) combined.headingLine3 = combined.titleTertiary;
+      if (combined.buttonLabel && !combined.button1Text) combined.button1Text = combined.buttonLabel;
+      if (combined.buttonHref && !combined.button1Href) combined.button1Href = combined.buttonHref;
+      if (combined.secondaryButtonLabel && !combined.button2Text) combined.button2Text = combined.secondaryButtonLabel;
+      if (combined.secondaryButtonHref && !combined.button2Href) combined.button2Href = combined.secondaryButtonHref;
+
+      for (let s = 1; s <= 5; s++) {
+        const lbl = `service${s}Label`;
+        const hrf = `service${s}Href`;
+        const icn = `service${s}Icon`;
+        if (combined[lbl] === undefined) combined[lbl] = slide[lbl] || fallbackSlide[lbl] || fallbackItem[lbl] || (
+          s === 1 ? "Retail\nInteriors" :
+          s === 2 ? "Display\nSolutions" :
+          s === 3 ? "Corporate\nInteriors" :
+          s === 4 ? "Exhibition\nStalls" : "Manufacturing\n& Execution"
+        );
+        if (combined[hrf] === undefined) combined[hrf] = slide[hrf] || fallbackSlide[hrf] || fallbackItem[hrf] || (
+          s === 1 ? "/services/retail-interior" :
+          s === 2 ? "/services/retail-kiosk" :
+          s === 3 ? "/services/corporate-interior" :
+          s === 4 ? "/services/exhibitions" : "/services"
+        );
+        if (combined[icn] === undefined) combined[icn] = slide[icn] || fallbackSlide[icn] || fallbackItem[icn] || `/assets/icon/icon${s}.png`;
+      }
+      for (let f = 1; f <= 4; f++) {
+        const flbl = `feature${f}Label`;
+        const ficn = `feature${f}Icon`;
+        if (combined[flbl] === undefined) combined[flbl] = slide[flbl] || fallbackSlide[flbl] || "";
+        if (combined[ficn] === undefined) combined[ficn] = slide[ficn] || fallbackSlide[ficn] || "";
+      }
+      return combined;
+    });
+  }
+
+  if (fallbackItem.key === "topbar" || merged.key === "topbar") {
+    if (!merged.title) merged.title = fallbackItem.title || "Design House India Pvt. Ltd.";
+    if (!merged.marqueeText) merged.marqueeText = fallbackItem.marqueeText || "5000+ PROJECTS DELIVERED • PAN-INDIA EXECUTION • RETAIL | RESTAURANT | KIOSK | CORPORATE | EXHIBITION EXPERTS";
+    if (!merged.phoneNumber) merged.phoneNumber = fallbackItem.phoneNumber || "+91 96549 00525";
+    if (!merged.contactEmail) merged.contactEmail = fallbackItem.contactEmail || "info@designhouse.co.in";
+    if (!merged.ensisLogo && !merged.logoImage) {
+      merged.ensisLogo = fallbackItem.ensisLogo || fallbackItem.logoImage || "/ensis.jpeg";
+      merged.logoImage = merged.ensisLogo;
+    } else if (merged.ensisLogo && !merged.logoImage) {
+      merged.logoImage = merged.ensisLogo;
+    } else if (merged.logoImage && !merged.ensisLogo) {
+      merged.ensisLogo = merged.logoImage;
+    }
+    if (!merged.externalLinkUrl) merged.externalLinkUrl = fallbackItem.externalLinkUrl || "https://ensis.in/";
+    if (!merged.externalLinkText) merged.externalLinkText = fallbackItem.externalLinkText || "Panchkarma Solution";
+  }
+
+  if (
+    fallbackItem.key === "clients-marquee" ||
+    merged.key === "clients-marquee" ||
+    fallbackItem.key === "clients" ||
+    merged.key === "clients" ||
+    fallbackItem.key === "partners-brands" ||
+    merged.key === "partners-brands" ||
+    merged.name === "Our Clients (Logo Strip)" ||
+    fallbackItem.name === "Our Clients (Logo Strip)"
+  ) {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "OUR CLIENTS";
+    if (!merged.title) merged.title = fallbackItem.title || "Trusted by";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Leading Brands";
+    if (!merged.description || String(merged.description).trim() === "") {
+      merged.description = fallbackItem.description || "Partnering with industry leaders to create exceptional spaces";
+    }
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "VIEW ALL CLIENTS";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "/clients";
+  }
+
+  if (fallbackItem.key === "hero" || merged.key === "hero") {
+    for (let s = 1; s <= 5; s++) {
+      const lbl = `service${s}Label`;
+      const hrf = `service${s}Href`;
+      const icn = `service${s}Icon`;
+      if (!merged[lbl] && fallbackItem[lbl]) merged[lbl] = fallbackItem[lbl];
+      if (!merged[hrf] && fallbackItem[hrf]) merged[hrf] = fallbackItem[hrf];
+      if (!merged[icn] && fallbackItem[icn]) merged[icn] = fallbackItem[icn];
+    }
+  }
+
+  if (fallbackItem.key === "featured-services" || merged.key === "featured-services") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "SERVICES WE DO";
+    if (!merged.title) merged.title = fallbackItem.title || "Our Featured Services";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "& Transformations";
+    if (!merged.description) merged.description = fallbackItem.description || "Explore our turnkey interior design, retail display merchandising, kiosk fabrication, and brand architectural execution capabilities.";
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "View All Services";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "/services";
+  }
+
+  if (fallbackItem.key === "how-we-work" || merged.key === "how-we-work") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "HOW WE WORK";
+    if (!merged.title) merged.title = fallbackItem.title || "Architecture Process For";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Exceptional Results.";
+    if (!merged.description) merged.description = fallbackItem.description || "Our process is alive — adapting, refining, and growing with your vision.";
+    if (!merged.quote) merged.quote = fallbackItem.quote || "Excellence in architecture is a journey of continuous refinement.";
+    if (!merged.backgroundImage) merged.backgroundImage = fallbackItem.backgroundImage || "/h1-bg01-1.webp";
+  }
+
+  if (fallbackItem.key === "stats-counter" || merged.key === "stats-counter") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "OUR TRACK RECORD";
+    if (!merged.title) merged.title = fallbackItem.title || "Delivering Impact Across India";
+    if (!merged.description) merged.description = fallbackItem.description || "Two decades of transforming commercial spaces with unmatched manufacturing precision.";
+  }
+
+  if (fallbackItem.key === "testimonials-carousel" || merged.key === "testimonials-carousel") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "TESTIMONIALS";
+    if (!merged.title) merged.title = fallbackItem.title || "What";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "People Says";
+    if (!merged.description) merged.description = fallbackItem.description || "Discover how we help leading enterprises and startups build spaces that leave lasting impressions.";
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "View All Reviews";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "/testimonials";
+  }
+
+  if (fallbackItem.key === "faqs" || merged.key === "faqs") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "FAQS";
+    if (!merged.title) merged.title = fallbackItem.title || "Frequently Asked";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Questions";
+    if (!merged.description) merged.description = fallbackItem.description || "Everything you need to know about our turnkey interior design, materials, execution process and timelines.";
+  }
+
+  if (fallbackItem.key === "recent-articles" || merged.key === "recent-articles") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "OUR BLOG";
+    if (!merged.title) merged.title = fallbackItem.title || "Read Our Latest";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Articles";
+    if (!merged.description) merged.description = fallbackItem.description || "Latest published posts and insights from our interior design, architectural execution, and retail fixture experts.";
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "View All Articles";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "/blogs";
+  }
+
+  if (fallbackItem.key === "about" || merged.key === "about") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "ABOUT US";
+    if (typeof merged.title === "string" && merged.title.includes("Since")) {
+      const parts = merged.title.split(/(?=Since)/i);
+      if (parts.length > 1) {
+        merged.title = parts[0].trim();
+        if (!merged.highlightedWord || merged.highlightedWord === "Since 2004") {
+          merged.highlightedWord = parts.slice(1).join("").trim();
+        }
+      }
+    }
+    if (!merged.title) merged.title = fallbackItem.title || "Crafting Exceptional Spaces";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Since 1982";
+    if (!merged.image1) merged.image1 = fallbackItem.image1 || "/assets/3_11zon.webp";
+    if (!merged.image2) merged.image2 = fallbackItem.image2 || "/assets/5.jpg_11zon.jpeg";
+    if (!merged.image3) merged.image3 = fallbackItem.image3 || "/assets/about3_11zon.webp";
+    if (!merged.image4) merged.image4 = fallbackItem.image4 || "/assets/8_11zon.jpg";
+    if (!merged.missionTitle) merged.missionTitle = fallbackItem.missionTitle || "Our Mission";
+    if (!merged.missionContent) merged.missionContent = fallbackItem.missionContent || "<p>Deliver innovative designs that exceed expectations.</p>";
+    if (!merged.visionTitle) merged.visionTitle = fallbackItem.visionTitle || "Our Vision";
+    if (!merged.visionContent) merged.visionContent = fallbackItem.visionContent || "<p>To be the most trusted interior design partner.</p>";
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "Know More";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "/about";
+  }
+
+  if (fallbackItem.key === "what-we-do" || merged.key === "what-we-do") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "WHAT WE DO";
+    if (!merged.title) merged.title = fallbackItem.title || "Turnkey Spaces for";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Every Business";
+    if (!merged.description) merged.description = fallbackItem.description || "<p>From concept to creation, we design and build impactful spaces that enhance your brand, engage your customers and deliver real business value.</p>";
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "View All Services";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "/services";
+    if (!merged.stat1Value) merged.stat1Value = fallbackItem.stat1Value || "21";
+    if (!merged.stat1Label) merged.stat1Label = fallbackItem.stat1Label || "Years of Experience";
+    if (!merged.stat2Value) merged.stat2Value = fallbackItem.stat2Value || "5000";
+    if (!merged.stat2Label) merged.stat2Label = fallbackItem.stat2Label || "Projects Delivered";
+    if (!merged.stat3Value) merged.stat3Value = fallbackItem.stat3Value || "10";
+    if (!merged.stat3Label) merged.stat3Label = fallbackItem.stat3Label || "Industry Categories";
+    if (!merged.industriesTitle) merged.industriesTitle = fallbackItem.industriesTitle || "Industries We Serve";
+    if (!merged.industriesList) merged.industriesList = fallbackItem.industriesList || "Corporate, Retail, Hospitality, Healthcare, Education, Exhibition, Wellness, Government, and More...";
+  }
+
+  if (fallbackItem.key === "our-achievements" || merged.key === "our-achievements" || fallbackItem.key === "achievements" || merged.key === "achievements") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "OUR ACHIEVEMENTS";
+    if (!merged.title) merged.title = fallbackItem.title || "Numbers that Reflect";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Your Trust in Us";
+    if (!merged.description) merged.description = fallbackItem.description || "<p>Over the years, we have delivered successful interior and exhibition solutions for leading brands across India.</p>";
+    if (!merged.backgroundImage) merged.backgroundImage = fallbackItem.backgroundImage || "/assets/banner/hero2.webp";
+  }
+
+  if (fallbackItem.key === "our-projects" || merged.key === "our-projects") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "OUR PROJECTS";
+    if (!merged.title) merged.title = fallbackItem.title || "Spaces We Have";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Brought to Life";
+    if (!merged.description) merged.description = fallbackItem.description || "<p>From retail and corporate interiors to exhibition stalls and kiosks, explore some of our recently completed projects for leading brands across India.</p>";
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "VIEW ALL PROJECTS";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "/projects";
+  }
+
+  if (fallbackItem.key === "why-choose-us" || merged.key === "why-choose-us") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Why Choose Us";
+    if (!merged.title) merged.title = fallbackItem.title || "Your Vision.";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Our Expertise.";
+    if (!merged.description) merged.description = fallbackItem.description || "<p>We combine creative design, in-house manufacturing and trusted execution to deliver spaces that are functional, brand-driven and built to last.</p>";
+    if (!merged.image) merged.image = fallbackItem.image || "/assets/image/vision.webp";
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "Get a Free Consultation";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "/contact";
+    if (!merged.secondaryButtonLabel) merged.secondaryButtonLabel = fallbackItem.secondaryButtonLabel || "Download Company Profile";
+    if (!merged.secondaryButtonHref) merged.secondaryButtonHref = fallbackItem.secondaryButtonHref || "/downloads";
+  }
+
+  if (fallbackItem.key === "capabilities" || merged.key === "capabilities") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Manufacturing & Execution Capabilities";
+    if (!merged.title) merged.title = fallbackItem.title || "Built In-House.";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Delivered with Excellence.";
+    if (!merged.description) merged.description = fallbackItem.description || "<p>Our in-house manufacturing facilities, skilled workforce and advanced machinery ensure superior quality, efficient execution and complete control from design to installation.</p>";
+    if (!merged.image) merged.image = fallbackItem.image || "/assets/image/manu.webp";
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "Explore Our Capabilities";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "/about/infrastructure";
+    if (!merged.stat1Value) merged.stat1Value = fallbackItem.stat1Value || "25,000+";
+    if (!merged.stat1Label) merged.stat1Label = fallbackItem.stat1Label || "Sq. Ft. Facility";
+    if (!merged.stat2Value) merged.stat2Value = fallbackItem.stat2Value || "100+";
+    if (!merged.stat2Label) merged.stat2Label = fallbackItem.stat2Label || "Skilled Professionals";
+    if (!merged.stat3Value) merged.stat3Value = fallbackItem.stat3Value || "Modern";
+    if (!merged.stat3Label) merged.stat3Label = fallbackItem.stat3Label || "Machinery";
+    if (!merged.stat4Value) merged.stat4Value = fallbackItem.stat4Value || "Quality";
+    if (!merged.stat4Label) merged.stat4Label = fallbackItem.stat4Label || "Assurance";
+  }
+
+  if (fallbackItem.key === "our-approach" || merged.key === "our-approach" || fallbackItem.key === "approach" || merged.key === "approach") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Our Approach";
+    if (!merged.title) merged.title = fallbackItem.title || "Ideas. Design. Build.";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Deliver.";
+    if (!merged.description) merged.description = fallbackItem.description || "<p>A streamlined process that ensures creativity, quality and on-time delivery for spaces that elevate your brand.</p>";
+    if (!merged.image) merged.image = fallbackItem.image || "/assets/image/approach.webp";
+    if (!merged.tagline) merged.tagline = fallbackItem.tagline || "Your Vision, Our Expertise, Exceptional Spaces";
+  }
+
+  if (fallbackItem.key === "featured-projects" || merged.key === "featured-projects") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "FEATURED PROJECTS";
+    if (!merged.title) merged.title = fallbackItem.title || "Spaces That Create";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Real Impact.";
+    if (!merged.description) merged.description = fallbackItem.description || "<p>Explore our recent projects across corporate, retail, exhibition and hospitality spaces, designed and executed with creativity, precision and a focus on brand experience.</p>";
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "View All Projects";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "/projects";
+    if (!merged.backgroundImage) merged.backgroundImage = fallbackItem.backgroundImage || "/assets/banner/bg-featured.webp";
+  }
+
+  if (fallbackItem.key === "our-strengths" || merged.key === "our-strengths" || fallbackItem.key === "strengths" || merged.key === "strengths") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Our Strengths";
+    if (!merged.title) merged.title = fallbackItem.title || "Built on Experience.";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Driven by Excellence.";
+    if (!merged.description) merged.description = fallbackItem.description || "<p>Our strength lies in a robust infrastructure, a skilled and passionate team, and measurable capabilities that enable us to deliver world-class interior and exhibition solutions across India.</p>";
+    if (!merged.image) merged.image = fallbackItem.image || "/assets/image/strengths.webp";
+    if (!merged.stat1Value) merged.stat1Value = fallbackItem.stat1Value || "5000+";
+    if (!merged.stat1Label) merged.stat1Label = fallbackItem.stat1Label || "Projects Delivered";
+    if (!merged.stat2Value) merged.stat2Value = fallbackItem.stat2Value || "500+";
+    if (!merged.stat2Label) merged.stat2Label = fallbackItem.stat2Label || "Happy Clients";
+    if (!merged.stat3Value) merged.stat3Value = fallbackItem.stat3Value || "21+";
+    if (!merged.stat3Label) merged.stat3Label = fallbackItem.stat3Label || "Years of Experience";
+    if (!merged.stat4Value) merged.stat4Value = fallbackItem.stat4Value || "Pan India";
+    if (!merged.stat4Label) merged.stat4Label = fallbackItem.stat4Label || "Execution & Support";
+  }
+
+  if (fallbackItem.key === "get-in-touch" || merged.key === "get-in-touch") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Get In Touch";
+    if (!merged.title) merged.title = fallbackItem.title || "Let's Discuss";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Your Project";
+    if (!merged.description) merged.description = fallbackItem.description || "<p>Whether you're looking for turnkey interior execution, retail kiosks, or exhibition stalls, our team is ready to bring your vision to reality.</p>";
+    if (!merged.phoneNumber1) merged.phoneNumber1 = fallbackItem.phoneNumber1 || "+91 96549 00525";
+    if (!merged.phoneNumber2) merged.phoneNumber2 = fallbackItem.phoneNumber2 || "+91 98102 47319";
+    if (!merged.contactEmail) merged.contactEmail = fallbackItem.contactEmail || "info@designhouse.co.in";
+    if (!merged.backgroundImage) merged.backgroundImage = fallbackItem.backgroundImage || "/assets/banner/touch.webp";
+    if (!merged.formTitle) merged.formTitle = fallbackItem.formTitle || "Request a Free Consultation";
+    if (!merged.formSubtitle) merged.formSubtitle = fallbackItem.formSubtitle || "Fill out the form below and our team will get in touch within 24 hours.";
+  }
   if (fallbackItem.key === "awards-hero" || merged.key === "awards-hero") {
     delete merged.shortDescription;
     if (!merged.imageAlt) merged.imageAlt = fallbackItem.imageAlt;
@@ -397,6 +676,30 @@ export function mergeSectionWithSavedData(
     if (!merged.keyPoint10) merged.keyPoint10 = "Health-Conscious Consumers & Eco-Enthusiasts";
   }
   if (fallbackItem.key === "footer" || merged.key === "footer") {
+    if (fallbackItem.ctaTitle !== undefined || fallbackItem.footBgImage !== undefined) {
+      if (!merged.ctaEyebrow) merged.ctaEyebrow = fallbackItem.ctaEyebrow;
+      if (!merged.ctaTitle) merged.ctaTitle = fallbackItem.ctaTitle;
+      if (!merged.ctaDescription) merged.ctaDescription = fallbackItem.ctaDescription;
+      if (!merged.ctaButtonLabel) merged.ctaButtonLabel = fallbackItem.ctaButtonLabel;
+      if (!merged.ctaButtonHref) merged.ctaButtonHref = fallbackItem.ctaButtonHref;
+      if (!merged.ctaBannerImage) merged.ctaBannerImage = fallbackItem.ctaBannerImage;
+      if (!merged.footBgImage) merged.footBgImage = fallbackItem.footBgImage;
+      if (!merged.logoImage) merged.logoImage = fallbackItem.logoImage;
+      if (!merged.phoneNumber) merged.phoneNumber = fallbackItem.phoneNumber;
+      if (!merged.altPhoneNumber) merged.altPhoneNumber = fallbackItem.altPhoneNumber;
+      if (!merged.contactEmail) merged.contactEmail = fallbackItem.contactEmail;
+      if (!merged.contactAddress) merged.contactAddress = fallbackItem.contactAddress;
+      if (!merged.websiteUrl) merged.websiteUrl = fallbackItem.websiteUrl;
+      if (merged.description === undefined || String(merged.description).startsWith("A global platform uniting")) {
+        merged.description = fallbackItem.description;
+      }
+      if (!merged.facebookUrl) merged.facebookUrl = fallbackItem.facebookUrl;
+      if (!merged.instagramUrl) merged.instagramUrl = fallbackItem.instagramUrl;
+      if (!merged.twitterUrl) merged.twitterUrl = fallbackItem.twitterUrl;
+      if (!merged.youtubeUrl) merged.youtubeUrl = fallbackItem.youtubeUrl;
+      if (!merged.linkedinUrl) merged.linkedinUrl = fallbackItem.linkedinUrl;
+      return merged;
+    }
     delete merged.title;
     delete merged.subtitle;
     delete merged.partnerLogoImage;
@@ -408,10 +711,6 @@ export function mergeSectionWithSavedData(
       merged.description =
         "A global platform uniting over 100+ exhibitors from across the organic value chain, showcasing certified products, advanced agritech, sustainable practices, and the rich heritage of traditional wellness. Discover organic living with conferences and B2B opportunities.";
     }
-    // Left blank on purpose (used to hardcode a local server `/uploads/...`
-    // URL) — the public Footer component already falls back to its own
-    // bundled placeholder art when these are empty. Upload real images via
-    // this editor to set them; new uploads are saved as Cloudinary URLs.
     if (merged.logoImage === undefined || merged.logoImage.includes("km.jpg")) {
       merged.logoImage = "";
     }

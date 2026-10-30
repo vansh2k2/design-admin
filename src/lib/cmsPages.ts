@@ -78,7 +78,6 @@ const routeAliases: Record<string, string> = {
   "blogs": "blogPage",
   "career": "careersPage",
   "careers": "careersPage",
-  "downloads": "downloadsPage",
   "contact": "contactPage",
   "contact-us": "contactPage",
   "privacy": "privacyPolicyPage",

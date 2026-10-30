@@ -7,5 +7,6 @@ export { Toggle } from "./Toggle";
 export { ToolbarButton } from "./ToolbarButton";
 export { EditorToolbar } from "./EditorToolbar";
 export { ImageUploadField } from "./ImageUploadField";
+export { ImageWithAltField } from "./ImageWithAltField";
 export { PdfUploadField } from "./PdfUploadField";
 export { VideoUploadField } from "./VideoUploadField";
