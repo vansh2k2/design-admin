@@ -716,18 +716,18 @@ export default function DownloadsManagementPage() {
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[940px] border-collapse text-left">
                   <thead>
-                    <tr className="h-10 border-b border-slate-200 bg-slate-50/80 text-[8.5px] font-semibold uppercase tracking-[.06em] text-slate-500">
-                      <th className="w-10 px-3 text-center">
+                    <tr className="h-10 border-b border-slate-200 bg-slate-50/80 text-[8.5px] font-semibold uppercase tracking-[.06em] text-slate-500 whitespace-nowrap">
+                      <th className="w-10 px-3 text-center whitespace-nowrap">
                         <input type="checkbox" />
                       </th>
-                      <th className="px-2">Download Item &amp; Card</th>
+                      <th className="px-2 whitespace-nowrap">Download Item &amp; Card</th>
                       <th className="px-2 whitespace-nowrap">Category</th>
-                      <th className="px-2">Image Alt Text</th>
+                      <th className="px-2 whitespace-nowrap">Image Alt Text</th>
                       <th className="px-2 whitespace-nowrap">Status</th>
-                      <th className="px-2 text-center">File Size</th>
-                      <th className="px-2 text-center">Downloads</th>
-                      <th className="px-2 text-center">Order</th>
-                      <th className="px-3 text-center">Actions</th>
+                      <th className="px-3 text-center whitespace-nowrap">File Size</th>
+                      <th className="px-2 text-center whitespace-nowrap">Downloads</th>
+                      <th className="px-2 text-center whitespace-nowrap">Order</th>
+                      <th className="px-3 text-center whitespace-nowrap">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -821,19 +821,19 @@ export default function DownloadsManagementPage() {
                             {item.status}
                           </span>
                         </td>
-                        <td className="px-2 text-center text-[9.5px] font-semibold text-slate-600 tabular-nums">
+                        <td className="px-3 text-center text-[9.5px] font-semibold text-slate-600 tabular-nums whitespace-nowrap">
                           {item.fileSize || "—"}
                         </td>
-                        <td className="px-2 text-center text-[9.5px] font-semibold tabular-nums text-slate-700">
+                        <td className="px-2 text-center text-[9.5px] font-semibold tabular-nums text-slate-700 whitespace-nowrap">
                           {(
                             item.downloadsCount ||
                             item.order * 142 + 230
                           ).toLocaleString()}
                         </td>
-                        <td className="px-2 text-center text-[9.5px] font-semibold tabular-nums text-slate-500">
+                        <td className="px-2 text-center text-[9.5px] font-semibold tabular-nums text-slate-500 whitespace-nowrap">
                           {item.order || 1}
                         </td>
-                        <td className="px-3">
+                        <td className="px-3 whitespace-nowrap">
                           <div className="flex items-center justify-center gap-1.5">
                             <button
                               type="button"
