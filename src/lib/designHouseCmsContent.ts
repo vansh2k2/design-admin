@@ -1025,29 +1025,25 @@ export const dhAboutSections: Section[] = [
   statsSection,
   teamSection,
   ctaSection(),
-  footerSection,
 ];
 
-export const dhTeamSections: Section[] = [pageHero("Our", "Team", "The people behind 5000+ projects.", img.project("team-review.webp")), teamSection, ctaSection(), footerSection];
+export const dhTeamSections: Section[] = [pageHero("Our", "Team", "The people behind 5000+ projects.", img.project("team-review.webp")), teamSection, ctaSection()];
 
 export const dhAssociatesSections: Section[] = [
   pageHero("Our", "Associates", "Partners and associate companies that help us deliver end-to-end projects.", img.project("team-planning.webp")),
   { key: "associates", name: "Associate Companies", enabled: true, eyebrow: "OUR ASSOCIATES", title: "Working Together", items: [{ title: "Ensis Panchakarma", description: "Spa and wellness interiors partner.", image: "/images/dh/projects/residential-living-room.jpg" }, { title: "Lumina LED Systems", description: "Architectural and display lighting.", image: "/images/dh/projects/retail-luxury-display.jpg" }] },
-  footerSection,
 ];
 
 export const dhBrandApproachSections: Section[] = [
   pageHero("Brand Conscious", "Approach", "Every space we design starts with your brand — its story, customers and goals.", img.project("retail-footwear-store.jpg")),
   { key: "brand-approach", name: "Brand Conscious Approach", enabled: true, eyebrow: "OUR APPROACH", title: "Design That Builds Brands", description: "We translate brand guidelines into materials, lighting, fixtures and customer journeys so every store looks and feels on-brand.", items: [{ title: "Understand the brand", description: "Workshops with your brand and retail teams." }, { title: "Design the journey", description: "Layouts that guide customers to hero products." }, { title: "Build consistently", description: "Master designs and modular fixtures for every rollout." }] },
   ctaSection(),
-  footerSection,
 ];
 
 export const dhInfrastructureSections: Section[] = [
   pageHero("Facility &", "Infrastructure", "In-house manufacturing for retail fixtures, kiosks, furniture and exhibition stalls.", img.project("team-3d-modelling.webp")),
   { key: "facility", name: "Facility & Infrastructure", enabled: true, eyebrow: "OUR FACTORY", title: "Built In-House", description: "Our Ghaziabad facility houses woodworking, metal fabrication, acrylic, paint and assembly units with dedicated quality control.", items: [{ title: "Woodworking", description: "CNC panel saws, edge banding and pressing lines." }, { title: "Metal Fabrication", description: "Cutting, bending, welding and powder coating." }, { title: "Acrylic & Signage", description: "Laser cutting, routing and LED assembly." }, { title: "Quality Control", description: "Pre-dispatch checks for every fixture." }] },
   statsSection,
-  footerSection,
 ];
 
 // ---------------------------------------------------------------------------------------------
@@ -1073,7 +1069,6 @@ export const dhServicesSections: Section[] = [
   featuredServicesSection,
   howWeWorkSection,
   ctaSection(),
-  footerSection,
 ];
 
 interface ServiceSeed {
@@ -1104,7 +1099,6 @@ function servicePage(seed: ServiceSeed): Section[] {
     { key: "project-gallery", name: "Recent Projects Gallery", enabled: true, eyebrow: "RECENT WORK", title: "Projects We've Delivered", items: seed.gallery.map((file) => ({ title: file.replace(/\.[a-z]+$/, "").replace(/-/g, " "), image: img.project(file) })) },
     faqSection,
     ctaSection(),
-    footerSection,
   ];
 }
 
@@ -1143,28 +1137,24 @@ export const dhPortfolioSections: Section[] = [
   },
   { key: "portfolio-videos", name: "Project Videos", enabled: true, title: "Videos", description: "Videos are managed in Video Highlights.", buttonLabel: "Watch Videos", buttonHref: "/portfolio/videos" },
   ctaSection(),
-  footerSection,
 ];
 
 export const dhGallerySections: Section[] = [
   pageHero("Project", "Gallery", "Photos from our recent projects — managed in the Media Library.", img.project("restaurant-dining-hall.jpg")),
   { key: "gallery-intro", name: "Gallery Introduction", enabled: true, title: "Our Work in Pictures", description: "Images are picked from the Media Library by category." },
-  footerSection,
 ];
 
 export const dhClientsSections: Section[] = [
   pageHero("Trusted By", "Premium Brands", "Leading brands across retail, QSR, FMCG and lifestyle trust Design House.", img.project("brand-store-facade.webp")),
   clientsSection,
   testimonialsSection,
-  footerSection,
 ];
 
-export const dhTestimonialsSections: Section[] = [pageHero("Client", "Testimonials", "What our clients say about working with us.", img.project("corporate-office-lounge.jpg")), testimonialsSection, ctaSection(), footerSection];
+export const dhTestimonialsSections: Section[] = [pageHero("Client", "Testimonials", "What our clients say about working with us.", img.project("corporate-office-lounge.jpg")), testimonialsSection, ctaSection()];
 
 export const dhBlogSections: Section[] = [
   pageHero("Our", "Blogs", "Interior design ideas, retail trends and project insights.", img.project("residential-living-room.jpg")),
   { key: "blog-listing", name: "Blog Listing", enabled: true, title: "Latest Articles", description: "Posts are managed in Blog & Insights.", buttonLabel: "Load More", buttonHref: "" },
-  footerSection,
 ];
 
 export const dhCareerSections: Section[] = [
@@ -1240,7 +1230,6 @@ export const dhCareerSections: Section[] = [
     image: "/assets/image/7.webp",
     alt: "Design House workspace",
   },
-  footerSection,
 ];
 
 export const dhDownloadsSections: Section[] = [
@@ -1388,7 +1377,6 @@ export const dhDownloadsSections: Section[] = [
       },
     ],
   },
-  footerSection,
 ];
 
 export const dhContactSections: Section[] = [
@@ -1407,13 +1395,11 @@ export const dhContactSections: Section[] = [
     successMessage: "Thank you! Our team will contact you shortly.",
   },
   locationSection,
-  footerSection,
 ];
 
 const legalPage = (title: string, intro: string, points: [string, string][]): Section[] => [
   pageHero("", title, intro, img.project("office-lounge-seating.webp")),
   { key: "legal-content", name: `${title} Content`, enabled: true, title, description: intro, items: points.map(([heading, text]) => ({ title: heading, description: text })) },
-  footerSection,
 ];
 
 export const dhPrivacySections = legalPage("Privacy Policy", "How Design House India Pvt. Ltd. collects, uses and protects your information.", [

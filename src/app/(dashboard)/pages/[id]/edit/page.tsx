@@ -443,6 +443,11 @@ export default function CmsEditPage() {
   };
 
   useEffect(() => {
+    const isHomePage =
+      page.configKey === "landingPage" ||
+      page.type === "home" ||
+      page.slug === "/" ||
+      (page.title || "").toLowerCase() === "home";
     const cfg = page.configKey && settings ? settings[page.configKey] : undefined;
     const fallbackSections = resolveDefaultSectionsForPage(page);
     const stored = cfg?.sections;
@@ -450,7 +455,9 @@ export default function CmsEditPage() {
       mergeSectionWithSavedData(fallbackItem, stored?.find((s: CmsRecord) => s.key === fallbackItem.key))
     );
     const finalSections = (rawSections && rawSections.length > 0 ? rawSections : fallbackSections).filter(
-      (s: CmsJson) => !(s.key === "gallery-grid" || s.name === "GalleryGrid")
+      (s: CmsJson) =>
+        !(s.key === "gallery-grid" || s.name === "GalleryGrid") &&
+        (isHomePage || (s.key !== "footer" && s.name !== "Footer & Contact Band" && s.name !== "Footer & Social Links"))
     );
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reset the section drafts when the page or its saved settings change
     setSectionsDraft(finalSections.map((section: CmsRecord) => ({ ...section })));
@@ -745,7 +752,16 @@ export default function CmsEditPage() {
   };
 
   const resetToWebsiteDefaults = () => {
-    const defaults = resolveResetDefaultsForPage(page);
+    const isHomePage =
+      page.configKey === "landingPage" ||
+      page.type === "home" ||
+      page.slug === "/" ||
+      (page.title || "").toLowerCase() === "home";
+    const defaults = resolveResetDefaultsForPage(page).filter(
+      (s) =>
+        !(s.key === "gallery-grid" || s.name === "GalleryGrid") &&
+        (isHomePage || (s.key !== "footer" && s.name !== "Footer & Contact Band" && s.name !== "Footer & Social Links"))
+    );
     setSectionsDraft(defaults.map((s) => ({ ...s })));
     Swal.fire({
       title: "Reset to Website Content",
@@ -761,82 +777,92 @@ export default function CmsEditPage() {
     setSaving(true);
     const savingKey = page.configKey;
     setActiveConfigKey(savingKey);
+    const isHomePage =
+      savingKey === "landingPage" ||
+      page.type === "home" ||
+      page.slug === "/" ||
+      (page.title || "").toLowerCase() === "home";
+    const targetSections = isHomePage
+      ? sectionsDraft
+      : sectionsDraft.filter(
+          (s) => s.key !== "footer" && s.name !== "Footer & Contact Band" && s.name !== "Footer & Social Links"
+        );
     try {
       if (savingKey === "landingPage" || page.type === "home") {
-        await saveHomeSections(sectionsDraft);
+        await saveHomeSections(targetSections);
       }
 
       if (savingKey === "whyExhibitPage" || page.slug?.includes("why-exhibit")) {
-        await saveWhyExhibitSections(sectionsDraft);
+        await saveWhyExhibitSections(targetSections);
       }
 
       if (savingKey === "whyVisitPage" || page.slug?.includes("why-visit")) {
-        await saveWhyVisitSections(sectionsDraft);
+        await saveWhyVisitSections(targetSections);
       }
 
       if (savingKey === "awardsPage" || page.slug?.includes("awards") || page.slug?.includes("excellence-awards")) {
-        await saveAwardsSections(sectionsDraft);
+        await saveAwardsSections(targetSections);
       }
 
       if (savingKey === "galleryPage" || page.slug?.includes("gallery") || page.slug?.includes("glimpses")) {
-        await saveGallerySections(sectionsDraft);
+        await saveGallerySections(targetSections);
       }
 
       if (savingKey === "aboutPage" || page.slug === "/about") {
-        await saveAboutSections(sectionsDraft);
+        await saveAboutSections(targetSections);
       }
 
       if (savingKey === "advisoryPage" || page.slug?.includes("advisory_board_member")) {
-        await saveAdvisorySections(sectionsDraft);
+        await saveAdvisorySections(targetSections);
       }
 
       if (savingKey === "sponsorshipPage" || page.slug === "/sponsorship") {
-        await saveSponsorshipSections(sectionsDraft);
+        await saveSponsorshipSections(targetSections);
       }
 
       if (savingKey === "termsAndConditionsPage" || page.slug?.includes("terms-and-conditions")) {
-        await saveTermsSections(sectionsDraft);
+        await saveTermsSections(targetSections);
       }
 
       if (savingKey === "msmePage") {
-        await saveMsmeSections(sectionsDraft);
+        await saveMsmeSections(targetSections);
       }
 
       if (savingKey === "buyerSellerMeetPage") {
-        await saveBuyerSellerMeetSections(sectionsDraft);
+        await saveBuyerSellerMeetSections(targetSections);
       }
 
       if (savingKey === "exhibitionCategoriesPage") {
-        await saveExhibitionCategoriesSections(sectionsDraft);
+        await saveExhibitionCategoriesSections(targetSections);
       }
 
       if (savingKey === "nominateAdvisoryPage") {
-        await saveNominateAdvisorySections(sectionsDraft);
+        await saveNominateAdvisorySections(targetSections);
       }
 
       if (savingKey === "blogPage") {
-        await saveBlogSections(sectionsDraft);
+        await saveBlogSections(targetSections);
       }
 
       if (savingKey === "exhibitorsPage") {
-        await saveExhibitorsSections(sectionsDraft);
+        await saveExhibitorsSections(targetSections);
       }
 
       if (savingKey === "epromotionPage") {
-        await saveEPromotionSections(sectionsDraft);
+        await saveEPromotionSections(targetSections);
       }
 
       if (savingKey === "partnershipPage") {
-        await savePartnershipSections(sectionsDraft);
+        await savePartnershipSections(targetSections);
       }
 
       if (savingKey && SUB_PARTNERSHIP_SLUGS[savingKey]) {
-        await saveSubPartnershipSections(SUB_PARTNERSHIP_SLUGS[savingKey], sectionsDraft);
+        await saveSubPartnershipSections(SUB_PARTNERSHIP_SLUGS[savingKey], targetSections);
       }
 
       const updated = await savePageCore({
         savingKey,
-        sectionsDraft,
+        sectionsDraft: targetSections,
         form,
         settings,
         currentAdmin,

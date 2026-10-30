@@ -240,18 +240,18 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   // Styling for active state
   const getActiveStyle = (isActive: boolean) =>
     isActive
-      ? "bg-blue-100 border-blue-400 text-blue-700 active:bg-blue-200"
-      : "bg-white border-gray-300 active:bg-gray-100";
+      ? "bg-teal-50 border-teal-500 text-teal-700 font-bold"
+      : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50 active:bg-gray-100";
 
   return (
-    <div className="border-2 border-gray-200 rounded overflow-hidden shadow-inner bg-white cursor-default">
-      {/* Standardized Toolbar - Hidden in code mode or customized if needed */}
+    <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-xs cursor-default">
+      {/* Standardized Toolbar - Compact & Sleek */}
       {!isCodeEditor && (
-        <div className="bg-gray-50 p-2 border-b-2 border-gray-200 flex flex-wrap gap-1 items-center select-none">
+        <div className="bg-slate-50/90 px-2 py-1.5 border-b border-gray-200 flex flex-wrap gap-1 items-center select-none">
           <button
             type="button"
             onMouseDown={(e) => handleAction(e, "bold")}
-            className={`w-9 h-9 flex items-center justify-center hover:bg-white rounded font-bold border-2 text-sm shadow-sm transition-colors cursor-pointer ${getActiveStyle(
+            className={`w-7 h-7 flex items-center justify-center hover:bg-white rounded font-bold border text-xs shadow-xs transition-colors cursor-pointer ${getActiveStyle(
               activeFormats.bold
             )}`}
             title="Bold"
@@ -261,7 +261,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           <button
             type="button"
             onMouseDown={(e) => handleAction(e, "italic")}
-            className={`w-9 h-9 flex items-center justify-center hover:bg-white rounded italic border-2 text-sm shadow-sm transition-colors cursor-pointer ${getActiveStyle(
+            className={`w-7 h-7 flex items-center justify-center hover:bg-white rounded italic border text-xs shadow-xs transition-colors cursor-pointer ${getActiveStyle(
               activeFormats.italic
             )}`}
             title="Italic"
@@ -271,7 +271,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           <button
             type="button"
             onMouseDown={(e) => handleAction(e, "underline")}
-            className={`w-9 h-9 flex items-center justify-center hover:bg-white rounded underline border-2 text-sm shadow-sm transition-colors cursor-pointer ${getActiveStyle(
+            className={`w-7 h-7 flex items-center justify-center hover:bg-white rounded underline border text-xs shadow-xs transition-colors cursor-pointer ${getActiveStyle(
               activeFormats.underline
             )}`}
             title="Underline"
@@ -279,12 +279,12 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             U
           </button>
 
-          <div className="w-px h-6 bg-gray-300 mx-1"></div>
+          <div className="w-px h-4 bg-gray-200 mx-0.5"></div>
 
           <button
             type="button"
             onMouseDown={(e) => handleAction(e, "justifyLeft")}
-            className={`w-9 h-9 flex items-center justify-center hover:bg-white rounded border-2 text-lg shadow-sm transition-colors cursor-pointer ${getActiveStyle(
+            className={`w-7 h-7 flex items-center justify-center hover:bg-white rounded border text-xs shadow-xs transition-colors cursor-pointer ${getActiveStyle(
               activeFormats.justifyLeft
             )}`}
             title="Align Left"
@@ -294,7 +294,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           <button
             type="button"
             onMouseDown={(e) => handleAction(e, "justifyCenter")}
-            className={`w-9 h-9 flex items-center justify-center hover:bg-white rounded border-2 text-lg shadow-sm transition-colors cursor-pointer ${getActiveStyle(
+            className={`w-7 h-7 flex items-center justify-center hover:bg-white rounded border text-xs shadow-xs transition-colors cursor-pointer ${getActiveStyle(
               activeFormats.justifyCenter
             )}`}
             title="Align Center"
@@ -304,7 +304,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           <button
             type="button"
             onMouseDown={(e) => handleAction(e, "justifyRight")}
-            className={`w-9 h-9 flex items-center justify-center hover:bg-white rounded border-2 text-lg shadow-sm transition-colors cursor-pointer ${getActiveStyle(
+            className={`w-7 h-7 flex items-center justify-center hover:bg-white rounded border text-xs shadow-xs transition-colors cursor-pointer ${getActiveStyle(
               activeFormats.justifyRight
             )}`}
             title="Align Right"
@@ -312,22 +312,22 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             ≡
           </button>
 
-          <div className="w-px h-6 bg-gray-300 mx-1"></div>
+          <div className="w-px h-4 bg-gray-200 mx-0.5"></div>
 
           <button
             type="button"
             onMouseDown={(e) => handleAction(e, "insertUnorderedList")}
-            className={`px-3 h-9 flex items-center justify-center hover:bg-white rounded border-2 text-[11px] font-bold shadow-sm gap-1 transition-colors cursor-pointer ${getActiveStyle(
+            className={`px-2 h-7 flex items-center justify-center hover:bg-white rounded border text-[10px] font-semibold shadow-xs gap-1 transition-colors cursor-pointer ${getActiveStyle(
               activeFormats.insertUnorderedList
             )}`}
             title="Bullet List"
           >
-            <span className="text-lg">●</span> List
+            <span className="text-xs">●</span> List
           </button>
           <button
             type="button"
             onMouseDown={(e) => handleAction(e, "insertOrderedList")}
-            className={`px-3 h-9 flex items-center justify-center hover:bg-white rounded border-2 text-[11px] font-bold shadow-sm gap-1 transition-colors cursor-pointer ${getActiveStyle(
+            className={`px-2 h-7 flex items-center justify-center hover:bg-white rounded border text-[10px] font-semibold shadow-xs gap-1 transition-colors cursor-pointer ${getActiveStyle(
               activeFormats.insertOrderedList
             )}`}
             title="Numbered List"
@@ -335,13 +335,13 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             1. List
           </button>
 
-          <div className="w-px h-6 bg-gray-300 mx-1"></div>
+          <div className="w-px h-4 bg-gray-200 mx-0.5"></div>
 
           <select
             onChange={(e) => execCommand("formatBlock", e.target.value)}
             value={activeFormats.formatBlock}
-            className={`h-9 border-2 text-[11px] font-bold px-2 rounded shadow-sm focus:outline-none min-w-[100px] transition-colors cursor-pointer ${
-              activeFormats.formatBlock !== "p" ? "bg-blue-50 border-blue-300" : "bg-white border-gray-300"
+            className={`h-7 border text-[10px] font-semibold px-1.5 py-0 rounded shadow-xs focus:outline-none min-w-[88px] transition-colors cursor-pointer ${
+              activeFormats.formatBlock !== "p" ? "bg-teal-50 border-teal-400 text-teal-800" : "bg-white border-gray-200 text-gray-700"
             }`}
           >
             <option value="p">Body Text</option>
@@ -356,33 +356,33 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           <button
             type="button"
             onMouseDown={insertLink}
-            className={`w-9 h-9 flex items-center justify-center hover:bg-white rounded border-2 text-sm shadow-sm transition-colors text-blue-600 cursor-pointer`}
+            className={`w-7 h-7 flex items-center justify-center hover:bg-white rounded border border-gray-200 text-xs shadow-xs transition-colors text-blue-600 cursor-pointer`}
             title="Insert/Remove Link"
           >
-            <LinkIcon size={16} />
+            <LinkIcon size={13} />
           </button>
 
-          <div className="w-px h-6 bg-gray-300 mx-1"></div>
+          <div className="w-px h-4 bg-gray-200 mx-0.5"></div>
 
-          <div className="relative group/color flex items-center gap-2 px-2 h-9 hover:bg-white rounded border-2 border-gray-300 shadow-sm transition-colors">
+          <div className="relative group/color flex items-center gap-1.5 px-1.5 h-7 hover:bg-white rounded border border-gray-200 shadow-xs transition-colors bg-white">
             <div className="flex items-center gap-1">
-              <Palette size={14} className="text-gray-500" />
+              <Palette size={12} className="text-gray-500" />
               <input
                 type="color"
                 onChange={(e) => execCommand("foreColor", e.target.value)}
                 onInput={(e) => execCommand("foreColor", (e.target as HTMLInputElement).value)}
-                className="w-6 h-6 p-0 border-none bg-transparent cursor-pointer"
+                className="w-4 h-4 p-0 border-none bg-transparent cursor-pointer rounded"
                 title="Visual Color Picker"
               />
             </div>
-            <div className="w-px h-4 bg-gray-300"></div>
-            <div className="flex items-center gap-1 group-hover:opacity-100 transition-opacity">
-              <span className="text-[10px] text-gray-400 font-mono font-bold">#</span>
+            <div className="w-px h-3 bg-gray-200"></div>
+            <div className="flex items-center gap-0.5">
+              <span className="text-[9px] text-gray-400 font-mono font-bold">#</span>
               <input
                 type="text"
-                placeholder="Color Code"
+                placeholder="COLOR"
                 maxLength={7}
-                className="w-16 h-6 text-[10px] bg-transparent focus:outline-none uppercase font-mono font-bold text-gray-700"
+                className="w-13 h-5 text-[9px] bg-transparent focus:outline-none uppercase font-mono font-bold text-gray-700"
                 onChange={(e) => {
                   const val = e.target.value.replace("#", "");
                   if (val.length === 3 || val.length === 6) {
@@ -401,16 +401,16 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             </div>
           </div>
 
-          <div className="w-px h-6 bg-gray-300 mx-1"></div>
+          <div className="w-px h-4 bg-gray-200 mx-0.5"></div>
 
           {/* Quick button to render HTML tags if user pasted raw tags */}
           <button
             type="button"
             onMouseDown={handleRenderRawHtml}
-            className="flex items-center gap-1 px-2.5 h-9 bg-[#f0fdf4] hover:bg-[#dcfce7] border-2 border-[#bbf7d0] text-[#166534] rounded text-[10px] font-bold shadow-sm transition-colors cursor-pointer"
+            className="flex items-center gap-1 px-2 h-7 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 rounded text-[9px] font-bold shadow-xs transition-colors cursor-pointer"
             title="Convert and render raw HTML tags into formatted text"
           >
-            <Code2 size={13} />
+            <Code2 size={11} />
             <span>Format HTML</span>
           </button>
         </div>
@@ -422,7 +422,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           ref={editorRef as React.RefObject<HTMLTextAreaElement>}
           value={value}
           onChange={(e) => onChange && onChange(e.target.value)}
-          className="w-full p-6 focus:outline-none font-mono text-sm leading-relaxed bg-gray-50/50 resize-y border-none text-gray-900"
+          className="w-full p-3 focus:outline-none font-mono text-xs leading-normal bg-gray-50/50 resize-y border-none text-gray-900"
           style={{ minHeight: minHeight, cursor: "default" }}
           placeholder={placeholder}
         />
@@ -435,7 +435,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           onMouseUp={updateActiveFormats}
           onKeyUp={updateActiveFormats}
           onFocus={updateActiveFormats}
-          className="p-6 focus:outline-none max-w-none text-gray-700 bg-white overflow-y-auto leading-relaxed prose"
+          className="p-3 focus:outline-none max-w-none text-gray-800 bg-white overflow-y-auto leading-normal text-xs sm:text-[13px]"
           style={{ minHeight: minHeight, cursor: "default" }}
           data-placeholder={placeholder}
         ></div>
@@ -449,7 +449,8 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           outline: none;
           color: #1e293b !important;
           text-align: left !important;
-          line-height: 1.6 !important;
+          font-size: 13px !important;
+          line-height: 1.5 !important;
           cursor: default !important;
           caret-color: #000000 !important;
         }
@@ -458,7 +459,8 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           caret-color: #000000 !important;
         }
         [contenteditable] p {
-          margin-bottom: 0.5rem !important;
+          font-size: 13px !important;
+          margin-bottom: 0.35rem !important;
           line-height: 1.5 !important;
           text-align: justify !important;
           cursor: default !important;
@@ -467,7 +469,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           margin-bottom: 0 !important;
         }
         [contenteditable] p, [contenteditable] li, [contenteditable] span {
-          /* Removed !important to allow inline colored styles */
           color: inherit;
         }
         [contenteditable] a {
@@ -479,17 +480,25 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           content: attr(data-placeholder);
           color: #9ca3af;
           font-style: italic;
+          font-size: 13px;
           pointer-events: none;
         }
         [contenteditable] ul {
           list-style-type: disc !important;
-          padding-left: 1.5rem !important;
-          margin: 1rem 0 !important;
+          padding-left: 1.25rem !important;
+          margin: 0.4rem 0 !important;
+          font-size: 13px !important;
         }
         [contenteditable] ol {
           list-style-type: decimal !important;
-          padding-left: 1.5rem !important;
-          margin: 1rem 0 !important;
+          padding-left: 1.25rem !important;
+          margin: 0.4rem 0 !important;
+          font-size: 13px !important;
+        }
+        [contenteditable] li {
+          font-size: 13px !important;
+          margin-bottom: 0.15rem !important;
+          line-height: 1.45 !important;
         }
         [contenteditable] b, [contenteditable] strong {
           font-weight: 600 !important;
@@ -499,15 +508,15 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         }
         [contenteditable] h1, [contenteditable] h2, [contenteditable] h3, [contenteditable] h4, [contenteditable] h5, [contenteditable] h6 {
           font-weight: bold !important;
-          margin: 0.5rem 0 !important;
+          margin: 0.35rem 0 !important;
           cursor: default !important;
         }
-        [contenteditable] h1 { font-size: 2rem !important; line-height: 1.25 !important; }
-        [contenteditable] h2 { font-size: 1.5rem !important; line-height: 1.3 !important; }
-        [contenteditable] h3 { font-size: 1.25rem !important; line-height: 1.35 !important; }
-        [contenteditable] h4 { font-size: 1.1rem !important; line-height: 1.4 !important; }
-        [contenteditable] h5 { font-size: 1rem !important; line-height: 1.4 !important; }
-        [contenteditable] h6 { font-size: 0.875rem !important; line-height: 1.4 !important; }
+        [contenteditable] h1 { font-size: 1.25rem !important; line-height: 1.3 !important; }
+        [contenteditable] h2 { font-size: 1.15rem !important; line-height: 1.35 !important; }
+        [contenteditable] h3 { font-size: 1.05rem !important; line-height: 1.35 !important; }
+        [contenteditable] h4 { font-size: 0.95rem !important; line-height: 1.4 !important; }
+        [contenteditable] h5 { font-size: 0.875rem !important; line-height: 1.4 !important; }
+        [contenteditable] h6 { font-size: 0.8rem !important; line-height: 1.4 !important; }
         textarea {
           color: #333333 !important;
           cursor: default !important;
