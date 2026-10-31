@@ -149,7 +149,7 @@ async function refreshAccessToken(): Promise<boolean> {
 
 // Modules already connected to the real backend: they skip the demo data even while
 // NEXT_PUBLIC_USE_MOCK_API is on
-const LIVE_API_PREFIXES = ["/contact-enquiry", "/whatsapp-templates", "/topbar"];
+const LIVE_API_PREFIXES = ["/contact-enquiry", "/whatsapp-templates", "/topbar", "/contact-page", "/uploads", "/page-seo"];
 export const isLivePath = (path: string) => LIVE_API_PREFIXES.some((prefix) => path.startsWith(prefix));
 
 async function request<T>(path: string, options?: ApiRequestOptions, isRetry = false): Promise<T> {
