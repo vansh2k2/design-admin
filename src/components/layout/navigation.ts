@@ -117,6 +117,7 @@ export const NAV_SECTIONS: NavSection[] = [
     title: "Content Management",
     items: [
       { label: "Pages & CMS", href: "/pages", icon: FileText },
+      { label: "Our Projects", href: "/projects", icon: LayoutGrid, badge: "NEW" },
       { label: "Downloads", href: "/downloads", icon: Download },
       { label: "Services Management", href: "/services", icon: BriefcaseBusiness },
       { label: "Blog & Insights", href: "/blogs", icon: BookOpenText },
