@@ -9,13 +9,78 @@ export type { ServiceDetailData };
 
 export type ServiceStatus = "Published" | "Draft" | "Scheduled";
 
-const withDetail = (s: ServiceItem): ServiceItem => ({
-  ...s,
-  detail:
-    s.detail ||
-    DETAIL_SEEDS[String(s._id || s.id)] ||
-    emptyServiceDetail(s.title.replace(/\n/g, " ")),
-});
+const MONGO_ID_SEED_MAP: Record<string, string> = {
+  "698d6f89fba49173937e25ec": "svc-6", // Retail Display Merchandising -> Display Fixtures
+  "698d6f38fba49173937e25e1": "svc-5", // Retail Kiosk -> Retail Kiosks
+  "698d7010fba49173937e2603": "svc-3", // Modular Restaurant Furniture -> Restaurant Interiors
+  "698d7055fba49173937e261e": "svc-7", // Branding & Signages -> Signage & Branding
+  "698d7035fba49173937e260f": "svc-1", // Retail & Corporate Interior -> Corporate Interiors
+  "698d7080fba49173937e262e": "svc-4", // Exhibition & Events -> Exhibition Stalls
+};
+
+export const resolveDetailSeed = (
+  idOrSlug?: string | number,
+  title?: string,
+  href?: string
+): ServiceDetailData | null => {
+  const idStr = String(idOrSlug || "").trim().toLowerCase();
+  const titleStr = String(title || "").trim().toLowerCase();
+  const hrefStr = String(href || "").trim().toLowerCase();
+
+  // 1. Direct ID in DETAIL_SEEDS (e.g. "svc-1" .. "svc-10")
+  if (idStr && DETAIL_SEEDS[idStr]) {
+    return DETAIL_SEEDS[idStr];
+  }
+
+  // 2. Direct MongoDB ID mapping
+  if (idStr && MONGO_ID_SEED_MAP[idStr] && DETAIL_SEEDS[MONGO_ID_SEED_MAP[idStr]]) {
+    return DETAIL_SEEDS[MONGO_ID_SEED_MAP[idStr]];
+  }
+
+  // 3. Slug or route matching
+  const slugCandidates = [
+    idStr,
+    hrefStr.replace(/^\/services\//, "").replace(/\/$/, ""),
+    titleStr.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
+  ];
+  for (const slug of slugCandidates) {
+    if (!slug) continue;
+    if (slug.includes("display") || slug.includes("merchandis") || slug.includes("fixture")) return DETAIL_SEEDS["svc-6"];
+    if (slug.includes("kiosk")) return DETAIL_SEEDS["svc-5"];
+    if (slug.includes("restaurant") || slug.includes("dining")) return DETAIL_SEEDS["svc-3"];
+    if (slug.includes("signage") || slug.includes("brand")) return DETAIL_SEEDS["svc-7"];
+    if (slug.includes("corporate") || slug.includes("office")) return DETAIL_SEEDS["svc-1"];
+    if (slug.includes("showroom")) return DETAIL_SEEDS["svc-2"];
+    if (slug.includes("exhibition") || slug.includes("stall") || slug.includes("event")) return DETAIL_SEEDS["svc-4"];
+    if (slug.includes("manufacturing") || slug.includes("execution")) return DETAIL_SEEDS["svc-8"];
+    if (slug.includes("residential") || slug.includes("home")) return DETAIL_SEEDS["svc-9"];
+    if (slug.includes("ensis") || slug.includes("spa") || slug.includes("panchkarma")) return DETAIL_SEEDS["svc-10"];
+  }
+
+  // 4. Keyword heuristics on title
+  if (titleStr) {
+    if (titleStr.includes("display") || titleStr.includes("merchandis") || titleStr.includes("fixture")) return DETAIL_SEEDS["svc-6"];
+    if (titleStr.includes("kiosk")) return DETAIL_SEEDS["svc-5"];
+    if (titleStr.includes("restaurant")) return DETAIL_SEEDS["svc-3"];
+    if (titleStr.includes("signage") || titleStr.includes("brand")) return DETAIL_SEEDS["svc-7"];
+    if (titleStr.includes("corporate")) return DETAIL_SEEDS["svc-1"];
+    if (titleStr.includes("showroom")) return DETAIL_SEEDS["svc-2"];
+    if (titleStr.includes("exhibition") || titleStr.includes("stall") || titleStr.includes("event")) return DETAIL_SEEDS["svc-4"];
+    if (titleStr.includes("manufacturing")) return DETAIL_SEEDS["svc-8"];
+    if (titleStr.includes("residential")) return DETAIL_SEEDS["svc-9"];
+    if (titleStr.includes("spa") || titleStr.includes("panchkarma") || titleStr.includes("ensis")) return DETAIL_SEEDS["svc-10"];
+  }
+
+  return null;
+};
+
+const withDetail = (s: ServiceItem): ServiceItem => {
+  const seed = resolveDetailSeed(s._id || s.id, s.title, s.href);
+  return {
+    ...s,
+    detail: s.detail || seed || emptyServiceDetail(s.title.replace(/\n/g, " ")),
+  };
+};
 
 export interface ServiceItem {
   id: string | number;
@@ -218,26 +283,59 @@ export const INITIAL_SERVICES: ServiceItem[] = [
 const mapBackendCardToItem = (card: any, index: number): ServiceItem => {
   const title = card.title || "Service";
   const desc = card.description || "";
-  const image = card.image || "/services/os1.webp";
-  const href = card.buttonUrl || `/services/${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
   const id = card._id || `svc-${index + 1}`;
+  const seed = resolveDetailSeed(id, title);
+
+  // Smart href resolution
+  let href = card.buttonUrl;
+  if (!href || href === "#" || href === "contact" || !href.startsWith("/services/")) {
+    if (seed?.name) {
+      href = `/services/${seed.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
+    } else {
+      href = `/services/${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
+    }
+  }
+
+  // Canonical image fallback if card.image is missing, generic, or broken upload
+  let image = card.image || "";
+  if (!image || image === "/services/os1.webp" || image.startsWith("/uploads/services/")) {
+    if (seed?.hero?.image) {
+      const match = seed.hero.image.match(/os\d+\.webp/);
+      image = match ? `/services/${match[0]}` : seed.hero.image;
+    } else {
+      image = `/services/os${(index % 10) + 1}.webp`;
+    }
+  }
+
+  // Detail prefill: card.detail if provided by backend, else resolved seed
+  const detail = card.detail || seed || emptyServiceDetail(title.replace(/\n/g, " "));
+
   return {
     id,
     _id: id,
     title,
     desc,
     image,
-    imageAlt: card.altText || `${title} image`,
-    logo: card.logo || "",
+    imageAlt: card.altText || `${title.replace(/\n/g, " ")} image`,
+    logo: card.logo || (title.toLowerCase().includes("ensis") || title.toLowerCase().includes("spa") ? "/services/ensis.jpeg" : ""),
     href,
     status: card.isPublished !== false ? "Published" : "Draft",
     views: card.views || 1000 + index * 120,
-    date: card.updatedAt ? new Date(card.updatedAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "28 Oct 2026",
-    dateTime: card.updatedAt ? new Date(card.updatedAt).toLocaleString("en-GB") : "28 Oct 2026, 11:30 AM",
+    date: card.updatedAt
+      ? new Date(card.updatedAt).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })
+      : "28 Oct 2026",
+    dateTime: card.updatedAt
+      ? new Date(card.updatedAt).toLocaleString("en-GB")
+      : "28 Oct 2026, 11:30 AM",
     author: card.author || "Design House Team",
-    metaTitle: card.metaTitle || title,
-    metaDescription: card.metaDescription || desc,
+    metaTitle: card.metaTitle || `${title.replace(/\n/g, " ")} | Design House India`,
+    metaDescription: card.metaDescription || desc.replace(/\n/g, " "),
     metaKeywords: card.metaKeywords || "",
+    detail,
   };
 };
 
@@ -265,9 +363,36 @@ export const servicesApi = {
         String(s.id).toLowerCase() === str ||
         String(s._id).toLowerCase() === str ||
         s.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") === str ||
-        s.href.toLowerCase().endsWith(str)
+        s.href.toLowerCase().endsWith(str) ||
+        s.href.toLowerCase().replace(/^\/services\//, "") === str
     );
     if (found) return withDetail(found);
+
+    const initFound = INITIAL_SERVICES.find(
+      (s) =>
+        String(s.id).toLowerCase() === str ||
+        String(s._id).toLowerCase() === str ||
+        s.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") === str ||
+        s.href.toLowerCase().endsWith(str)
+    );
+    if (initFound) return withDetail(initFound);
+
+    const directSeed = resolveDetailSeed(str, "", str);
+    if (directSeed) {
+      return {
+        id: str,
+        _id: str,
+        title: directSeed.name,
+        desc: directSeed.hero.tagline || directSeed.hero.text.slice(0, 120),
+        image: directSeed.hero.image || "/services/os1.webp",
+        href: `/services/${str}`,
+        status: "Published",
+        views: 1200,
+        date: "28 Oct 2026",
+        author: "Design House Team",
+        detail: directSeed,
+      };
+    }
 
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -285,7 +410,7 @@ export const servicesApi = {
           views: 1500,
           date: "28 Oct 2026",
           author: "Design House Team",
-          detail: detailData,
+          detail: detailData.detailData || detailData.detail || detailData,
         };
       }
     } catch {}
@@ -303,6 +428,7 @@ export const servicesApi = {
         icon: "ShoppingBag",
         buttonText: "Learn More",
         buttonUrl: data.href || "#",
+        detail: data.detail,
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const res: any = await api.post("/featured-services/cards", payload);
@@ -355,6 +481,7 @@ export const servicesApi = {
         image: data.image,
         altText: data.imageAlt,
         buttonUrl: data.href,
+        detail: data.detail,
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const res: any = await api.put(`/featured-services/cards/${id}`, payload);
