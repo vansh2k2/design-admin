@@ -8,15 +8,79 @@ import Swal from "sweetalert2";
 import {
   servicesApi,
   type ServiceItem,
+  type ServiceDetailData,
   DEFAULT_SERVICE_LINKS,
 } from "@/lib/servicesApi";
+import { emptyServiceDetail } from "@/lib/servicesDetailSeed";
 import {
   ArrowLeft,
   Eye,
   Link2,
+  Plus,
   Save,
+  Trash2,
   Upload,
 } from "lucide-react";
+import {
+  Activity,
+  Armchair,
+  BadgeCheck,
+  Box,
+  Boxes,
+  Building,
+  Building2,
+  Car,
+  ChefHat,
+  Clock,
+  Coffee,
+  Cpu,
+  Diamond,
+  Dumbbell,
+  Factory,
+  Flower2,
+  Gem,
+  GraduationCap,
+  Hammer,
+  Headset,
+  HeartPulse,
+  Home,
+  Hospital,
+  Hotel,
+  Lamp,
+  Laptop,
+  Layers,
+  LayoutDashboard,
+  LayoutGrid,
+  LayoutPanelTop,
+  Leaf,
+  Lightbulb,
+  Monitor,
+  Palette,
+  PencilRuler,
+  Pill,
+  Presentation,
+  Ruler,
+  Settings,
+  Shapes,
+  ShieldCheck,
+  Shirt,
+  ShoppingBag,
+  ShoppingCart,
+  SignpostBig,
+  Smartphone,
+  Sofa,
+  Sparkles,
+  Store,
+  Target,
+  Trees,
+  Truck,
+  UtensilsCrossed,
+  Users,
+  Warehouse,
+  Wine,
+  Wrench,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 const Toast = Swal.mixin({
   toast: true,
@@ -47,6 +111,68 @@ function showWarning(msg: string) {
   });
 }
 
+const ICON_MAP: Record<string, LucideIcon> = {
+  Activity,
+  Armchair,
+  BadgeCheck,
+  Box,
+  Boxes,
+  Building,
+  Building2,
+  Car,
+  ChefHat,
+  Clock,
+  Coffee,
+  Cpu,
+  Diamond,
+  Dumbbell,
+  Factory,
+  Flower2,
+  Gem,
+  GraduationCap,
+  Hammer,
+  Headset,
+  HeartPulse,
+  Home,
+  Hospital,
+  Hotel,
+  Lamp,
+  Laptop,
+  Layers,
+  LayoutDashboard,
+  LayoutGrid,
+  LayoutPanelTop,
+  Leaf,
+  Lightbulb,
+  Monitor,
+  Palette,
+  PencilRuler,
+  Pill,
+  Presentation,
+  Ruler,
+  Settings,
+  Shapes,
+  ShieldCheck,
+  Shirt,
+  ShoppingBag,
+  ShoppingCart,
+  SignpostBig,
+  Smartphone,
+  Sofa,
+  Sparkles,
+  Store,
+  Target,
+  Trees,
+  Truck,
+  UtensilsCrossed,
+  Users,
+  Warehouse,
+  Wine,
+  Wrench,
+};
+
+const ICON_OPTIONS = Object.keys(ICON_MAP);
+
 const AVAILABLE_IMAGES = [
   { label: "OS1: Corporate", src: "/services/os1.webp" },
   { label: "OS2: Showroom", src: "/services/os2.webp" },
@@ -72,6 +198,131 @@ const slugify = (val: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 
+const labelInput =
+  "block text-[8.5px] font-bold text-slate-700 uppercase tracking-wider mb-1";
+const inputCls =
+  "h-[32px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-[11px] font-medium text-slate-800 outline-none transition focus:border-[#134698]";
+const textareaCls =
+  "w-full rounded-[6px] border border-slate-300 bg-white p-2.5 text-[11px] font-medium text-slate-800 outline-none transition focus:border-[#134698] whitespace-pre-line";
+const selectCls =
+  "h-[32px] w-full rounded-[6px] border border-slate-300 bg-white px-2 text-[11px] font-medium text-slate-800 outline-none cursor-pointer focus:border-[#134698]";
+const cardCls = "rounded-[7px] border border-[#e8e5df] bg-white p-[14px] shadow-xs";
+const cardTitleCls =
+  "mb-3 border-b border-[#e8e5df] pb-2 text-[10px] font-bold uppercase tracking-wide text-[#233D4D]";
+const addBtnCls =
+  "inline-flex h-[26px] items-center gap-1 rounded-[5px] border border-[#bfdbfe] bg-[#eff6ff] px-2.5 text-[8px] font-bold text-[#1d4ed8] transition hover:bg-[#dbeafe]";
+const delBtnCls =
+  "flex h-[24px] w-[24px] shrink-0 items-center justify-center rounded-[5px] border border-red-200 bg-red-50 text-red-500 transition hover:bg-red-100";
+
+function SectionHeading({ title, subtitle }: { title: string; subtitle?: string }) {
+  return (
+    <div className="flex items-center justify-between border-b-[2px] border-[#293681] pb-[8px]">
+      <div>
+        <h2 className="text-[13px] font-bold tracking-[-0.01em] text-[#23471d]">{title}</h2>
+        {subtitle && <p className="mt-0.5 text-[8.5px] font-medium text-[#6c7587]">{subtitle}</p>}
+      </div>
+    </div>
+  );
+}
+
+function IconPicker({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const Preview = ICON_MAP[value];
+  return (
+    <div className="flex items-center gap-1.5">
+      <span className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-[5px] border border-slate-200 bg-slate-50 text-[#134698]">
+        {Preview ? <Preview className="h-3.5 w-3.5" /> : <Shapes className="h-3.5 w-3.5" />}
+      </span>
+      <select value={value} onChange={(e) => onChange(e.target.value)} className={selectCls}>
+        {ICON_OPTIONS.map((name) => (
+          <option key={name} value={name}>
+            {name}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+function ImageField({
+  label,
+  value,
+  onChange,
+  previewH = "h-[70px]",
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  previewH?: string;
+}) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  return (
+    <div>
+      <label className={labelInput}>{label}</label>
+      <div className="flex items-start gap-3">
+        <div className={`relative ${previewH} w-[110px] shrink-0 overflow-hidden rounded-[6px] border border-slate-300 bg-slate-50 shadow-xs`}>
+          <img
+            src={value}
+            alt={label}
+            className="h-full w-full object-cover"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = "/services/os1.webp";
+            }}
+          />
+        </div>
+        <div className="flex-1 space-y-2">
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="/services/detail/b2.webp"
+            className={inputCls}
+          />
+          <input
+            type="file"
+            ref={fileRef}
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => onChange((ev.target?.result as string) || "");
+                reader.readAsDataURL(file);
+              }
+            }}
+          />
+          <button type="button" onClick={() => fileRef.current?.click()} className={`h-[26px] ${addBtnCls}`}>
+            <Upload className="h-3 w-3" /> Upload
+          </button>
+        </div>
+      </div>
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {AVAILABLE_IMAGES.map((img) => (
+          <button
+            type="button"
+            key={img.src}
+            onClick={() => onChange(img.src)}
+            title={img.label}
+            className={`h-[30px] overflow-hidden rounded-[4px] border transition ${
+              value === img.src
+                ? "border-[#134698] ring-2 ring-[#134698]/30"
+                : "border-slate-200 opacity-75 hover:opacity-100"
+            }`}
+          >
+            <img src={img.src} alt={img.label} className="h-full w-[44px] object-cover" />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function AddEditServiceContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -93,11 +344,30 @@ function AddEditServiceContent() {
     metaTitle: "",
     metaDescription: "",
     metaKeywords: "",
+    detail: emptyServiceDetail(""),
   });
 
   const [isLoading, setIsLoading] = useState(Boolean(editId));
   const [isSaving, setIsSaving] = useState(false);
   const [isHrefDetached, setIsHrefDetached] = useState(false);
+
+  const setDetail = (patch: Partial<ServiceDetailData>) =>
+    setFormData((prev) => ({ ...prev, detail: { ...prev.detail, ...patch } }));
+
+  const setHero = (patch: Partial<ServiceDetailData["hero"]>) =>
+    setFormData((prev) => ({ ...prev, detail: { ...prev.detail, hero: { ...prev.detail.hero, ...patch } } }));
+
+  const setWhy = (patch: Partial<ServiceDetailData["why"]>) =>
+    setFormData((prev) => ({ ...prev, detail: { ...prev.detail, why: { ...prev.detail.why, ...patch } } }));
+
+  const setProcess = (patch: Partial<ServiceDetailData["process"]>) =>
+    setFormData((prev) => ({ ...prev, detail: { ...prev.detail, process: { ...prev.detail.process, ...patch } } }));
+
+  const setProjects = (patch: Partial<ServiceDetailData["projects"]>) =>
+    setFormData((prev) => ({ ...prev, detail: { ...prev.detail, projects: { ...prev.detail.projects, ...patch } } }));
+
+  const setIdealFor = (patch: Partial<ServiceDetailData["idealFor"]>) =>
+    setFormData((prev) => ({ ...prev, detail: { ...prev.detail, idealFor: { ...prev.detail.idealFor, ...patch } } }));
 
   // Load existing service if editing
   useEffect(() => {
@@ -123,6 +393,7 @@ function AddEditServiceContent() {
             metaTitle: service.metaTitle || service.title.replace(/\n/g, " ") || "",
             metaDescription: service.metaDescription || service.desc.replace(/\n/g, " ") || "",
             metaKeywords: service.metaKeywords || "",
+            detail: service.detail || emptyServiceDetail(service.title.replace(/\n/g, " ")),
           });
           setIsHrefDetached(true);
         } else {
@@ -147,8 +418,9 @@ function AddEditServiceContent() {
         ...prev,
         title: val,
         href: slugPart ? `/services/${slugPart}` : "",
-        metaTitle: plainTitle ? `${plainTitle.replace(/\n/g, " ")} | Design House India` : "",
+        metaTitle: plainTitle ? `${plainTitle} | Design House India` : "",
         imageAlt: plainTitle ? plainTitle : "",
+        detail: { ...prev.detail, name: prev.detail.name || plainTitle },
       }));
     } else {
       setFormData((prev) => ({ ...prev, title: val }));
@@ -201,6 +473,10 @@ function AddEditServiceContent() {
         metaTitle: formData.metaTitle.trim(),
         metaDescription: formData.metaDescription.trim(),
         metaKeywords: formData.metaKeywords.trim(),
+        detail: {
+          ...formData.detail,
+          name: formData.detail.name.trim() || formData.title.replace(/\n/g, " "),
+        },
       };
 
       if (editId) {
@@ -229,6 +505,8 @@ function AddEditServiceContent() {
     );
   }
 
+  const detail = formData.detail;
+
   return (
     <main
       className={`${typography.pages} h-full min-h-0 w-full overflow-y-auto overflow-x-hidden bg-[#fffefb] px-[18px] py-[14px] text-[#142347] [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300`}
@@ -248,7 +526,7 @@ function AddEditServiceContent() {
                 {editId ? "Edit Service" : "Add New Service"}
               </h1>
               <p className="mt-0.5 text-[9px] font-medium text-[#6c7587]">
-                Configure service card title, description, photo, logo overlay &amp; detail page link.
+                Edit the service card and the full detail page — hero, why choose us, process, projects, ideal-for, FAQs &amp; CTA.
               </p>
             </div>
           </div>
@@ -277,14 +555,12 @@ function AddEditServiceContent() {
           {/* LEFT COLUMN: MAIN FIELDS */}
           <div className="space-y-[14px]">
             {/* CARD 1: PRIMARY INFORMATION */}
-            <div className="rounded-[7px] border border-[#e8e5df] bg-white p-[14px] shadow-xs">
-              <h2 className="mb-3 border-b border-[#e8e5df] pb-2 text-[10px] font-bold uppercase tracking-wide text-[#233D4D]">
-                Service Information
-              </h2>
+            <div className={cardCls}>
+              <h2 className={cardTitleCls}>Service Information (Website Card)</h2>
 
               <div className="space-y-3">
                 <div>
-                  <label className="block text-[8.5px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  <label className={labelInput}>
                     Service Title <span className="text-red-500">*</span>
                   </label>
                   <textarea
@@ -293,7 +569,7 @@ function AddEditServiceContent() {
                     value={formData.title}
                     onChange={handleTitleChange}
                     placeholder={"Corporate Interiors\n(use line breaks like the website)"}
-                    className="w-full rounded-[6px] border border-slate-300 bg-white px-3 py-2 text-[11px] font-medium text-slate-800 outline-none transition focus:border-[#134698] whitespace-pre-line"
+                    className={textareaCls}
                   />
                   <p className="mt-1 text-[7.5px] text-slate-500">
                     Line breaks are allowed — same format as the website cards (e.g. &quot;Retail Showroom{"\n"}Interiors&quot;).
@@ -301,49 +577,46 @@ function AddEditServiceContent() {
                 </div>
 
                 <div>
-                  <label className="block text-[8.5px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Service Description
-                  </label>
+                  <label className={labelInput}>Service Description</label>
                   <textarea
                     rows={4}
                     value={formData.desc}
                     onChange={(e) => setFormData({ ...formData, desc: e.target.value })}
                     placeholder={"Workspaces designed for\nproductivity, brand identity\nand growth."}
-                    className="w-full rounded-[6px] border border-slate-300 bg-white p-3 text-[11px] font-medium text-slate-800 outline-none transition focus:border-[#134698] whitespace-pre-line"
+                    className={textareaCls}
                   />
-                  <p className="mt-1 text-[7.5px] text-slate-500">
-                    Keep line breaks to match the website card layout.
-                  </p>
                 </div>
 
                 <div>
-                  <label className="block text-[8.5px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Detail Page Link / Route
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={formData.href}
-                      onChange={(e) => {
-                        setIsHrefDetached(true);
-                        setFormData({ ...formData, href: e.target.value });
-                      }}
-                      placeholder="/services/corporate-interiors"
-                      className="h-[34px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-[11px] font-medium text-slate-800 outline-none transition focus:border-[#134698]"
-                    />
-                  </div>
-                  <p className="mt-1 text-[7.5px] text-slate-500">
-                    URL opened when clicking the service card on the live website.
-                  </p>
+                  <label className={labelInput}>Detail Page Link / Route</label>
+                  <input
+                    type="text"
+                    value={formData.href}
+                    onChange={(e) => {
+                      setIsHrefDetached(true);
+                      setFormData({ ...formData, href: e.target.value });
+                    }}
+                    placeholder="/services/corporate-interiors"
+                    className={inputCls}
+                  />
+                </div>
+
+                <div>
+                  <label className={labelInput}>Detail Page Name (breadcrumb / metadata)</label>
+                  <input
+                    type="text"
+                    value={detail.name}
+                    onChange={(e) => setDetail({ name: e.target.value })}
+                    placeholder="Corporate Interiors"
+                    className={inputCls}
+                  />
                 </div>
               </div>
             </div>
 
             {/* CARD 2: SERVICE IMAGE & PRESETS */}
-            <div className="rounded-[7px] border border-[#e8e5df] bg-white p-[14px] shadow-xs">
-              <h2 className="mb-3 border-b border-[#e8e5df] pb-2 text-[10px] font-bold uppercase tracking-wide text-[#233D4D]">
-                Service Card Image
-              </h2>
+            <div className={cardCls}>
+              <h2 className={cardTitleCls}>Service Card Image</h2>
 
               <div className="space-y-3">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -373,7 +646,7 @@ function AddEditServiceContent() {
                         value={formData.image}
                         onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                         placeholder="/services/os1.webp"
-                        className="h-[32px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-[11px] text-slate-800 outline-none focus:border-[#134698]"
+                        className={inputCls}
                       />
                     </div>
 
@@ -396,7 +669,6 @@ function AddEditServiceContent() {
                   </div>
                 </div>
 
-                {/* Quick Presets */}
                 <div>
                   <label className="block text-[8px] font-bold text-slate-600 uppercase mb-1.5">
                     Or select from Design House Services Library:
@@ -423,23 +695,21 @@ function AddEditServiceContent() {
                 </div>
 
                 <div>
-                  <label className="block text-[8px] font-bold text-slate-600 uppercase mb-1">
-                    Image Alt Text
-                  </label>
+                  <label className={labelInput}>Image Alt Text</label>
                   <input
                     type="text"
                     value={formData.imageAlt}
                     onChange={(e) => setFormData({ ...formData, imageAlt: e.target.value })}
                     placeholder="Corporate Interiors workspace"
-                    className="h-[32px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-[11px] text-slate-800 outline-none focus:border-[#134698]"
+                    className={inputCls}
                   />
                 </div>
               </div>
             </div>
 
             {/* CARD 3: LOGO OVERLAY */}
-            <div className="rounded-[7px] border border-[#e8e5df] bg-white p-[14px] shadow-xs">
-              <h2 className="mb-3 border-b border-[#e8e5df] pb-2 text-[10px] font-bold uppercase tracking-wide text-[#233D4D]">
+            <div className={cardCls}>
+              <h2 className={cardTitleCls}>
                 Brand Logo Overlay <span className="text-[8px] font-semibold text-slate-400 normal-case">(optional)</span>
               </h2>
 
@@ -459,7 +729,7 @@ function AddEditServiceContent() {
                       value={formData.logo}
                       onChange={(e) => setFormData({ ...formData, logo: e.target.value })}
                       placeholder="/services/ensis.jpeg"
-                      className="h-[32px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-[11px] text-slate-800 outline-none focus:border-[#134698]"
+                      className={inputCls}
                     />
                     <div className="flex items-center gap-2">
                       <input
@@ -511,20 +781,16 @@ function AddEditServiceContent() {
           {/* RIGHT COLUMN: PUBLISHING & SEO */}
           <div className="space-y-[14px]">
             {/* PUBLISHING CONTROLS */}
-            <div className="rounded-[7px] border border-[#e8e5df] bg-white p-[14px] shadow-xs">
-              <h2 className="mb-3 border-b border-[#e8e5df] pb-2 text-[10px] font-bold uppercase tracking-wide text-[#233D4D]">
-                Publishing Status
-              </h2>
+            <div className={cardCls}>
+              <h2 className={cardTitleCls}>Publishing Status</h2>
 
               <div className="space-y-3">
                 <div>
-                  <label className="block text-[8px] font-bold text-slate-600 uppercase mb-1">
-                    Status
-                  </label>
+                  <label className="block text-[8px] font-bold text-slate-600 uppercase mb-1">Status</label>
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="h-[32px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-[11px] font-semibold text-slate-800 outline-none cursor-pointer focus:border-[#134698]"
+                    className={selectCls}
                   >
                     <option value="Published">Published (Live on Website)</option>
                     <option value="Draft">Draft (Internal Only)</option>
@@ -540,7 +806,7 @@ function AddEditServiceContent() {
                     type="text"
                     value={formData.author}
                     onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                    className="h-[32px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-[11px] text-slate-800 outline-none focus:border-[#134698]"
+                    className={inputCls}
                   />
                 </div>
 
@@ -552,7 +818,7 @@ function AddEditServiceContent() {
                     type="number"
                     value={formData.views}
                     onChange={(e) => setFormData({ ...formData, views: Number(e.target.value) })}
-                    className="h-[32px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-[11px] text-slate-800 outline-none focus:border-[#134698]"
+                    className={inputCls}
                   />
                 </div>
 
@@ -568,10 +834,8 @@ function AddEditServiceContent() {
             </div>
 
             {/* WEBSITE LINK REFERENCE */}
-            <div className="rounded-[7px] border border-[#e8e5df] bg-white p-[14px] shadow-xs">
-              <h2 className="mb-3 border-b border-[#e8e5df] pb-2 text-[10px] font-bold uppercase tracking-wide text-[#233D4D]">
-                Website Reference Links
-              </h2>
+            <div className={cardCls}>
+              <h2 className={cardTitleCls}>Website Reference Links</h2>
 
               <div className="space-y-2">
                 <a
@@ -611,22 +875,18 @@ function AddEditServiceContent() {
             </div>
 
             {/* SEO SETTINGS */}
-            <div className="rounded-[7px] border border-[#e8e5df] bg-white p-[14px] shadow-xs">
-              <h2 className="mb-3 border-b border-[#e8e5df] pb-2 text-[10px] font-bold uppercase tracking-wide text-[#233D4D]">
-                SEO Meta Tags
-              </h2>
+            <div className={cardCls}>
+              <h2 className={cardTitleCls}>SEO Meta Tags</h2>
 
               <div className="space-y-3">
                 <div>
-                  <label className="block text-[8px] font-bold text-slate-600 uppercase mb-1">
-                    Meta Title
-                  </label>
+                  <label className="block text-[8px] font-bold text-slate-600 uppercase mb-1">Meta Title</label>
                   <input
                     type="text"
                     value={formData.metaTitle}
                     onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
                     placeholder="Corporate Interiors | Design House India"
-                    className="h-[32px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-[11px] text-slate-800 outline-none focus:border-[#134698]"
+                    className={inputCls}
                   />
                 </div>
 
@@ -639,7 +899,7 @@ function AddEditServiceContent() {
                     value={formData.metaDescription}
                     onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
                     placeholder="Workspaces designed for productivity, brand identity and growth..."
-                    className="w-full rounded-[6px] border border-slate-300 bg-white p-2.5 text-[11px] text-slate-800 outline-none focus:border-[#134698]"
+                    className={textareaCls}
                   />
                 </div>
 
@@ -652,11 +912,936 @@ function AddEditServiceContent() {
                     value={formData.metaKeywords}
                     onChange={(e) => setFormData({ ...formData, metaKeywords: e.target.value })}
                     placeholder="corporate interiors, office design, turnkey execution"
-                    className="h-[32px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-[11px] text-slate-800 outline-none focus:border-[#134698]"
+                    className={inputCls}
                   />
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* ================= SERVICE DETAIL PAGE CONTENT ================= */}
+        <div className="mt-[18px] space-y-[14px]">
+          <SectionHeading
+            title="Service Detail Page Content (/services/...)"
+            subtitle="Everything shown on the detail page — hero banner, why choose us, our process, featured projects, ideal for, FAQs and the bottom CTA."
+          />
+
+          {/* HERO */}
+          <div className={cardCls}>
+            <h2 className={cardTitleCls}>1. Hero Banner</h2>
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+              <div>
+                <label className={labelInput}>Eyebrow (small label)</label>
+                <input
+                  type="text"
+                  value={detail.hero.eyebrow || ""}
+                  onChange={(e) => setHero({ eyebrow: e.target.value })}
+                  placeholder="Our Services"
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>Photo Style</label>
+                <select
+                  value={detail.hero.photoStyle || "fade"}
+                  onChange={(e) => setHero({ photoStyle: e.target.value as "fade" | "cut" })}
+                  className={selectCls}
+                >
+                  <option value="fade">Fade (photo fades into white)</option>
+                  <option value="cut">Cut (diagonal edge + gold band)</option>
+                </select>
+              </div>
+              <div>
+                <label className={labelInput}>Title Line 1</label>
+                <input
+                  type="text"
+                  value={detail.hero.title[0]}
+                  onChange={(e) => setHero({ title: [e.target.value, detail.hero.title[1]] })}
+                  placeholder="Corporate"
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>
+                  Title Line 2 <span className="normal-case text-slate-400">(shown in gold)</span>
+                </label>
+                <input
+                  type="text"
+                  value={detail.hero.title[1]}
+                  onChange={(e) => setHero({ title: [detail.hero.title[0], e.target.value] })}
+                  placeholder="Interiors"
+                  className={inputCls}
+                />
+              </div>
+              <div className="lg:col-span-2">
+                <label className={labelInput}>Tagline</label>
+                <input
+                  type="text"
+                  value={detail.hero.tagline || ""}
+                  onChange={(e) => setHero({ tagline: e.target.value })}
+                  placeholder="Workspaces Designed for Productivity, Brand Identity and Growth."
+                  className={inputCls}
+                />
+              </div>
+              <div className="lg:col-span-2">
+                <label className={labelInput}>Hero Text</label>
+                <textarea
+                  rows={3}
+                  value={detail.hero.text}
+                  onChange={(e) => setHero({ text: e.target.value })}
+                  placeholder="We create modern, functional and inspiring corporate spaces..."
+                  className={textareaCls}
+                />
+              </div>
+              <div className="lg:col-span-2">
+                <ImageField
+                  label="Hero Image"
+                  value={detail.hero.image}
+                  onChange={(v) => setHero({ image: v })}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>Photo Words (stacked on photo, comma separated)</label>
+                <input
+                  type="text"
+                  value={(detail.hero.photoWords || []).join(", ")}
+                  onChange={(e) =>
+                    setHero({
+                      photoWords: e.target.value
+                        .split(",")
+                        .map((w) => w.trim())
+                        .filter(Boolean),
+                    })
+                  }
+                  placeholder="Brands, People, Spaces"
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>Secondary CTA Button</label>
+                <div className="flex items-center gap-2 pt-1">
+                  <input
+                    type="checkbox"
+                    id="secondaryCta"
+                    checked={Boolean(detail.hero.secondaryCta)}
+                    onChange={(e) => setHero({ secondaryCta: e.target.checked })}
+                    className="h-4 w-4 cursor-pointer"
+                  />
+                  <label htmlFor="secondaryCta" className="text-[10px] font-semibold text-slate-700 cursor-pointer">
+                    Show &quot;View Projects&quot; outlined button
+                  </label>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className={labelInput}>Primary CTA Label</label>
+                  <input
+                    type="text"
+                    value={detail.hero.primaryCta?.label || ""}
+                    onChange={(e) =>
+                      setHero({
+                        primaryCta: { label: e.target.value, href: detail.hero.primaryCta?.href || "/contact" },
+                      })
+                    }
+                    placeholder="Enquire Now"
+                    className={inputCls}
+                  />
+                </div>
+                <div>
+                  <label className={labelInput}>Primary CTA Link</label>
+                  <input
+                    type="text"
+                    value={detail.hero.primaryCta?.href || ""}
+                    onChange={(e) =>
+                      setHero({
+                        primaryCta: { label: detail.hero.primaryCta?.label || "Enquire Now", href: e.target.value },
+                      })
+                    }
+                    placeholder="/contact"
+                    className={inputCls}
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className={labelInput}>Secondary Link Label</label>
+                  <input
+                    type="text"
+                    value={detail.hero.secondaryCtaLink?.label || ""}
+                    onChange={(e) =>
+                      setHero({
+                        secondaryCtaLink: { label: e.target.value, href: detail.hero.secondaryCtaLink?.href || "/portfolio" },
+                      })
+                    }
+                    placeholder="View Projects"
+                    className={inputCls}
+                  />
+                </div>
+                <div>
+                  <label className={labelInput}>Secondary Link URL</label>
+                  <input
+                    type="text"
+                    value={detail.hero.secondaryCtaLink?.href || ""}
+                    onChange={(e) =>
+                      setHero({
+                        secondaryCtaLink: { label: detail.hero.secondaryCtaLink?.label || "View Projects", href: e.target.value },
+                      })
+                    }
+                    placeholder="/portfolio"
+                    className={inputCls}
+                  />
+                </div>
+              </div>
+
+              {/* Brand logo above title (ENSIS style) */}
+              <div className="lg:col-span-2 rounded-[6px] border border-[#edf0f2] bg-[#fbfcfc] p-3">
+                <p className="mb-2 text-[8px] font-bold uppercase tracking-wider text-slate-500">
+                  Brand Logo Above Title (optional — used by ENSIS)
+                </p>
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                  <input
+                    type="text"
+                    value={detail.hero.brandLogo?.src || ""}
+                    onChange={(e) =>
+                      setHero({
+                        brandLogo: {
+                          src: e.target.value,
+                          alt: detail.hero.brandLogo?.alt || "",
+                          width: detail.hero.brandLogo?.width || 472,
+                          height: detail.hero.brandLogo?.height || 193,
+                          tagline: detail.hero.brandLogo?.tagline || "",
+                        },
+                      })
+                    }
+                    placeholder="/Ensis Panchakarma.png"
+                    className={inputCls}
+                  />
+                  <input
+                    type="text"
+                    value={detail.hero.brandLogo?.alt || ""}
+                    onChange={(e) =>
+                      setHero({
+                        brandLogo: {
+                          src: detail.hero.brandLogo?.src || "",
+                          alt: e.target.value,
+                          width: detail.hero.brandLogo?.width || 472,
+                          height: detail.hero.brandLogo?.height || 193,
+                          tagline: detail.hero.brandLogo?.tagline || "",
+                        },
+                      })
+                    }
+                    placeholder="Logo alt text"
+                    className={inputCls}
+                  />
+                  <input
+                    type="text"
+                    value={detail.hero.brandLogo?.tagline || ""}
+                    onChange={(e) =>
+                      setHero({
+                        brandLogo: {
+                          src: detail.hero.brandLogo?.src || "",
+                          alt: detail.hero.brandLogo?.alt || "",
+                          width: detail.hero.brandLogo?.width || 472,
+                          height: detail.hero.brandLogo?.height || 193,
+                          tagline: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="Logo tagline"
+                    className={inputCls}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setHero({ brandLogo: undefined })}
+                    className="h-[32px] rounded-[6px] border border-red-200 bg-red-50 text-[9px] font-bold text-red-600 hover:bg-red-100 transition"
+                  >
+                    Remove Logo
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* HERO FEATURES */}
+            <div className="mt-4">
+              <div className="mb-2 flex items-center justify-between">
+                <label className="block text-[8.5px] font-bold text-slate-700 uppercase tracking-wider">
+                  Hero Feature Strip ({detail.hero.features.length})
+                </label>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setHero({ features: [...detail.hero.features, { icon: "Sparkles", label: "New Feature", text: "" }] })
+                  }
+                  className={addBtnCls}
+                >
+                  <Plus className="h-3 w-3" /> Add Feature
+                </button>
+              </div>
+              <div className="space-y-2">
+                {detail.hero.features.map((f, i) => (
+                  <div key={i} className="grid grid-cols-1 gap-2 rounded-[6px] border border-[#edf0f2] bg-[#fbfcfc] p-2 sm:grid-cols-[150px_1fr_1fr_24px]">
+                    <IconPicker
+                      value={f.icon}
+                      onChange={(v) => {
+                        const next = [...detail.hero.features];
+                        next[i] = { ...f, icon: v };
+                        setHero({ features: next });
+                      }}
+                    />
+                    <input
+                      type="text"
+                      value={f.label}
+                      onChange={(e) => {
+                        const next = [...detail.hero.features];
+                        next[i] = { ...f, label: e.target.value };
+                        setHero({ features: next });
+                      }}
+                      placeholder="Workspace&#10;Planning"
+                      className={inputCls}
+                    />
+                    <input
+                      type="text"
+                      value={f.text || ""}
+                      onChange={(e) => {
+                        const next = [...detail.hero.features];
+                        next[i] = { ...f, text: e.target.value };
+                        setHero({ features: next });
+                      }}
+                      placeholder="Feature text (optional)"
+                      className={inputCls}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setHero({ features: detail.hero.features.filter((_, idx) => idx !== i) })}
+                      className={delBtnCls}
+                      title="Remove"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+                {detail.hero.features.length === 0 && (
+                  <p className="text-[9px] text-slate-400">No features yet. Add the strip items shown under the hero banner.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* WHY */}
+          <div className={cardCls}>
+            <h2 className={cardTitleCls}>2. Why Choose Us</h2>
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+              <div>
+                <label className={labelInput}>Eyebrow</label>
+                <input
+                  type="text"
+                  value={detail.why.eyebrow || ""}
+                  onChange={(e) => setWhy({ eyebrow: e.target.value })}
+                  placeholder="Why Choose Us"
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>Layout</label>
+                <select
+                  value={detail.why.layout || "split"}
+                  onChange={(e) => setWhy({ layout: e.target.value as "split" | "overview" })}
+                  className={selectCls}
+                >
+                  <option value="split">Split (edge-to-edge photo + points beside)</option>
+                  <option value="overview">Overview (inset photo, points below)</option>
+                </select>
+              </div>
+              <div>
+                <label className={labelInput}>Title Line 1</label>
+                <input
+                  type="text"
+                  value={detail.why.title[0]}
+                  onChange={(e) => setWhy({ title: [e.target.value, detail.why.title[1]] })}
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>Title Line 2</label>
+                <input
+                  type="text"
+                  value={detail.why.title[1]}
+                  onChange={(e) => setWhy({ title: [detail.why.title[0], e.target.value] })}
+                  className={inputCls}
+                />
+              </div>
+              <div className="lg:col-span-2">
+                <label className={labelInput}>Section Text</label>
+                <textarea
+                  rows={3}
+                  value={detail.why.text}
+                  onChange={(e) => setWhy({ text: e.target.value })}
+                  className={textareaCls}
+                />
+              </div>
+              <div className="lg:col-span-2">
+                <ImageField label="Section Image" value={detail.why.image} onChange={(v) => setWhy({ image: v })} />
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <div className="mb-2 flex items-center justify-between">
+                <label className="block text-[8.5px] font-bold text-slate-700 uppercase tracking-wider">
+                  Why Points ({detail.why.points.length})
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setWhy({ points: [...detail.why.points, { icon: "BadgeCheck", title: "New Point", text: "" }] })}
+                  className={addBtnCls}
+                >
+                  <Plus className="h-3 w-3" /> Add Point
+                </button>
+              </div>
+              <div className="space-y-2">
+                {detail.why.points.map((p, i) => (
+                  <div key={i} className="grid grid-cols-1 gap-2 rounded-[6px] border border-[#edf0f2] bg-[#fbfcfc] p-2 sm:grid-cols-[150px_1fr_1fr_24px]">
+                    <IconPicker
+                      value={p.icon}
+                      onChange={(v) => {
+                        const next = [...detail.why.points];
+                        next[i] = { ...p, icon: v };
+                        setWhy({ points: next });
+                      }}
+                    />
+                    <input
+                      type="text"
+                      value={p.title}
+                      onChange={(e) => {
+                        const next = [...detail.why.points];
+                        next[i] = { ...p, title: e.target.value };
+                        setWhy({ points: next });
+                      }}
+                      className={inputCls}
+                    />
+                    <input
+                      type="text"
+                      value={p.text}
+                      onChange={(e) => {
+                        const next = [...detail.why.points];
+                        next[i] = { ...p, text: e.target.value };
+                        setWhy({ points: next });
+                      }}
+                      className={inputCls}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setWhy({ points: detail.why.points.filter((_, idx) => idx !== i) })}
+                      className={delBtnCls}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+                {detail.why.points.length === 0 && (
+                  <p className="text-[9px] text-slate-400">No points yet.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* PROCESS */}
+          <div className={cardCls}>
+            <h2 className={cardTitleCls}>3. Our Process</h2>
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+              <div>
+                <label className={labelInput}>Title</label>
+                <input
+                  type="text"
+                  value={detail.process.title}
+                  onChange={(e) => setProcess({ title: e.target.value })}
+                  placeholder="From Planning to Possession"
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>Tone</label>
+                <select
+                  value={detail.process.tone || "white"}
+                  onChange={(e) => setProcess({ tone: e.target.value as "white" | "warm" })}
+                  className={selectCls}
+                >
+                  <option value="white">White</option>
+                  <option value="warm">Warm</option>
+                </select>
+              </div>
+              <div className="lg:col-span-2">
+                <label className={labelInput}>Subtitle Text</label>
+                <input
+                  type="text"
+                  value={detail.process.text}
+                  onChange={(e) => setProcess({ text: e.target.value })}
+                  className={inputCls}
+                />
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <div className="mb-2 flex items-center justify-between">
+                <label className="block text-[8.5px] font-bold text-slate-700 uppercase tracking-wider">
+                  Process Steps ({detail.process.steps.length})
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setProcess({ steps: [...detail.process.steps, { title: "New Step", text: "" }] })}
+                  className={addBtnCls}
+                >
+                  <Plus className="h-3 w-3" /> Add Step
+                </button>
+              </div>
+              <div className="space-y-2">
+                {detail.process.steps.map((s, i) => (
+                  <div key={i} className="grid grid-cols-1 gap-2 rounded-[6px] border border-[#edf0f2] bg-[#fbfcfc] p-2 sm:grid-cols-[1fr_1.5fr_24px]">
+                    <input
+                      type="text"
+                      value={s.title}
+                      onChange={(e) => {
+                        const next = [...detail.process.steps];
+                        next[i] = { ...s, title: e.target.value };
+                        setProcess({ steps: next });
+                      }}
+                      placeholder={`Step ${i + 1} title`}
+                      className={inputCls}
+                    />
+                    <input
+                      type="text"
+                      value={s.text}
+                      onChange={(e) => {
+                        const next = [...detail.process.steps];
+                        next[i] = { ...s, text: e.target.value };
+                        setProcess({ steps: next });
+                      }}
+                      placeholder="Step description"
+                      className={inputCls}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setProcess({ steps: detail.process.steps.filter((_, idx) => idx !== i) })}
+                      className={delBtnCls}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+                {detail.process.steps.length === 0 && <p className="text-[9px] text-slate-400">No steps yet.</p>}
+              </div>
+            </div>
+          </div>
+
+          {/* FEATURED PROJECTS */}
+          <div className={cardCls}>
+            <h2 className={cardTitleCls}>4. Featured Projects / Products</h2>
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+              <div>
+                <label className={labelInput}>Eyebrow (default: Featured Projects)</label>
+                <input
+                  type="text"
+                  value={detail.projects.eyebrow || ""}
+                  onChange={(e) => setProjects({ eyebrow: e.target.value })}
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>Link Label (default: View All Projects)</label>
+                <input
+                  type="text"
+                  value={detail.projects.linkLabel || ""}
+                  onChange={(e) => setProjects({ linkLabel: e.target.value })}
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>Title</label>
+                <input
+                  type="text"
+                  value={detail.projects.title}
+                  onChange={(e) => setProjects({ title: e.target.value })}
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>Link Style</label>
+                <select
+                  value={detail.projects.linkStyle || "button"}
+                  onChange={(e) => setProjects({ linkStyle: e.target.value as "button" | "text" })}
+                  className={selectCls}
+                >
+                  <option value="button">Gold Button</option>
+                  <option value="text">Text Link</option>
+                </select>
+              </div>
+              <div className="lg:col-span-2">
+                <label className={labelInput}>Subtitle Text</label>
+                <input
+                  type="text"
+                  value={detail.projects.text || ""}
+                  onChange={(e) => setProjects({ text: e.target.value })}
+                  className={inputCls}
+                />
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <div className="mb-2 flex items-center justify-between">
+                <label className="block text-[8.5px] font-bold text-slate-700 uppercase tracking-wider">
+                  Project Cards ({detail.projects.items.length})
+                </label>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setProjects({ items: [...detail.projects.items, { title: "New Project", place: "", image: "/services/os1.webp" }] })
+                  }
+                  className={addBtnCls}
+                >
+                  <Plus className="h-3 w-3" /> Add Project
+                </button>
+              </div>
+              <div className="space-y-3">
+                {detail.projects.items.map((item, i) => (
+                  <div key={i} className="rounded-[6px] border border-[#edf0f2] bg-[#fbfcfc] p-2">
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_24px]">
+                      <input
+                        type="text"
+                        value={item.title}
+                        onChange={(e) => {
+                          const next = [...detail.projects.items];
+                          next[i] = { ...item, title: e.target.value };
+                          setProjects({ items: next });
+                        }}
+                        placeholder="Project title"
+                        className={inputCls}
+                      />
+                      <input
+                        type="text"
+                        value={item.place}
+                        onChange={(e) => {
+                          const next = [...detail.projects.items];
+                          next[i] = { ...item, place: e.target.value };
+                          setProjects({ items: next });
+                        }}
+                        placeholder="Place / location"
+                        className={inputCls}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setProjects({ items: detail.projects.items.filter((_, idx) => idx !== i) })}
+                        className={delBtnCls}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    </div>
+                    <div className="mt-2 flex items-center gap-2">
+                      <div className="h-[38px] w-[60px] shrink-0 overflow-hidden rounded-[4px] border border-slate-200 bg-white">
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="h-full w-full object-cover"
+                          onError={(e) => ((e.target as HTMLImageElement).src = "/services/os1.webp")}
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        value={item.image}
+                        onChange={(e) => {
+                          const next = [...detail.projects.items];
+                          next[i] = { ...item, image: e.target.value };
+                          setProjects({ items: next });
+                        }}
+                        placeholder="/services/detail/b2.webp"
+                        className={inputCls}
+                      />
+                    </div>
+                  </div>
+                ))}
+                {detail.projects.items.length === 0 && (
+                  <p className="text-[9px] text-slate-400">No project cards yet.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* IDEAL FOR */}
+          <div className={cardCls}>
+            <h2 className={cardTitleCls}>5. Ideal For</h2>
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+              <div>
+                <label className={labelInput}>Title (one line per row)</label>
+                <textarea
+                  rows={2}
+                  value={(detail.idealFor.title || []).join("\n")}
+                  onChange={(e) => setIdealFor({ title: e.target.value.split("\n") })}
+                  className={textareaCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>Subtitle Text</label>
+                <textarea
+                  rows={2}
+                  value={detail.idealFor.text || ""}
+                  onChange={(e) => setIdealFor({ text: e.target.value })}
+                  className={textareaCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>Checklist Items (one per row — list layout)</label>
+                <textarea
+                  rows={7}
+                  value={(detail.idealFor.items || []).join("\n")}
+                  onChange={(e) =>
+                    setIdealFor({
+                      items: e.target.value.split("\n").map((x) => x.trim()).filter(Boolean),
+                    })
+                  }
+                  placeholder={"IT & ITES Companies\nConsulting Firms\nAnd More..."}
+                  className={textareaCls}
+                />
+                <p className="mt-1 text-[7.5px] text-slate-500">
+                  Used with the photo layout (Corporate look). Leave empty to use icon tiles.
+                </p>
+              </div>
+              <div>
+                <label className={labelInput}>Section Image (list layout)</label>
+                <ImageField label="" value={detail.idealFor.image || ""} onChange={(v) => setIdealFor({ image: v })} />
+              </div>
+              <div>
+                <label className={labelInput}>Icon Tone (tile layout)</label>
+                <select
+                  value={detail.idealFor.iconTone || "gold"}
+                  onChange={(e) => setIdealFor({ iconTone: e.target.value as "gold" | "navy" })}
+                  className={selectCls}
+                >
+                  <option value="gold">Gold</option>
+                  <option value="navy">Navy</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <div className="mb-2 flex items-center justify-between">
+                <label className="block text-[8.5px] font-bold text-slate-700 uppercase tracking-wider">
+                  Icon Tiles ({detail.idealFor.tiles?.length || 0})
+                </label>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setIdealFor({ tiles: [...(detail.idealFor.tiles || []), { icon: "Sparkles", label: "New Tile" }] })
+                  }
+                  className={addBtnCls}
+                >
+                  <Plus className="h-3 w-3" /> Add Tile
+                </button>
+              </div>
+              <div className="space-y-2">
+                {(detail.idealFor.tiles || []).map((t, i) => (
+                  <div key={i} className="grid grid-cols-1 gap-2 rounded-[6px] border border-[#edf0f2] bg-[#fbfcfc] p-2 sm:grid-cols-[150px_1fr_24px]">
+                    <IconPicker
+                      value={t.icon}
+                      onChange={(v) => {
+                        const next = [...(detail.idealFor.tiles || [])];
+                        next[i] = { ...t, icon: v };
+                        setIdealFor({ tiles: next });
+                      }}
+                    />
+                    <input
+                      type="text"
+                      value={t.label}
+                      onChange={(e) => {
+                        const next = [...(detail.idealFor.tiles || [])];
+                        next[i] = { ...t, label: e.target.value };
+                        setIdealFor({ tiles: next });
+                      }}
+                      className={`${inputCls} whitespace-pre-line`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setIdealFor({ tiles: (detail.idealFor.tiles || []).filter((_, idx) => idx !== i) })}
+                      className={delBtnCls}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* FAQS */}
+          <div className={cardCls}>
+            <h2 className={cardTitleCls}>6. Frequently Asked Questions</h2>
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+              <div>
+                <label className={labelInput}>FAQ Heading Title</label>
+                <input
+                  type="text"
+                  value={detail.faqHeading?.title || ""}
+                  onChange={(e) =>
+                    setDetail({
+                      faqHeading: { title: e.target.value, text: detail.faqHeading?.text || "" },
+                    })
+                  }
+                  placeholder="Frequently Asked Questions"
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>FAQ Heading Text</label>
+                <input
+                  type="text"
+                  value={detail.faqHeading?.text || ""}
+                  onChange={(e) =>
+                    setDetail({
+                      faqHeading: { title: detail.faqHeading?.title || "Frequently Asked Questions", text: e.target.value },
+                    })
+                  }
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>FAQ Style</label>
+                <div className="flex items-center gap-4 pt-1">
+                  <label className="flex items-center gap-1.5 text-[10px] font-semibold text-slate-700">
+                    <input
+                      type="checkbox"
+                      checked={Boolean(detail.faqStyle?.numbered)}
+                      onChange={(e) => setDetail({ faqStyle: { ...detail.faqStyle, numbered: e.target.checked } })}
+                      className="h-3.5 w-3.5"
+                    />
+                    Numbered
+                  </label>
+                  <select
+                    value={detail.faqStyle?.tone || "white"}
+                    onChange={(e) => setDetail({ faqStyle: { ...detail.faqStyle, tone: e.target.value as "white" | "blue" } })}
+                    className="h-[28px] w-[110px] rounded-[6px] border border-slate-300 bg-white px-2 text-[10px] font-semibold outline-none cursor-pointer"
+                  >
+                    <option value="white">White tone</option>
+                    <option value="blue">Blue tone</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <div className="mb-2 flex items-center justify-between">
+                <label className="block text-[8.5px] font-bold text-slate-700 uppercase tracking-wider">
+                  FAQ Items ({detail.faqs.length})
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setDetail({ faqs: [...detail.faqs, { q: "", a: "" }] })}
+                  className={addBtnCls}
+                >
+                  <Plus className="h-3 w-3" /> Add FAQ
+                </button>
+              </div>
+              <div className="space-y-3">
+                {detail.faqs.map((f, i) => (
+                  <div key={i} className="rounded-[6px] border border-[#edf0f2] bg-[#fbfcfc] p-2">
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_24px]">
+                      <input
+                        type="text"
+                        value={f.q}
+                        onChange={(e) => {
+                          const next = [...detail.faqs];
+                          next[i] = { ...f, q: e.target.value };
+                          setDetail({ faqs: next });
+                        }}
+                        placeholder="Question"
+                        className={inputCls}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setDetail({ faqs: detail.faqs.filter((_, idx) => idx !== i) })}
+                        className={delBtnCls}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    </div>
+                    <textarea
+                      rows={2}
+                      value={f.a}
+                      onChange={(e) => {
+                        const next = [...detail.faqs];
+                        next[i] = { ...f, a: e.target.value };
+                        setDetail({ faqs: next });
+                      }}
+                      placeholder="Answer"
+                      className={`${textareaCls} mt-2`}
+                    />
+                  </div>
+                ))}
+                {detail.faqs.length === 0 && <p className="text-[9px] text-slate-400">No FAQs yet.</p>}
+              </div>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className={cardCls}>
+            <h2 className={cardTitleCls}>7. Bottom CTA Banner</h2>
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+              <div>
+                <label className={labelInput}>Eyebrow (default: Let&apos;s Build Together)</label>
+                <input
+                  type="text"
+                  value={detail.ctaEyebrow || ""}
+                  onChange={(e) => setDetail({ ctaEyebrow: e.target.value })}
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>Subtitle (default: Get in touch with our team...)</label>
+                <input
+                  type="text"
+                  value={detail.ctaSubtitle || ""}
+                  onChange={(e) => setDetail({ ctaSubtitle: e.target.value })}
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>CTA Title Line 1</label>
+                <input
+                  type="text"
+                  value={detail.ctaTitle[0]}
+                  onChange={(e) => setDetail({ ctaTitle: [e.target.value, detail.ctaTitle[1]] })}
+                  placeholder="Let's Discuss"
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className={labelInput}>
+                  CTA Title Line 2 <span className="normal-case text-slate-400">(shown in gold)</span>
+                </label>
+                <input
+                  type="text"
+                  value={detail.ctaTitle[1]}
+                  onChange={(e) => setDetail({ ctaTitle: [detail.ctaTitle[0], e.target.value] })}
+                  placeholder="Your Workspace Project"
+                  className={inputCls}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* BOTTOM SAVE */}
+          <div className="flex items-center justify-end gap-[10px] pb-2">
+            <Link
+              href="/services"
+              className="flex h-[32px] items-center justify-center rounded-[6px] border border-slate-300 bg-white px-[16px] text-[9px] font-semibold text-slate-700 transition hover:bg-slate-50"
+            >
+              Cancel
+            </Link>
+            <button
+              type="submit"
+              disabled={isSaving}
+              className="flex h-[32px] items-center justify-center gap-1.5 rounded-[6px] bg-[#4B1426] px-[18px] text-[9px] font-semibold text-white shadow-[0_5px_12px_rgba(75,20,38,0.25)] transition hover:bg-[#3a0f1d] disabled:opacity-50"
+            >
+              <Save className="h-3.5 w-3.5" strokeWidth={1.8} />
+              {isSaving ? "Saving..." : editId ? "Update Service & Detail Page" : "Publish Service"}
+            </button>
           </div>
         </div>
       </form>
