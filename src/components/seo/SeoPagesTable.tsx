@@ -57,7 +57,7 @@ const COLUMNS: ColumnDefinition[] = [
     defaultVisible: true,
     render: (page) => {
       const audit = getSavedPageSpeed(page.url);
-      const score = audit?.ok ? audit.scores.seo : (page.performance?.score ?? 91);
+      const score = (audit?.ok ? audit.scores.seo : null) ?? page.performance?.score ?? 91;
       const tone =
         score >= 90
           ? "text-[#15803d] bg-[#dcfce7] border-[#bbf7d0]"

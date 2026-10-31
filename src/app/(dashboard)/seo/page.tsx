@@ -42,6 +42,7 @@ import {
   type SeoCompetitor,
   type SeoInsights,
   type SeoOverview,
+  type SeoPageRow,
   type SeoScoreExplanation,
 } from "@/lib/seoAuditApi";
 import { SeverityBadge, formatDateTime } from "@/components/seo/SeoBadges";
@@ -49,6 +50,7 @@ import SeoPagesTable from "@/components/seo/SeoPagesTable";
 import SeoPageDetail from "@/components/seo/SeoPageDetail";
 import SeoCheckupFullReport from "@/components/seo/SeoCheckupFullReport";
 import { checkupReportToCsv, downloadTextFile, type SeoCheckupReportData } from "@/lib/seoCheckupData";
+import { exportFullSeoPdf } from "@/lib/seoPdfExport";
 
 type Tab =
   | "Overview"
@@ -198,6 +200,21 @@ export default function SeoDashboardPage() {
     document.body.removeChild(link);
   };
 
+  const handleExportPDF = async () => {
+    let pagesList: SeoPageRow[] = [];
+    try {
+      const res = await seoAuditApi.pages();
+      pagesList = res.pages || [];
+    } catch {
+      pagesList = [];
+    }
+    exportFullSeoPdf({
+      overview,
+      siteReport,
+      pages: pagesList,
+    });
+  };
+
   const handleAddCompetitor = async () => {
     if (!newCompetitorUrl) return;
     try {
@@ -315,7 +332,7 @@ export default function SeoDashboardPage() {
 
           <button
             type="button"
-            onClick={() => window.print()}
+            onClick={handleExportPDF}
             className="inline-flex h-9 items-center gap-1.5 rounded-md border border-slate-300 bg-white px-3 text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-xs cursor-pointer"
           >
             <Download className="h-3.5 w-3.5 text-slate-600" /> Export PDF
