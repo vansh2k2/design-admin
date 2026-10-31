@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import { SectionFieldsEditor, SectionItemsEditor, SectionTitle } from "../section-editor";
+import { schemaSectionFor } from "../section-editor/SectionFieldsEditor";
 import { Toggle } from "../fields";
 import type { CmsRecord } from "@/lib/cmsJson";
 
@@ -151,7 +152,8 @@ export function PageSectionsPanel({
                     onFieldChange={(key, value) => updateSectionField(sectionIndex, key, value)}
                   />
 
-                  {Array.isArray(section.slides) && (
+                  {/* The home hero has its own editor (HomeHeroFields) */}
+                  {Array.isArray(section.slides) && !(section.key === "hero" && section.name === "Hero Carousel Slides") && (
                     <div className="flex flex-col gap-[8px]">
                       <SectionItemsEditor
                         items={section.slides}
@@ -262,7 +264,7 @@ export function PageSectionsPanel({
                     </div>
                   )}
 
-                  {Array.isArray(section.items) && section.key !== "hero" && section.key !== "introduction-section" && section.key !== "why-participate" && section.key !== "conference-section" && section.key !== "sponsors-attend" && section.key !== "testimonials-section" && (
+                  {Array.isArray(section.items) && section.key !== "hero" && !(section.key === "what-we-do" && section.name === "What We Do (Turnkey Spaces)") && !(section.key === "our-achievements" && section.name === "Our Achievements (Trust & Numbers)") && !(section.key === "our-projects" && section.name === "Our Projects (Portfolio Grid)") && !schemaSectionFor(section) && section.key !== "introduction-section" && section.key !== "why-participate" && section.key !== "conference-section" && section.key !== "sponsors-attend" && section.key !== "testimonials-section" && (
                     <SectionItemsEditor
                       items={section.items}
                       onChangeItem={(itemIndex, key, value) => updateSectionItem(sectionIndex, itemIndex, key, value)}

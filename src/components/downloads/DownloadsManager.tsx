@@ -673,7 +673,6 @@ export default function DownloadsManager() {
                                     {item.accent && <span className="rounded-[3px] bg-orange-100 px-1 text-[7px] font-bold text-orange-700">Accent</span>}
                                     {item.ensis && <span className="rounded-[3px] bg-teal-100 px-1 text-[7px] font-bold text-teal-700">ENSIS</span>}
                                   </p>
-                                  <p className="truncate text-[8px] font-medium text-[#64748b]">{item.desc}</p>
                                 </div>
                               </div>
                             </td>

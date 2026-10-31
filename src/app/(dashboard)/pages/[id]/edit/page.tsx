@@ -28,6 +28,7 @@ import typography from "../../PagesTypography.module.css";
 import Swal from "sweetalert2";
 
 import { getTemplateForPage, getPageForTemplate } from "@/components/pages-cms/utils/templateMapping";
+import { generatePageSeo } from "@/components/pages-cms/utils/seoGenerator";
 import {
   resolveDefaultSectionsForPage,
   resolveResetDefaultsForPage,
@@ -403,47 +404,24 @@ export default function CmsEditPage() {
     setOgPreview(null);
   };
 
-  const autoGenerateSeo = async (envType: "local" | "live") => {
-    const pageKey = page.slug === "/" ? "home" : (page.slug ? page.slug.replace(/^\//, "") : "home");
-    try {
-      const res: CmsJson = await api.post("/seo/generate", {
-        page: pageKey,
-        envType,
-        metaTitle: form.metaTitle || undefined,
-        metaDescription: form.metaDescription || undefined,
-      });
-      const gen = res?.data?.data || res?.data || res;
-      if (gen) {
-        updateField("canonicalUrl", gen.canonicalUrl || "");
-        updateField("canonicalTag", gen.canonicalTag || "");
-        updateField("openGraphTags", gen.openGraphTags || "");
-        updateField("schemaMarkup", gen.schemaMarkup || "");
-        if (!form.metaTitle && gen.metaTitle) updateField("metaTitle", gen.metaTitle);
-        if (!form.metaDescription && gen.metaDescription) updateField("metaDescription", gen.metaDescription);
-        if (!form.metaKeywords && gen.metaKeywords) updateField("metaKeywords", gen.metaKeywords);
-        if (!form.ogImage && gen.ogImage) updateField("ogImage", gen.ogImage);
+  // Canonical, Open Graph tags and JSON-LD schema built from this page's title, description and URL
+  const autoGenerateSeo = (envType: "local" | "live") => {
+    const gen = generatePageSeo(page, form, envType);
+    updateField("canonicalUrl", gen.canonicalUrl);
+    updateField("canonicalTag", gen.canonicalUrl);
+    updateField("openGraphTags", gen.openGraphTags);
+    updateField("schemaMarkup", gen.schemaMarkup);
+    if (!form.metaTitle) updateField("metaTitle", gen.metaTitle);
+    if (!form.metaDescription) updateField("metaDescription", gen.metaDescription);
+    if (canonicalEditorRef.current) canonicalEditorRef.current.innerText = gen.canonicalUrl;
 
-        if (canonicalEditorRef.current) {
-          canonicalEditorRef.current.innerText = gen.canonicalTag || gen.canonicalUrl || "";
-        }
-
-        Swal.fire({
-          title: `Auto-Generated for ${envType.toUpperCase()}`,
-          text: `Canonical, OG Tags & Schema markup generated for ${
-            envType === "local" ? "http://localhost:3002" : "https://www.designhouse.co.in"
-          }. You can edit any field manually anytime!`,
-          icon: "success",
-          timer: 2500,
-          confirmButtonColor: "#134698",
-        });
-      }
-    } catch (err) {
-      Swal.fire({
-        title: "Generation Failed",
-        text: (err instanceof Error ? err.message : "") || "Failed to auto-generate SEO tags",
-        icon: "error",
-      });
-    }
+    Swal.fire({
+      title: `Auto-Generated for ${envType.toUpperCase()}`,
+      text: `Canonical, OG tags & schema markup generated for ${gen.canonicalUrl}. Click Update Page to save; you can edit any field first.`,
+      icon: "success",
+      timer: 2800,
+      confirmButtonColor: "#134698",
+    });
   };
 
   useEffect(() => {

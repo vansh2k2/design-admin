@@ -40,14 +40,7 @@ const topbarSection: Section = {
   key: "topbar",
   name: "Topbar & Header Contact",
   enabled: true,
-  title: "Design House India Pvt. Ltd.",
-  phoneNumber: CONTACT.phone,
-  contactEmail: CONTACT.email,
-  marqueeText: "5000+ PROJECTS DELIVERED • PAN-INDIA EXECUTION • RETAIL | RESTAURANT | KIOSK | CORPORATE | EXHIBITION EXPERTS",
-  ensisLogo: "/ensis.jpeg",
-  logoImage: "/ensis.jpeg",
-  externalLinkText: "Panchkarma Solution",
-  externalLinkUrl: "https://ensis.in/",
+  // Phone numbers, email and quick links are loaded from / saved to the backend (/topbar)
 };
 
 const navbarSection: Section = {

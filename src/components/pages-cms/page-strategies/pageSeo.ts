@@ -5,6 +5,7 @@ import type { CmsPage } from "@/lib/cmsPages";
 import type { FormState } from "../types";
 import type { SectionsDraft } from "./types";
 import type { CmsJson, CmsRecord } from "@/lib/cmsJson";
+import { generatePageSeo } from "../utils/seoGenerator";
 
 // The live website: canonical URLs always point here (never to localhost)
 export const LIVE_SITE_URL = "https://www.designhouse.co.in";
@@ -43,18 +44,29 @@ export function syncPageSeoFromLiveApi(
       if (!seo) return;
       // Canonical is generated from the page URL unless one was saved
       const canonical = seo.canonicalTag || autoCanonicalUrl(page);
-      setForm((prev) => ({
-        ...prev,
-        metaTitle: seo.metaTitle || prev.metaTitle,
-        metaDescription: seo.metaDescription || prev.metaDescription,
-        metaKeywords: seo.metaKeywords || prev.metaKeywords,
-        canonicalUrl: canonical,
-        canonicalTag: canonical,
-        openGraphTags: seo.openGraphTags || prev.openGraphTags,
-        schemaMarkup: seo.schemaMarkup || prev.schemaMarkup,
-        ogImage: seo.ogImage || prev.ogImage,
-        isActive: seo.isActive,
-      }));
+      setForm((prev) => {
+        const next = {
+          ...prev,
+          metaTitle: seo.metaTitle || prev.metaTitle,
+          metaDescription: seo.metaDescription || prev.metaDescription,
+          metaKeywords: seo.metaKeywords || prev.metaKeywords,
+          canonicalUrl: canonical,
+          canonicalTag: canonical,
+          openGraphTags: seo.openGraphTags || "",
+          schemaMarkup: seo.schemaMarkup && seo.schemaMarkup.trim().length > 10 ? seo.schemaMarkup : "",
+          ogImage: seo.ogImage || prev.ogImage,
+          isActive: seo.isActive,
+        };
+        // Nothing saved yet for OG tags / schema: fill them as "Auto Generate (Live)" would
+        if (!next.openGraphTags || !next.schemaMarkup) {
+          const gen = generatePageSeo(page, next, "live");
+          if (!next.metaTitle) next.metaTitle = gen.metaTitle;
+          if (!next.metaDescription) next.metaDescription = gen.metaDescription;
+          if (!next.openGraphTags) next.openGraphTags = gen.openGraphTags;
+          if (!next.schemaMarkup) next.schemaMarkup = gen.schemaMarkup;
+        }
+        return next;
+      });
       if (canonicalEditorRef.current) canonicalEditorRef.current.innerText = canonical;
     })
     .catch(() => {

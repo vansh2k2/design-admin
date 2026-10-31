@@ -35,6 +35,7 @@ const SAMPLE_VALUES: Record<string, string> = {
   PHONE: "9876543210",
   SERVICE: "Interiors — Retail Interior",
   LOCATION: "Noida, Uttar Pradesh",
+  COMPANY: "UrbanCart Retail Pvt. Ltd.",
   MESSAGE: "Need a complete interior fit-out for our new 1,200 sq ft showroom.",
   SUBJECT: "Interior Designer",
 };

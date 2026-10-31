@@ -1,6 +1,30 @@
 import { FieldLabel, ImageUploadField, ImageWithAltField, PdfUploadField, TextInput, Textarea, Toggle, VideoUploadField } from "../fields";
 import RichTextEditor from "@/components/RichTextEditor";
 import { TopbarContactFields } from "./TopbarContactFields";
+import { HomeHeroFields } from "./HomeHeroFields";
+import { WhatWeDoFields } from "./WhatWeDoFields";
+import { AchievementsFields } from "./AchievementsFields";
+import { HomeProjectsFields } from "./HomeProjectsFields";
+import { SchemaSectionFields } from "./SchemaSectionFields";
+
+// Home sections edited with the schema-driven form: admin section → backend /home-sections/:key
+const SCHEMA_SECTIONS: { key: string; name: string; backendKey: string }[] = [
+  { key: "why-choose-us", name: "Why Choose Us (Vision & Expertise)", backendKey: "why-choose-us" },
+  { key: "capabilities", name: "Capabilities (In-House Manufacturing)", backendKey: "capabilities" },
+  { key: "our-approach", name: "Our Approach (5-Stage Turnkey Process)", backendKey: "approach" },
+  { key: "featured-projects", name: "Featured Projects (Landmark Showcases)", backendKey: "featured-projects" },
+  { key: "our-strengths", name: "Our Strengths (Infrastructure & Track Record)", backendKey: "strengths" },
+  // Heading only: the reviews are managed in Testimonials Management
+  { key: "testimonials-carousel", name: "Testimonials (Client Reviews)", backendKey: "testimonials" },
+  { key: "faqs", name: "Frequently Asked Questions", backendKey: "faqs" },
+  // Form submissions are listed in the "Get In Touch" page
+  { key: "get-in-touch", name: "Get In Touch (Book a Meeting & Form)", backendKey: "get-in-touch" },
+  // Footer on every page + the floating social icons
+  { key: "footer", name: "Footer & Social Links", backendKey: "footer" },
+];
+
+export const schemaSectionFor = (section: CmsRecord) =>
+  SCHEMA_SECTIONS.find((s) => s.key === section.key && s.name === section.name)?.backendKey;
 import {
   IMAGE_KEY_PATTERN,
   LONG_TEXT_KEY_PATTERN,
@@ -18,71 +42,40 @@ export function SectionFieldsEditor({
   section: CmsRecord;
   onFieldChange: (key: string, value: unknown) => void;
 }) {
+  // Home hero: slides, second button and bottom strip as on the website (saved to the backend)
+  if (section.key === "hero" && section.name === "Hero Carousel Slides") {
+    return <HomeHeroFields />;
+  }
+
+  // Home "What We Do": heading, cards, stats and industries as on the website (saved to the backend)
+  if (section.key === "what-we-do" && section.name === "What We Do (Turnkey Spaces)") {
+    return <WhatWeDoFields />;
+  }
+
+  // Home "Our Achievements": heading, background and stat cards as on the website (saved to the backend)
+  if (section.key === "our-achievements" && section.name === "Our Achievements (Trust & Numbers)") {
+    return <AchievementsFields />;
+  }
+
+  // Home sections with a schema-driven form (content and images saved to the backend)
+  const schemaKey = schemaSectionFor(section);
+  if (schemaKey) {
+    return <SchemaSectionFields sectionKey={schemaKey} />;
+  }
+
+  // Home "Our Projects": heading, badge, filter tabs and project cards as on the website (saved to the backend)
+  if (section.key === "our-projects" && section.name === "Our Projects (Portfolio Grid)") {
+    return <HomeProjectsFields />;
+  }
+
   if (section.key === "topbar" || section.name === "Topbar & Header Contact") {
+    // Only what the website's topbar shows: phone numbers, email and quick links (saved to the backend)
     return (
       <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
         <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
-          <span>Topbar Brand, Contact & Ensis Logo Settings</span>
+          <span>Topbar Contact & Quick Links</span>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div className="md:col-span-2">
-            <FieldLabel>Company Title</FieldLabel>
-            <TextInput
-              value={String(section.title || "Design House India Pvt. Ltd.")}
-              onChange={(next) => onFieldChange("title", next)}
-              placeholder="Design House India Pvt. Ltd."
-              hideLimit={true}
-            />
-          </div>
-          <div className="md:col-span-2">
-            <FieldLabel>Marquee Text</FieldLabel>
-            <TextInput
-              value={String(section.marqueeText || "")}
-              onChange={(next) => onFieldChange("marqueeText", next)}
-              placeholder="5000+ PROJECTS DELIVERED • PAN-INDIA EXECUTION • RETAIL | RESTAURANT | KIOSK | CORPORATE | EXHIBITION EXPERTS"
-              hideLimit={true}
-            />
-          </div>
-          {/* Phone numbers, email and quick links: saved to the backend, live on the website */}
-          <div className="md:col-span-2">
-            <TopbarContactFields />
-          </div>
-          <div className="md:col-span-2 border-t border-gray-100 pt-2.5">
-            <ImageWithAltField
-              label="Ensis Logo (Upload Image)"
-              image={String(section.ensisLogo || section.logoImage || "/ensis.jpeg")}
-              alt={String(section.ensisLogoAlt || section.logoAlt || "Ensis Spa and Panchkarma Furniture")}
-              onImageChange={(next) => {
-                onFieldChange("ensisLogo", next);
-                onFieldChange("logoImage", next);
-              }}
-              onAltChange={(next) => {
-                onFieldChange("ensisLogoAlt", next);
-                onFieldChange("logoAlt", next);
-              }}
-              altLabel="Alt Tag"
-              altPlaceholder="e.g. Ensis Spa and Wellness Furniture Solutions"
-            />
-          </div>
-          <div>
-            <FieldLabel>Ensis Partner Website URL</FieldLabel>
-            <TextInput
-              value={String(section.externalLinkUrl || "https://ensis.in/")}
-              onChange={(next) => onFieldChange("externalLinkUrl", next)}
-              placeholder="https://ensis.in/"
-              hideLimit={true}
-            />
-          </div>
-          <div>
-            <FieldLabel>Ensis Tooltip / Sub-label</FieldLabel>
-            <TextInput
-              value={String(section.externalLinkText || "Panchkarma Solution")}
-              onChange={(next) => onFieldChange("externalLinkText", next)}
-              placeholder="Panchkarma Solution"
-              hideLimit={true}
-            />
-          </div>
-        </div>
+        <TopbarContactFields />
       </div>
     );
   }
