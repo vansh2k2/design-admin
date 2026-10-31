@@ -51,6 +51,8 @@ export interface ServiceDetailData {
   ctaEyebrow?: string;
   ctaTitle: [string, string];
   ctaSubtitle?: string;
+  ctaImage?: string;
+  ctaImageAlt?: string;
 }
 
 export const DETAIL_SEEDS: Record<string, ServiceDetailData> = {
@@ -1084,4 +1086,6 @@ export const emptyServiceDetail = (name: string): ServiceDetailData => ({
   },
   faqs: [],
   ctaTitle: ["", ""],
+  ctaImage: "/assets/image/t2.webp",
+  ctaImageAlt: "Let's Discuss Your Project Consultation Lounge",
 });

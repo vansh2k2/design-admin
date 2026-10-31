@@ -1823,6 +1823,13 @@ function AddEditServiceContent() {
                   className={inputCls}
                 />
               </div>
+              <div className="lg:col-span-2 border-t border-slate-100 pt-3">
+                <ImageField
+                  label="CTA Background / Diagonal Image (Upload / URL)"
+                  value={detail.ctaImage || "/assets/image/t2.webp"}
+                  onChange={(v) => setDetail({ ctaImage: v })}
+                />
+              </div>
             </div>
           </div>
 

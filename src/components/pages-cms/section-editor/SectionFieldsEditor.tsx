@@ -907,7 +907,20 @@ export function SectionFieldsEditor({
     );
   }
 
-  if (section.key === "services-cta" || section.name === "Discuss Your Project CTA") {
+  if (
+    section.key === "services-cta" ||
+    section.key === "cta-banner" ||
+    section.key === "cta" ||
+    section.key === "project-cta" ||
+    section.name === "Discuss Your Project CTA" ||
+    section.name === "Call to Action Banner" ||
+    (typeof section.eyebrow === "string" && section.eyebrow.toLowerCase().includes("build together")) ||
+    (typeof section.title === "string" && (
+      section.title.toLowerCase().includes("discuss your project") ||
+      section.title.toLowerCase().includes("build together") ||
+      section.title.toLowerCase().includes("project in mind")
+    ))
+  ) {
     return (
       <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
         <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
