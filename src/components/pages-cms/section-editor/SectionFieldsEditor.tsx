@@ -434,30 +434,39 @@ export function SectionFieldsEditor({
           <span className="text-[10px] text-gray-500 font-normal">Header Title, Subtitle & Banner Background</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div>
+          <div className="md:col-span-2">
             <FieldLabel>Breadcrumb / Eyebrow</FieldLabel>
             <TextInput
-              value={String(section.eyebrow || "HOME / CONTACT US")}
+              value={String(section.eyebrow || "Contact Us")}
               onChange={(next) => onFieldChange("eyebrow", next)}
-              placeholder="HOME / CONTACT US"
+              placeholder="Contact Us"
               hideLimit={true}
             />
           </div>
           <div>
-            <FieldLabel required>Main Headline Title</FieldLabel>
+            <FieldLabel required>Main Headline (Line 1)</FieldLabel>
             <TextInput
-              value={String(section.title || "Connecting You to Exceptional Design & Build Solutions")}
+              value={String(section.title || "Let's Build")}
               onChange={(next) => onFieldChange("title", next)}
-              placeholder="Connecting You to Exceptional Design & Build Solutions"
+              placeholder="Let's Build"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Orange Accent Headline (Line 2)</FieldLabel>
+            <TextInput
+              value={String(section.highlightedWord || "Your Next Space")}
+              onChange={(next) => onFieldChange("highlightedWord", next)}
+              placeholder="Your Next Space"
               hideLimit={true}
             />
           </div>
           <div className="md:col-span-2">
             <FieldLabel>Subtitle / Description</FieldLabel>
             <TextInput
-              value={String(section.description || "")}
+              value={String(section.description || "From concept to completion, our team is here to understand your requirements and create the right solution for your brand.")}
               onChange={(next) => onFieldChange("description", next)}
-              placeholder="Get in touch with Design House India Pvt. Ltd. for turnkey interiors, retail displays, exhibition stalls and architectural execution across India."
+              placeholder="From concept to completion, our team is here to understand your requirements and create the right solution for your brand."
               hideLimit={true}
             />
           </div>
@@ -465,11 +474,11 @@ export function SectionFieldsEditor({
             <ImageWithAltField
               label="Hero Banner Image (Upload / URL)"
               image={String(section.image || "/assets/banner/contact.webp")}
-              alt={String(section.imageAlt || "Design House Contact Us Banner")}
+              alt={String(section.imageAlt || "Design House India reception and office")}
               onImageChange={(next) => onFieldChange("image", next)}
               onAltChange={(next) => onFieldChange("imageAlt", next)}
               altLabel="Banner Image Alt Tag"
-              altPlaceholder="e.g. Design House Contact Us Banner"
+              altPlaceholder="e.g. Design House India reception and office"
             />
           </div>
         </div>

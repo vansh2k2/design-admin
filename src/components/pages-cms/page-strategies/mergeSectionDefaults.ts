@@ -358,36 +358,71 @@ export function mergeSectionWithSavedData(
     if (!merged.image || String(merged.image).includes("design-house/") || String(merged.image).includes("corporate-office-lounge")) {
       merged.image = fallbackItem.image || "/assets/banner/contact.webp";
     }
-    if (!merged.imageAlt) merged.imageAlt = fallbackItem.imageAlt || "Design House Contact Us Banner";
-    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "HOME / CONTACT US";
-    if (!merged.title || merged.title === "Contact Us") merged.title = fallbackItem.title || "Connecting You to Exceptional Design & Build Solutions";
-    if (!merged.description) merged.description = fallbackItem.description;
-    if (!merged.items || !Array.isArray(merged.items) || merged.items.length === 0) {
+    if (!merged.imageAlt || merged.imageAlt === "Design House Contact Us Banner") {
+      merged.imageAlt = fallbackItem.imageAlt || "Design House India reception and office";
+    }
+    if (!merged.eyebrow || merged.eyebrow === "HOME / CONTACT US") {
+      merged.eyebrow = fallbackItem.eyebrow || "Contact Us";
+    }
+    if (!merged.title || merged.title === "Contact Us" || merged.title === "Connecting You to Exceptional Design & Build Solutions") {
+      merged.title = fallbackItem.title || "Let's Build";
+    }
+    if (!merged.highlightedWord || merged.highlightedWord === "Connecting You") {
+      merged.highlightedWord = fallbackItem.highlightedWord || "Your Next Space";
+    }
+    if (!merged.description || merged.description.includes("Get in touch with Design House India Pvt. Ltd. for turnkey")) {
+      merged.description = fallbackItem.description || "From concept to completion, our team is here to understand your requirements and create the right solution for your brand.";
+    }
+    if (!merged.items || !Array.isArray(merged.items) || merged.items.length === 0 || merged.items[0]?.label === "New Highlight Point") {
       merged.items = fallbackItem.items;
     }
   }
   if (fallbackItem.key === "contact-info" || merged.key === "contact-info") {
-    if (!merged.phoneNumber1) merged.phoneNumber1 = fallbackItem.phoneNumber1;
-    if (!merged.phoneNumber2) merged.phoneNumber2 = fallbackItem.phoneNumber2;
-    if (!merged.contactEmail) merged.contactEmail = fallbackItem.contactEmail;
-    if (!merged.workingHoursWeekday) merged.workingHoursWeekday = fallbackItem.workingHoursWeekday;
-    if (!merged.workingHoursWeekend) merged.workingHoursWeekend = fallbackItem.workingHoursWeekend;
+    if (!merged.eyebrow || merged.eyebrow === "Reach Out") merged.eyebrow = fallbackItem.eyebrow || "Get in Touch";
+    if (!merged.title || merged.title === "Get in Touch" || merged.title === "Contact Us") merged.title = fallbackItem.title || "We're Here to Help";
+    if (!merged.description || merged.description.includes("Have a project in mind or need a quote")) {
+      merged.description = fallbackItem.description || "Have a project in mind or need expert advice? Our team will be happy to assist you with design, manufacturing and execution tailored to your requirements.";
+    }
+    if (!merged.phoneNumber1) merged.phoneNumber1 = fallbackItem.phoneNumber1 || "+91 9654900525";
+    if (!merged.phoneNumber2) merged.phoneNumber2 = fallbackItem.phoneNumber2 || "+91 9810247319";
+    if (!merged.contactEmail) merged.contactEmail = fallbackItem.contactEmail || "info@designhouse.co.in";
+    if (!merged.workingHoursWeekday) merged.workingHoursWeekday = fallbackItem.workingHoursWeekday || "Monday – Saturday: 9:00 AM – 6:00 PM";
+    if (!merged.workingHoursWeekend) merged.workingHoursWeekend = fallbackItem.workingHoursWeekend || "Sunday: Closed";
   }
   if (fallbackItem.key === "contact-form" || merged.key === "contact-form") {
-    if (!merged.submitLabel) merged.submitLabel = fallbackItem.submitLabel;
-    if (!merged.securityNote) merged.securityNote = fallbackItem.securityNote;
-    if (!merged.successTitle) merged.successTitle = fallbackItem.successTitle;
-    if (!merged.successMessage) merged.successMessage = fallbackItem.successMessage;
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Send Us a Message";
+    if (!merged.title) merged.title = fallbackItem.title || "Enquire Now";
+    if (!merged.description) merged.description = fallbackItem.description || "Share your requirements and we will get back to you shortly.";
+    if (!merged.submitLabel) merged.submitLabel = fallbackItem.submitLabel || "Send Enquiry";
+    if (!merged.securityNote) merged.securityNote = fallbackItem.securityNote || "Your information is safe with us. We typically respond during business hours.";
+    if (!merged.successTitle) merged.successTitle = fallbackItem.successTitle || "Enquiry Sent!";
+    if (!merged.successMessage) merged.successMessage = fallbackItem.successMessage || "Thank you for contacting us. Our team will get back to you within 24 hours.";
   }
   if (fallbackItem.key === "offices" || merged.key === "offices") {
-    if (!merged.items || !Array.isArray(merged.items) || merged.items.length === 0) {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Our Offices";
+    if (!merged.title) merged.title = fallbackItem.title || "Visit Us";
+    if (!merged.description) merged.description = fallbackItem.description || "Meet our team at any of our locations or get in touch to schedule a discussion.";
+    if (!merged.items || !Array.isArray(merged.items) || merged.items.length === 0 || !merged.items[0]?.city || merged.items[0]?.city === "City Name") {
       merged.items = fallbackItem.items;
+    } else if (Array.isArray(fallbackItem.items) && fallbackItem.items.length > 0) {
+      merged.items = fallbackItem.items.map((fbItem: CmsRecord, idx: number) => {
+        const savedOffice = merged.items?.[idx] || {};
+        return {
+          ...fbItem,
+          ...savedOffice,
+          image: savedOffice.image || fbItem.image,
+          imageAlt: savedOffice.imageAlt || fbItem.imageAlt,
+        };
+      });
     }
   }
   if (fallbackItem.key === "contact-map" || merged.key === "contact-map") {
-    if (!merged.mapEmbedUrl) merged.mapEmbedUrl = fallbackItem.mapEmbedUrl;
-    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref;
-    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel;
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Our Location";
+    if (!merged.title) merged.title = fallbackItem.title || "Find Us on Map";
+    if (!merged.description) merged.description = fallbackItem.description || "Our head office is located in Ghaziabad, with branch offices in New Delhi and Mumbai.";
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "Open in Google Maps";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "https://www.google.com/maps/search/?api=1&query=Design+House+India+Pvt+Ltd%2C+Plot+No.+12%2F29%2C+Site-II+Industrial+Area%2C+Loni+Road%2C+Mohan+Nagar%2C+Ghaziabad+201007";
+    if (!merged.mapEmbedUrl) merged.mapEmbedUrl = fallbackItem.mapEmbedUrl || "https://maps.google.com/maps?q=Design+House+India+Pvt+Ltd%2C+Mohan+Nagar%2C+Ghaziabad&z=15&output=embed";
   }
   if (fallbackItem.key === "sub-partnership-hero" || merged.key === "sub-partnership-hero") {
     // The old generic hero had fields the website never showed.
