@@ -210,12 +210,20 @@ export const dashboardApi = {
     }
   };
 },
-  pageSpeed: async () => ({
-    status: "not_connected" as const,
-    updatedAt: new Date().toISOString(),
-    data: null,
-    message: "Run the SEO Audit for real PageSpeed scores.",
-  }),
+  pageSpeed: async () => {
+    try {
+      const overview = await dashboardApi.overview();
+      if (overview?.sources?.pageSpeed) {
+        return overview.sources.pageSpeed;
+      }
+    } catch {}
+    return {
+      status: "not_connected" as const,
+      updatedAt: new Date().toISOString(),
+      data: null,
+      message: "Run the SEO Audit for real PageSpeed scores.",
+    };
+  },
   indexCoverage: async () => ({
     status: "not_connected" as const,
     updatedAt: new Date().toISOString(),
