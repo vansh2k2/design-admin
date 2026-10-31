@@ -445,14 +445,11 @@ export default function CmsEditPage() {
   };
 
   useEffect(() => {
-    const isHomePage =
+    const isHomeEdit =
       page.configKey === "landingPage" ||
-      page.configKey === "contactPage" ||
       page.type === "home" ||
       page.slug === "/" ||
-      page.slug === "/contact" ||
-      (page.title || "").toLowerCase() === "home" ||
-      (page.title || "").toLowerCase().includes("contact");
+      (page.title || "").toLowerCase() === "home";
     const cfg = page.configKey && settings ? settings[page.configKey] : undefined;
     const fallbackSections = resolveDefaultSectionsForPage(page);
     const stored = cfg?.sections;
@@ -460,9 +457,25 @@ export default function CmsEditPage() {
       mergeSectionWithSavedData(fallbackItem, stored?.find((s: CmsRecord) => s.key === fallbackItem.key))
     );
     const finalSections = (rawSections && rawSections.length > 0 ? rawSections : fallbackSections).filter(
-      (s: CmsJson) =>
-        !(s.key === "gallery-grid" || s.name === "GalleryGrid") &&
-        (isHomePage || (s.key !== "footer" && s.name !== "Footer & Contact Band" && s.name !== "Footer & Social Links"))
+      (s: CmsJson) => {
+        if (s.key === "gallery-grid" || s.name === "GalleryGrid") return false;
+        if (!isHomeEdit) {
+          const key = (s.key || "").toLowerCase();
+          const name = (s.name || "").toLowerCase();
+          if (
+            key === "topbar" ||
+            key === "navbar" ||
+            key === "footer" ||
+            name.includes("topbar") ||
+            name.includes("header") ||
+            name.includes("navbar") ||
+            name.includes("footer")
+          ) {
+            return false;
+          }
+        }
+        return true;
+      }
     );
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reset the section drafts when the page or its saved settings change
     setSectionsDraft(finalSections.map((section: CmsRecord) => ({ ...section })));

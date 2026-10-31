@@ -744,6 +744,469 @@ export function SectionFieldsEditor({
     );
   }
 
+  if (section.key === "projects-hero" || section.name === "Projects Hero Banner") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Projects Hero Banner & Headline</span>
+          <span className="text-[10px] text-gray-500 font-normal">Title, Eyebrow, Subtitle & Banner Photo</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="md:col-span-2">
+            <FieldLabel>Eyebrow Label</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "Our Projects")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="Our Projects"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Main Title (Line 1)</FieldLabel>
+            <TextInput
+              value={String(section.title || "Spaces")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Spaces"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Title Line 2 Prefix</FieldLabel>
+            <TextInput
+              value={String(section.titleLine2 || "That")}
+              onChange={(next) => onFieldChange("titleLine2", next)}
+              placeholder="That"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Gold Accent Word</FieldLabel>
+            <TextInput
+              value={String(section.highlightedWord || "Inspire")}
+              onChange={(next) => onFieldChange("highlightedWord", next)}
+              placeholder="Inspire"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Tagline / Subtitle</FieldLabel>
+            <TextInput
+              value={String(section.tagline || "From Vision to Reality")}
+              onChange={(next) => onFieldChange("tagline", next)}
+              placeholder="From Vision to Reality"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Description</FieldLabel>
+            <TextInput
+              value={String(section.description || "Explore our portfolio of thoughtfully designed and expertly executed spaces across industries. Each project reflects our commitment to functionality, aesthetics and long-term value.")}
+              onChange={(next) => onFieldChange("description", next)}
+              placeholder="Explore our portfolio of thoughtfully designed..."
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>CTA Button Text</FieldLabel>
+            <TextInput
+              value={String(section.buttonLabel || "Discuss Your Project")}
+              onChange={(next) => onFieldChange("buttonLabel", next)}
+              placeholder="Discuss Your Project"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>CTA Button Link</FieldLabel>
+            <TextInput
+              value={String(section.buttonHref || "/contact")}
+              onChange={(next) => onFieldChange("buttonHref", next)}
+              placeholder="/contact"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2 border-t border-gray-100 pt-2.5">
+            <ImageWithAltField
+              label="Hero Banner Reception Image (Upload / URL)"
+              image={String(section.image || "/newproject/p1.png")}
+              alt={String(section.imageAlt || "Design House India reception lobby")}
+              onImageChange={(next) => onFieldChange("image", next)}
+              onAltChange={(next) => onFieldChange("imageAlt", next)}
+              altLabel="Banner Image Alt Tag"
+              altPlaceholder="e.g. Design House India reception lobby"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (section.key === "projects-featured" || section.name === "Featured Project Showcase") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Featured Project Showcase & Slider</span>
+          <span className="text-[10px] text-gray-500 font-normal">Headings, Metadata, Link & Showcase Photo (Slides in items below)</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <FieldLabel>Section Eyebrow</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "Featured Project")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="Featured Project"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Main Project Title</FieldLabel>
+            <TextInput
+              value={String(section.title || "Axis Business Park")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Axis Business Park"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Project Category</FieldLabel>
+            <TextInput
+              value={String(section.category || "Corporate Interior")}
+              onChange={(next) => onFieldChange("category", next)}
+              placeholder="Corporate Interior"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Project Location</FieldLabel>
+            <TextInput
+              value={String(section.location || "Gurugram, Haryana")}
+              onChange={(next) => onFieldChange("location", next)}
+              placeholder="Gurugram, Haryana"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Description</FieldLabel>
+            <TextInput
+              value={String(section.description || "A modern and functional workspace designed to enhance collaboration, productivity and brand identity. Clean lines, premium finishes and thoughtful spatial planning create an inspiring work environment.")}
+              onChange={(next) => onFieldChange("description", next)}
+              placeholder="A modern and functional workspace designed..."
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Button Label</FieldLabel>
+            <TextInput
+              value={String(section.buttonLabel || "View Project Details")}
+              onChange={(next) => onFieldChange("buttonLabel", next)}
+              placeholder="View Project Details"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Button Link</FieldLabel>
+            <TextInput
+              value={String(section.buttonHref || "/portfolio/interior/corporate-interior")}
+              onChange={(next) => onFieldChange("buttonHref", next)}
+              placeholder="/portfolio/interior/corporate-interior"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2 border-t border-gray-100 pt-2.5">
+            <ImageWithAltField
+              label="Featured Project Image (Upload / URL)"
+              image={String(section.image || "/newproject/p2.png")}
+              alt={String(section.imageAlt || "Axis Business Park Reception")}
+              onImageChange={(next) => onFieldChange("image", next)}
+              onAltChange={(next) => onFieldChange("imageAlt", next)}
+              altLabel="Image Alt Tag"
+              altPlaceholder="e.g. Axis Business Park Reception"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (section.key === "projects-gallery" || section.name === "Our Projects (Header & Search)") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Our Projects Grid Section Header</span>
+          <span className="text-[10px] text-gray-500 font-normal">Search Header & Category Filter Intro</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <FieldLabel>Section Eyebrow</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "Explore Our Work")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="Explore Our Work"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Section Title</FieldLabel>
+            <TextInput
+              value={String(section.title || "Our Projects")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Our Projects"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Description / Subtitle</FieldLabel>
+            <TextInput
+              value={String(section.description || "Browse our delivered projects across corporate, retail, hospitality, exhibition, and residential spaces.")}
+              onChange={(next) => onFieldChange("description", next)}
+              placeholder="Browse our delivered projects..."
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2 bg-[#f8fafc] border border-blue-100 rounded-md p-3 text-[11px] text-blue-900 leading-relaxed">
+            <span className="font-bold">Portfolio Database Integration:</span> Project filter cards (DLF Corporate Office, Trends, The Palate, Bharat Organic Expo, Mall Kiosk, Signage, Office Fit-Out, Hotel Interiors, Luxury Residence) are managed automatically by the portfolio module with live category search filters.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (section.key === "diverse-spaces" || section.name === "Diverse Spaces Banner") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Diverse Spaces. Endless Possibilities.</span>
+          <span className="text-[10px] text-gray-500 font-normal">Headings, Description, CTA & Lounge Banner</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <FieldLabel>Eyebrow</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "Diverse Spaces")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="Diverse Spaces"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Main Title (Line 1)</FieldLabel>
+            <TextInput
+              value={String(section.title || "Diverse Spaces.")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Diverse Spaces."
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Title Line 2 Subtitle</FieldLabel>
+            <TextInput
+              value={String(section.subtitle || "Endless Possibilities.")}
+              onChange={(next) => onFieldChange("subtitle", next)}
+              placeholder="Endless Possibilities."
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Orange Accent Word</FieldLabel>
+            <TextInput
+              value={String(section.highlightedWord || "Possibilities")}
+              onChange={(next) => onFieldChange("highlightedWord", next)}
+              placeholder="Possibilities"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Description</FieldLabel>
+            <TextInput
+              value={String(section.description || "From corporate offices to retail environments, restaurants to residential spaces, we create environments that reflect your vision and deliver lasting impact.")}
+              onChange={(next) => onFieldChange("description", next)}
+              placeholder="From corporate offices to retail environments..."
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Button Text</FieldLabel>
+            <TextInput
+              value={String(section.buttonLabel || "Start a Conversation")}
+              onChange={(next) => onFieldChange("buttonLabel", next)}
+              placeholder="Start a Conversation"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Button Link</FieldLabel>
+            <TextInput
+              value={String(section.buttonHref || "/contact")}
+              onChange={(next) => onFieldChange("buttonHref", next)}
+              placeholder="/contact"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2 border-t border-gray-100 pt-2.5">
+            <ImageWithAltField
+              label="Diverse Spaces Banner Image (Upload / URL)"
+              image={String(section.image || "/newproject/pb.png")}
+              alt={String(section.imageAlt || "Diverse Spaces lounge with city view")}
+              onImageChange={(next) => onFieldChange("image", next)}
+              onAltChange={(next) => onFieldChange("imageAlt", next)}
+              altLabel="Image Alt Tag"
+              altPlaceholder="e.g. Diverse Spaces lounge with city view"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (section.key === "projects-impact" || section.name === "Our Impact & Track Record") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Our Impact & Numbers That Reflect Trust</span>
+          <span className="text-[10px] text-gray-500 font-normal">Headings (Stat counters are managed in the items list below)</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <FieldLabel>Section Eyebrow</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "Our Impact")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="Our Impact"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Section Title</FieldLabel>
+            <TextInput
+              value={String(section.title || "Delivering Measurable Impact Across India")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Delivering Measurable Impact Across India"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Description</FieldLabel>
+            <TextInput
+              value={String(section.description || "Numbers that represent our commitment to quality execution and client partnerships.")}
+              onChange={(next) => onFieldChange("description", next)}
+              placeholder="Numbers that represent our commitment..."
+              hideLimit={true}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (section.key === "projects-process" || section.name === "Our 4-Stage Process") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Our 4-Stage Process (From Concept to Completion)</span>
+          <span className="text-[10px] text-gray-500 font-normal">Headings & Subtitle (Process steps are managed in the items list below)</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <FieldLabel>Section Eyebrow</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "Our Process")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="Our Process"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Main Title</FieldLabel>
+            <TextInput
+              value={String(section.title || "From Concept to Completion")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="From Concept to Completion"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Description / Subtitle</FieldLabel>
+            <TextInput
+              value={String(section.description || "A streamlined approach that ensures quality, efficiency and on-time delivery.")}
+              onChange={(next) => onFieldChange("description", next)}
+              placeholder="A streamlined approach that ensures quality, efficiency and on-time delivery."
+              hideLimit={true}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (section.key === "projects-cta" || section.name === "Projects CTA Band") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Have a Project in Mind? Collaboration CTA</span>
+          <span className="text-[10px] text-gray-500 font-normal">Headings, CTA Button & Diagonal Lounge Photo</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <FieldLabel>Eyebrow</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "Let's Work Together")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="Let's Work Together"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Headline Title</FieldLabel>
+            <TextInput
+              value={String(section.title || "Have a Project in Mind?")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Have a Project in Mind?"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Subtitle / Description</FieldLabel>
+            <TextInput
+              value={String(section.description || "Share your requirements with our team for a customized solution.")}
+              onChange={(next) => onFieldChange("description", next)}
+              placeholder="Share your requirements with our team..."
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Button Text</FieldLabel>
+            <TextInput
+              value={String(section.buttonLabel || "Enquire Now")}
+              onChange={(next) => onFieldChange("buttonLabel", next)}
+              placeholder="Enquire Now"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Button Link</FieldLabel>
+            <TextInput
+              value={String(section.buttonHref || "/contact")}
+              onChange={(next) => onFieldChange("buttonHref", next)}
+              placeholder="/contact"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2 border-t border-gray-100 pt-2.5">
+            <ImageWithAltField
+              label="CTA Lounge Photo (Upload / URL)"
+              image={String(section.image || "/newproject/p12.png")}
+              alt={String(section.imageAlt || "Luxury city lounge consultation")}
+              onImageChange={(next) => onFieldChange("image", next)}
+              onAltChange={(next) => onFieldChange("imageAlt", next)}
+              altLabel="Image Alt Tag"
+              altPlaceholder="e.g. Luxury city lounge consultation"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+
   if (section.key === "footer" || section.name === "Footer & Contact Band" || section.name === "Footer & Social Links") {
     return (
       <div className="flex flex-col gap-4">

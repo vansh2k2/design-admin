@@ -424,6 +424,73 @@ export function mergeSectionWithSavedData(
     if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "https://www.google.com/maps/search/?api=1&query=Design+House+India+Pvt+Ltd%2C+Plot+No.+12%2F29%2C+Site-II+Industrial+Area%2C+Loni+Road%2C+Mohan+Nagar%2C+Ghaziabad+201007";
     if (!merged.mapEmbedUrl) merged.mapEmbedUrl = fallbackItem.mapEmbedUrl || "https://maps.google.com/maps?q=Design+House+India+Pvt+Ltd%2C+Mohan+Nagar%2C+Ghaziabad&z=15&output=embed";
   }
+  if (fallbackItem.key === "projects-hero" || merged.key === "projects-hero") {
+    if (!merged.image) merged.image = fallbackItem.image || "/newproject/p1.png";
+    if (!merged.imageAlt) merged.imageAlt = fallbackItem.imageAlt || "Design House India reception lobby";
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Our Projects";
+    if (!merged.title) merged.title = fallbackItem.title || "Spaces";
+    if (!merged.titleLine2) merged.titleLine2 = fallbackItem.titleLine2 || "That";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Inspire";
+    if (!merged.tagline) merged.tagline = fallbackItem.tagline || "From Vision to Reality";
+    if (!merged.description) merged.description = fallbackItem.description || "Explore our portfolio of thoughtfully designed and expertly executed spaces across industries. Each project reflects our commitment to functionality, aesthetics and long-term value.";
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "Discuss Your Project";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "/contact";
+  }
+  if (fallbackItem.key === "projects-featured" || merged.key === "projects-featured") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Featured Project";
+    if (!merged.title) merged.title = fallbackItem.title || "Axis Business Park";
+    if (!merged.category) merged.category = fallbackItem.category || "Corporate Interior";
+    if (!merged.location) merged.location = fallbackItem.location || "Gurugram, Haryana";
+    if (!merged.description) merged.description = fallbackItem.description;
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "View Project Details";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "/portfolio/interior/corporate-interior";
+    if (!merged.image) merged.image = fallbackItem.image || "/newproject/p2.png";
+    if (!merged.imageAlt) merged.imageAlt = fallbackItem.imageAlt || "Axis Business Park Reception";
+    if (!merged.items || !Array.isArray(merged.items) || merged.items.length === 0) {
+      merged.items = fallbackItem.items;
+    }
+  }
+  if (fallbackItem.key === "projects-gallery" || merged.key === "projects-gallery") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Explore Our Work";
+    if (!merged.title) merged.title = fallbackItem.title || "Our Projects";
+    if (!merged.description) merged.description = fallbackItem.description || "Browse our delivered projects across corporate, retail, hospitality, exhibition, and residential spaces.";
+    delete merged.items;
+  }
+  if (fallbackItem.key === "diverse-spaces" || merged.key === "diverse-spaces") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Diverse Spaces";
+    if (!merged.title) merged.title = fallbackItem.title || "Diverse Spaces.";
+    if (!merged.subtitle) merged.subtitle = fallbackItem.subtitle || "Endless Possibilities.";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Possibilities";
+    if (!merged.description) merged.description = fallbackItem.description || "From corporate offices to retail environments, restaurants to residential spaces, we create environments that reflect your vision and deliver lasting impact.";
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "Start a Conversation";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "/contact";
+    if (!merged.image) merged.image = fallbackItem.image || "/newproject/pb.png";
+    if (!merged.imageAlt) merged.imageAlt = fallbackItem.imageAlt || "Diverse Spaces lounge with city view";
+  }
+  if (fallbackItem.key === "projects-impact" || merged.key === "projects-impact") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Our Impact";
+    if (!merged.title) merged.title = fallbackItem.title || "Delivering Measurable Impact Across India";
+    if (!merged.items || !Array.isArray(merged.items) || merged.items.length === 0) {
+      merged.items = fallbackItem.items;
+    }
+  }
+  if (fallbackItem.key === "projects-process" || merged.key === "projects-process") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Our Process";
+    if (!merged.title) merged.title = fallbackItem.title || "From Concept to Completion";
+    if (!merged.description) merged.description = fallbackItem.description || "A streamlined approach that ensures quality, efficiency and on-time delivery.";
+    if (!merged.items || !Array.isArray(merged.items) || merged.items.length === 0) {
+      merged.items = fallbackItem.items;
+    }
+  }
+  if (fallbackItem.key === "projects-cta" || merged.key === "projects-cta") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Let's Work Together";
+    if (!merged.title) merged.title = fallbackItem.title || "Have a Project in Mind?";
+    if (!merged.description) merged.description = fallbackItem.description || "Share your requirements with our team for a customized solution.";
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "Enquire Now";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "/contact";
+    if (!merged.image) merged.image = fallbackItem.image || "/newproject/p12.png";
+    if (!merged.imageAlt) merged.imageAlt = fallbackItem.imageAlt || "Luxury city lounge consultation";
+  }
   if (fallbackItem.key === "sub-partnership-hero" || merged.key === "sub-partnership-hero") {
     // The old generic hero had fields the website never showed.
     delete merged.eyebrow;
