@@ -607,9 +607,9 @@ export const seoAuditApi = {
       ],
     };
   },
-  pages: async (filters?: SeoPageFilters): Promise<SeoPagesResponse> => {
+  pages: async (filters?: SeoPageFilters, forceFresh = false): Promise<SeoPagesResponse> => {
     try {
-      const res = await api.get<SeoPagesResponse>("/seo-audit/pages");
+      const res = await api.get<SeoPagesResponse>("/seo-audit/pages", { forceFresh });
       const payload = res as unknown as SeoPagesResponse;
       if (payload && Array.isArray(payload.pages)) return payload;
     } catch { /* fall through */ }

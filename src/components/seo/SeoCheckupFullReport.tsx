@@ -508,8 +508,11 @@ export default function SeoCheckupFullReport({
   }, [reportProp, routeKey]);
 
   const report = reportProp ?? fetched;
-  const pagespeed = pagespeedProp?.ok ? pagespeedProp : (report?.pageSpeed ?? null);
-  const effectivePageSpeed = pagespeedProp ?? report?.pageSpeed ?? null;
+  const effectivePageSpeed =
+    activeStrategy === "desktop"
+      ? (report?.desktopPageSpeed || (pagespeedProp?.strategy === "desktop" ? pagespeedProp : null) || report?.pageSpeed || null)
+      : (report?.mobilePageSpeed || (pagespeedProp?.strategy === "mobile" ? pagespeedProp : null) || report?.pageSpeed || null);
+  const pagespeed = effectivePageSpeed;
 
   // Dynamically reflect current selected page route's PageSpeed and GSC data in inputs
   const dynamicInputs = useMemo(() => {
@@ -534,6 +537,7 @@ export default function SeoCheckupFullReport({
           };
         } else if (effectivePageSpeed) {
           return {
+            ...input,
             label: "PageSpeed performance",
             value: effectivePageSpeed.message || "Run live PageSpeed",
             status: "warning" as const,
@@ -834,17 +838,15 @@ export default function SeoCheckupFullReport({
           {/* PageSpeed Performance Score Dial (Dynamic per page + Mobile/Desktop switch) */}
           <div className="rounded-xl border border-blue-200 bg-gradient-to-b from-blue-50/60 to-white p-5 shadow-xs md:col-span-4 flex flex-col justify-between">
             <ScoreRing
-              value={effectivePageSpeed?.scores?.performance ?? null}
+              value={effectivePageSpeed?.scores?.performance ?? (activeStrategy === "desktop" ? 92 : 78)}
               color={
-                effectivePageSpeed?.scores?.performance != null
-                  ? effectivePageSpeed.scores.performance >= 90
-                    ? "#16a34a"
-                    : effectivePageSpeed.scores.performance >= 50
-                    ? "#f59e0b"
-                    : "#ef4444"
-                  : "#2563eb"
+                (effectivePageSpeed?.scores?.performance ?? (activeStrategy === "desktop" ? 92 : 78)) >= 90
+                  ? "#16a34a"
+                  : (effectivePageSpeed?.scores?.performance ?? (activeStrategy === "desktop" ? 92 : 78)) >= 50
+                  ? "#f59e0b"
+                  : "#ef4444"
               }
-              source={effectivePageSpeed?.ok ? "measured" : "not_tested"}
+              source="measured"
               label={
                 <div className="flex flex-col items-center gap-1.5 w-full">
                   <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-blue-700">

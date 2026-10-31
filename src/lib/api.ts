@@ -30,10 +30,10 @@ export const getApiBaseUrl = (): string => {
 
   // If running on local network / custom IP in browser
   if (typeof window !== "undefined" && window.location.hostname !== "localhost") {
-    return `http://${window.location.hostname}:4001/api`;
+    return `http://${window.location.hostname}:5000/api`;
   }
 
-  return "http://localhost:4001/api";
+  return "http://localhost:5000/api";
 };
 
 export const getBackendUrl = (): string => {
@@ -50,12 +50,13 @@ export const getBackendUrl = (): string => {
     }
     return process.env.NEXT_PUBLIC_BACKEND_URL;
   }
-  return "http://localhost:4001";
+  return "http://localhost:5000";
 };
 
 export const API_BASE_URL = getApiBaseUrl();
 const REQUEST_TIMEOUT_MS = 10_000;
 const GET_CACHE_TTL_MS = 2_000;
+const SEO_CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes cache for SEO
 const getInFlight = new Map<string, Promise<unknown>>();
 const getCache = new Map<string, { expiresAt: number; value: unknown }>();
 
@@ -149,7 +150,30 @@ async function refreshAccessToken(): Promise<boolean> {
 
 // Modules already connected to the real backend: they skip the demo data even while
 // NEXT_PUBLIC_USE_MOCK_API is on
-const LIVE_API_PREFIXES = ["/contact-enquiry", "/consultation-requests", "/whatsapp-templates", "/topbar", "/contact-page", "/uploads", "/page-seo", "/meeting-requests", "/downloads", "/home-hero", "/home-what-we-do", "/home-achievements", "/home-projects", "/home-sections", "/website/home/testimonials-carousel"];
+const LIVE_API_PREFIXES = [
+  "/contact-enquiry",
+  "/consultation-requests",
+  "/whatsapp-templates",
+  "/topbar",
+  "/contact-page",
+  "/uploads",
+  "/page-seo",
+  "/meeting-requests",
+  "/downloads",
+  "/home-hero",
+  "/home-what-we-do",
+  "/home-achievements",
+  "/home-projects",
+  "/home-sections",
+  "/website/home/testimonials-carousel",
+  "/seo-audit",
+  "/seo",
+  "/dashboard",
+  "/seo-settings",
+  "/auth",
+  "/featured-services",
+  "/service-details",
+];
 export const isLivePath = (path: string) => LIVE_API_PREFIXES.some((prefix) => path.startsWith(prefix));
 
 async function request<T>(path: string, options?: ApiRequestOptions, isRetry = false): Promise<T> {
@@ -219,12 +243,15 @@ async function request<T>(path: string, options?: ApiRequestOptions, isRetry = f
     path.startsWith("/stall-rates/") ||
     (isWrite && (path.startsWith("/settings") || path.startsWith("/uploads") || path.startsWith("/website")));
 
+  const isSeoPath = path.startsWith("/seo-audit") || path.startsWith("/seo") || path.startsWith("/page-seo");
+
   try {
     res = await fetch(`${getApiBaseUrl()}${path}`, {
       ...fetchOptions,
       headers,
       signal: options?.signal ?? timeoutController.signal,
-    });
+      next: isSeoPath ? { revalidate: 1800 } : undefined,
+    } as RequestInit);
   } catch (_error) {
     clearTimeout(timeoutId);
     if (isRealBackendPath) {
@@ -305,22 +332,34 @@ async function requestBlob(path: string): Promise<Blob> {
 }
 
 export const api = {
-  get: <T>(path: string): Promise<T> => {
-    const cached = getCache.get(path);
-    if (cached && cached.expiresAt > Date.now()) return Promise.resolve(cached.value as T);
-    if (cached) getCache.delete(path);
+  get: <T>(path: string, options?: { forceFresh?: boolean; ttlMs?: number }): Promise<T> => {
+    const isSeo = path.startsWith("/seo-audit") || path.startsWith("/seo") || path.startsWith("/page-seo");
+    const ttl = options?.ttlMs ?? (isSeo ? SEO_CACHE_TTL_MS : GET_CACHE_TTL_MS);
+
+    if (!options?.forceFresh) {
+      const cached = getCache.get(path);
+      if (cached && cached.expiresAt > Date.now()) return Promise.resolve(cached.value as T);
+      if (cached) getCache.delete(path);
+    }
 
     const pending = getInFlight.get(path);
-    if (pending) return pending as Promise<T>;
+    if (pending && !options?.forceFresh) return pending as Promise<T>;
 
     const next = request<T>(path)
       .then((value) => {
-        getCache.set(path, { value, expiresAt: Date.now() + GET_CACHE_TTL_MS });
+        getCache.set(path, { value, expiresAt: Date.now() + ttl });
         return value;
       })
       .finally(() => getInFlight.delete(path));
     getInFlight.set(path, next);
     return next;
+  },
+  clearSeoCache: () => {
+    for (const key of Array.from(getCache.keys())) {
+      if (key.startsWith("/seo-audit") || key.startsWith("/seo") || key.startsWith("/page-seo")) {
+        getCache.delete(key);
+      }
+    }
   },
   post: <T>(path: string, payload?: unknown, options?: Pick<ApiRequestOptions, "timeoutMs">) =>
     request<T>(path, {

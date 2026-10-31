@@ -10,7 +10,7 @@ import type { AdminUser } from "../types";
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-export class AuthError extends Error {}
+export class AuthError extends Error { }
 
 type BackendLogin = {
   accessToken?: string;
