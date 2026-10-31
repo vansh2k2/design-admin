@@ -497,27 +497,27 @@ export function SectionFieldsEditor({
           <div>
             <FieldLabel>Section Eyebrow</FieldLabel>
             <TextInput
-              value={String(section.eyebrow || "Reach Out")}
+              value={String(section.eyebrow || "Get in Touch")}
               onChange={(next) => onFieldChange("eyebrow", next)}
-              placeholder="Reach Out"
+              placeholder="Get in Touch"
               hideLimit={true}
             />
           </div>
           <div>
             <FieldLabel required>Heading Title</FieldLabel>
             <TextInput
-              value={String(section.title || "Get in Touch")}
+              value={String(section.title || "We're Here to Help")}
               onChange={(next) => onFieldChange("title", next)}
-              placeholder="Get in Touch"
+              placeholder="We're Here to Help"
               hideLimit={true}
             />
           </div>
           <div className="md:col-span-2">
             <FieldLabel>Section Subtitle</FieldLabel>
             <TextInput
-              value={String(section.description || "Have a project in mind or need a quote? Reach our team directly.")}
+              value={String(section.description || "Have a project in mind or need expert advice? Our team will be happy to assist you with design, manufacturing and execution tailored to your requirements.")}
               onChange={(next) => onFieldChange("description", next)}
-              placeholder="Have a project in mind or need a quote? Reach our team directly."
+              placeholder="Have a project in mind or need expert advice? Our team will be happy to assist you with design, manufacturing and execution tailored to your requirements."
               hideLimit={true}
             />
           </div>
@@ -734,7 +734,7 @@ export function SectionFieldsEditor({
           <div>
             <FieldLabel>Google Maps Search / Directions Link</FieldLabel>
             <TextInput
-              value={String(section.buttonHref || "")}
+              value={String(section.buttonHref || "https://www.google.com/maps/search/?api=1&query=Design+House+India+Pvt+Ltd%2C+Plot+No.+12%2F29%2C+Site-II+Industrial+Area%2C+Loni+Road%2C+Mohan+Nagar%2C+Ghaziabad+201007")}
               onChange={(next) => onFieldChange("buttonHref", next)}
               placeholder="https://www.google.com/maps/search/?api=1&query=..."
               hideLimit={true}
@@ -743,7 +743,7 @@ export function SectionFieldsEditor({
           <div className="md:col-span-2">
             <FieldLabel required>Google Maps Embed URL (Iframe src)</FieldLabel>
             <TextInput
-              value={String(section.mapEmbedUrl || "")}
+              value={String(section.mapEmbedUrl || "https://maps.google.com/maps?q=Design+House+India+Pvt+Ltd%2C+Mohan+Nagar%2C+Ghaziabad&z=15&output=embed")}
               onChange={(next) => onFieldChange("mapEmbedUrl", next)}
               placeholder="https://maps.google.com/maps?q=...&output=embed"
               hideLimit={true}
