@@ -34,6 +34,8 @@ import {
   mergeSectionWithSavedData,
   syncHomeSectionsFromLiveApi,
   saveHomeSections,
+  syncContactSectionsFromLiveApi,
+  saveContactSections,
   syncWhyExhibitSectionsFromLiveApi,
   saveWhyExhibitSections,
   syncWhyVisitSectionsFromLiveApi,
@@ -445,9 +447,12 @@ export default function CmsEditPage() {
   useEffect(() => {
     const isHomePage =
       page.configKey === "landingPage" ||
+      page.configKey === "contactPage" ||
       page.type === "home" ||
       page.slug === "/" ||
-      (page.title || "").toLowerCase() === "home";
+      page.slug === "/contact" ||
+      (page.title || "").toLowerCase() === "home" ||
+      (page.title || "").toLowerCase().includes("contact");
     const cfg = page.configKey && settings ? settings[page.configKey] : undefined;
     const fallbackSections = resolveDefaultSectionsForPage(page);
     const stored = cfg?.sections;
@@ -465,6 +470,10 @@ export default function CmsEditPage() {
 
     if (page.configKey === "landingPage" || page.type === "home") {
       syncHomeSectionsFromLiveApi(setSectionsDraft);
+    }
+
+    if (page.configKey === "contactPage" || page.slug === "/contact" || (page.title || "").toLowerCase().includes("contact")) {
+      syncContactSectionsFromLiveApi(setSectionsDraft);
     }
 
     if (page.configKey === "whyExhibitPage" || page.slug?.includes("why-exhibit")) {
@@ -574,6 +583,26 @@ export default function CmsEditPage() {
       previous.map((section, index) => {
         if (index !== sectionIndex) return section;
         const items = [...(section.items ?? [])];
+        if (section.key === "contact-hero") {
+          const blankHighlight = {
+            label: "New Highlight Point",
+            icon: "MapPin",
+          };
+          return { ...section, items: [...items, blankHighlight] };
+        }
+        if (section.key === "offices" || section.key === "contact-offices") {
+          const blankOffice = {
+            label: "Regional Office",
+            city: "City Name",
+            lines: "Office Address Line 1\nCity, State Pincode, India",
+            query: "Design House India Pvt Ltd",
+            image: "/assets/image/c1.webp",
+            imageAlt: "Office Branch",
+            buttonLabel: "Get Directions",
+            buttonHref: "https://maps.google.com",
+          };
+          return { ...section, items: [...items, blankOffice] };
+        }
         if (section.key === "why-exhibit-hero") {
           const blankHighlight = {
             main: "New Highlight",
@@ -779,9 +808,12 @@ export default function CmsEditPage() {
     setActiveConfigKey(savingKey);
     const isHomePage =
       savingKey === "landingPage" ||
+      savingKey === "contactPage" ||
       page.type === "home" ||
       page.slug === "/" ||
-      (page.title || "").toLowerCase() === "home";
+      page.slug === "/contact" ||
+      (page.title || "").toLowerCase() === "home" ||
+      (page.title || "").toLowerCase().includes("contact");
     const targetSections = isHomePage
       ? sectionsDraft
       : sectionsDraft.filter(
@@ -790,6 +822,10 @@ export default function CmsEditPage() {
     try {
       if (savingKey === "landingPage" || page.type === "home") {
         await saveHomeSections(targetSections);
+      }
+
+      if (savingKey === "contactPage" || page.slug === "/contact" || (page.title || "").toLowerCase().includes("contact")) {
+        await saveContactSections(targetSections);
       }
 
       if (savingKey === "whyExhibitPage" || page.slug?.includes("why-exhibit")) {

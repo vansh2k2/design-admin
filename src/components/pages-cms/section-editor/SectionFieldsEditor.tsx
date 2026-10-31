@@ -426,6 +426,328 @@ export function SectionFieldsEditor({
     );
   }
 
+  if (section.key === "contact-hero" || section.name === "Contact Hero Banner") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Contact Us Hero Banner & Tagline</span>
+          <span className="text-[10px] text-gray-500 font-normal">Header Title, Subtitle & Banner Background</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <FieldLabel>Breadcrumb / Eyebrow</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "HOME / CONTACT US")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="HOME / CONTACT US"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Main Headline Title</FieldLabel>
+            <TextInput
+              value={String(section.title || "Connecting You to Exceptional Design & Build Solutions")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Connecting You to Exceptional Design & Build Solutions"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Subtitle / Description</FieldLabel>
+            <TextInput
+              value={String(section.description || "")}
+              onChange={(next) => onFieldChange("description", next)}
+              placeholder="Get in touch with Design House India Pvt. Ltd. for turnkey interiors, retail displays, exhibition stalls and architectural execution across India."
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2 border-t border-gray-100 pt-2.5">
+            <ImageWithAltField
+              label="Hero Banner Image (Upload / URL)"
+              image={String(section.image || "/assets/banner/contact.webp")}
+              alt={String(section.imageAlt || "Design House Contact Us Banner")}
+              onImageChange={(next) => onFieldChange("image", next)}
+              onAltChange={(next) => onFieldChange("imageAlt", next)}
+              altLabel="Banner Image Alt Tag"
+              altPlaceholder="e.g. Design House Contact Us Banner"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (section.key === "contact-info" || section.name === "Direct Contact Information") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Direct Contact Information & Operating Hours</span>
+          <span className="text-[10px] text-gray-500 font-normal">Phone Numbers, Email & Business Timings</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <FieldLabel>Section Eyebrow</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "Reach Out")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="Reach Out"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Heading Title</FieldLabel>
+            <TextInput
+              value={String(section.title || "Get in Touch")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Get in Touch"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Section Subtitle</FieldLabel>
+            <TextInput
+              value={String(section.description || "Have a project in mind or need a quote? Reach our team directly.")}
+              onChange={(next) => onFieldChange("description", next)}
+              placeholder="Have a project in mind or need a quote? Reach our team directly."
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Primary Phone Number</FieldLabel>
+            <TextInput
+              value={String(section.phoneNumber1 || "+91 9654900525")}
+              onChange={(next) => onFieldChange("phoneNumber1", next)}
+              placeholder="+91 96549 00525"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Secondary / WhatsApp Phone</FieldLabel>
+            <TextInput
+              value={String(section.phoneNumber2 || "+91 9810247319")}
+              onChange={(next) => onFieldChange("phoneNumber2", next)}
+              placeholder="+91 98102 47319"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel required>Contact Email</FieldLabel>
+            <TextInput
+              value={String(section.contactEmail || "info@designhouse.co.in")}
+              onChange={(next) => onFieldChange("contactEmail", next)}
+              placeholder="info@designhouse.co.in"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Weekday Working Hours</FieldLabel>
+            <TextInput
+              value={String(section.workingHoursWeekday || "Monday – Saturday: 9:00 AM – 6:00 PM")}
+              onChange={(next) => onFieldChange("workingHoursWeekday", next)}
+              placeholder="Monday – Saturday: 9:00 AM – 6:00 PM"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Weekend Working Hours</FieldLabel>
+            <TextInput
+              value={String(section.workingHoursWeekend || "Sunday: Closed")}
+              onChange={(next) => onFieldChange("workingHoursWeekend", next)}
+              placeholder="Sunday: Closed"
+              hideLimit={true}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (section.key === "contact-form" || section.name === "Contact & Enquiry Form" || section.name === "Contact Form") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Contact & Enquiry Form Settings</span>
+          <span className="text-[10px] text-gray-500 font-normal">Headings, Labels, Button & Confirmation Messages</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <FieldLabel>Form Eyebrow</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "Send Us a Message")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="Send Us a Message"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Form Title</FieldLabel>
+            <TextInput
+              value={String(section.title || "Enquire Now")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Enquire Now"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Form Subtitle / Lead Text</FieldLabel>
+            <TextInput
+              value={String(section.description || "Share your requirements and we will get back to you shortly.")}
+              onChange={(next) => onFieldChange("description", next)}
+              placeholder="Share your requirements and we will get back to you shortly."
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Submit Button Text</FieldLabel>
+            <TextInput
+              value={String(section.submitLabel || "Send Enquiry")}
+              onChange={(next) => onFieldChange("submitLabel", next)}
+              placeholder="Send Enquiry"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Security & Trust Note</FieldLabel>
+            <TextInput
+              value={String(section.securityNote || "Your information is safe with us. We typically respond during business hours.")}
+              onChange={(next) => onFieldChange("securityNote", next)}
+              placeholder="Your information is safe with us..."
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Success Modal Title</FieldLabel>
+            <TextInput
+              value={String(section.successTitle || "Enquiry Sent!")}
+              onChange={(next) => onFieldChange("successTitle", next)}
+              placeholder="Enquiry Sent!"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Success Confirmation Message</FieldLabel>
+            <TextInput
+              value={String(section.successMessage || "Thank you for contacting us. Our team will get back to you within 24 hours.")}
+              onChange={(next) => onFieldChange("successMessage", next)}
+              placeholder="Thank you for contacting us..."
+              hideLimit={true}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (section.key === "offices" || section.key === "contact-offices" || section.name === "Our Regional Offices") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Our Regional Offices & Branches Settings</span>
+          <span className="text-[10px] text-gray-500 font-normal">Headings (Office Cards are managed in the items list below)</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <FieldLabel>Section Eyebrow</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "Our Offices")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="Our Offices"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Section Title</FieldLabel>
+            <TextInput
+              value={String(section.title || "Visit Us")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Visit Us"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Description</FieldLabel>
+            <TextInput
+              value={String(section.description || "Meet our team at any of our locations or get in touch to schedule a discussion.")}
+              onChange={(next) => onFieldChange("description", next)}
+              placeholder="Meet our team at any of our locations..."
+              hideLimit={true}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (section.key === "contact-map" || section.name === "Find Us on Map & Directions" || section.name === "Find Us on Map") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Interactive Google Map & Directions</span>
+          <span className="text-[10px] text-gray-500 font-normal">Map Embed Iframe, Coordinates & Direction Links</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <FieldLabel>Section Eyebrow</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "Our Location")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="Our Location"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Section Title</FieldLabel>
+            <TextInput
+              value={String(section.title || "Find Us on Map")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Find Us on Map"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Description</FieldLabel>
+            <TextInput
+              value={String(section.description || "Our head office is located in Ghaziabad, with branch offices in New Delhi and Mumbai.")}
+              onChange={(next) => onFieldChange("description", next)}
+              placeholder="Our head office is located in Ghaziabad..."
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Button Text</FieldLabel>
+            <TextInput
+              value={String(section.buttonLabel || "Open in Google Maps")}
+              onChange={(next) => onFieldChange("buttonLabel", next)}
+              placeholder="Open in Google Maps"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Google Maps Search / Directions Link</FieldLabel>
+            <TextInput
+              value={String(section.buttonHref || "")}
+              onChange={(next) => onFieldChange("buttonHref", next)}
+              placeholder="https://www.google.com/maps/search/?api=1&query=..."
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel required>Google Maps Embed URL (Iframe src)</FieldLabel>
+            <TextInput
+              value={String(section.mapEmbedUrl || "")}
+              onChange={(next) => onFieldChange("mapEmbedUrl", next)}
+              placeholder="https://maps.google.com/maps?q=...&output=embed"
+              hideLimit={true}
+            />
+            <p className="text-[10px] text-slate-500 mt-1">
+              Google Maps embed URL with &amp;output=embed or full maps iframe URL.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (section.key === "footer" || section.name === "Footer & Contact Band" || section.name === "Footer & Social Links") {
     return (
       <div className="flex flex-col gap-4">

@@ -1379,22 +1379,118 @@ export const dhDownloadsSections: Section[] = [
   },
 ];
 
+const contactHeroSection: Section = {
+  key: "contact-hero",
+  name: "Contact Hero Banner",
+  enabled: true,
+  eyebrow: "HOME / CONTACT US",
+  title: "Connecting You to Exceptional Design & Build Solutions",
+  description:
+    "Get in touch with Design House India Pvt. Ltd. for turnkey interiors, retail displays, exhibition stalls and architectural execution across India.",
+  image: "/assets/banner/contact.webp",
+  imageAlt: "Design House Contact Us Banner",
+  items: [
+    { label: "Discuss\nYour Idea", icon: "MapPin" },
+    { label: "Expert\nGuidance", icon: "ClipboardPen" },
+    { label: "End-to-End\nSupport", icon: "MessageCircleMore" },
+  ],
+};
+
+const contactInfoSection: Section = {
+  key: "contact-info",
+  name: "Direct Contact Information",
+  enabled: true,
+  eyebrow: "Reach Out",
+  title: "Get in Touch",
+  description:
+    "Have a project in mind or need a quote? Reach our team directly.",
+  phoneNumber1: "+91 96549 00525",
+  phoneNumber2: "+91 98102 47319",
+  contactEmail: "info@designhouse.co.in",
+  workingHoursWeekday: "Monday – Saturday: 9:00 AM – 6:00 PM",
+  workingHoursWeekend: "Sunday: Closed",
+};
+
+const contactFormSection: Section = {
+  key: "contact-form",
+  name: "Contact & Enquiry Form",
+  enabled: true,
+  eyebrow: "Send Us a Message",
+  title: "Enquire Now",
+  description:
+    "Share your requirements and we will get back to you shortly.",
+  submitLabel: "Send Enquiry",
+  securityNote:
+    "Your information is safe with us. We typically respond during business hours.",
+  successTitle: "Enquiry Sent!",
+  successMessage:
+    "Thank you for contacting us. Our team will get back to you within 24 hours.",
+};
+
+const contactOfficesSection: Section = {
+  key: "offices",
+  name: "Our Regional Offices",
+  enabled: true,
+  eyebrow: "Our Offices",
+  title: "Visit Us",
+  description:
+    "Meet our team at any of our locations or get in touch to schedule a discussion.",
+  items: [
+    {
+      label: "Head Office",
+      city: "Ghaziabad",
+      lines: "Plot No. 12/29, Site-II Industrial Area,\nLoni Road, Mohan Nagar, Ghaziabad,\nUttar Pradesh 201007, India",
+      query: "Design House India Pvt Ltd, Plot No. 12/29, Site-II Industrial Area, Loni Road, Mohan Nagar, Ghaziabad 201007",
+      image: "/assets/image/c1.webp",
+      imageAlt: "Design House Ghaziabad office",
+      buttonLabel: "Get Directions",
+      buttonHref: "https://www.google.com/maps/search/?api=1&query=Design+House+India+Pvt+Ltd%2C+Plot+No.+12%2F29%2C+Site-II+Industrial+Area%2C+Loni+Road%2C+Mohan+Nagar%2C+Ghaziabad+201007",
+    },
+    {
+      label: "Delhi Branch",
+      city: "New Delhi",
+      lines: "Ground Floor, Main Market, E-1,\nopposite KFC, Kalkaji,\nNew Delhi 110019, India",
+      query: "Ground Floor, Main Market, E-1, opposite KFC, Kalkaji, New Delhi 110019",
+      image: "/assets/image/c2.webp",
+      imageAlt: "Design House Delhi Kalkaji office",
+      buttonLabel: "Get Directions",
+      buttonHref: "https://www.google.com/maps/search/?api=1&query=Ground+Floor%2C+Main+Market%2C+E-1%2C+opposite+KFC%2C+Kalkaji%2C+New+Delhi+110019",
+    },
+    {
+      label: "Mumbai Branch",
+      city: "Vasai East",
+      lines: "U/IT-II SR Compound, Plot No. 49/459,\nOpp. Dynamic Flow Company,\nWakanpada Road, Vasai Phata,\nVasai East – 401208, India",
+      query: "SR Compound, Wakanpada Road, Vasai Phata, Vasai East 401208",
+      image: "/assets/image/c3.webp",
+      imageAlt: "Design House Mumbai Vasai office",
+      buttonLabel: "Get Directions",
+      buttonHref: "https://www.google.com/maps/search/?api=1&query=SR+Compound%2C+Wakanpada+Road%2C+Vasai+Phata%2C+Vasai+East+401208",
+    },
+  ],
+};
+
+const contactMapSection: Section = {
+  key: "contact-map",
+  name: "Find Us on Map & Directions",
+  enabled: true,
+  eyebrow: "Our Location",
+  title: "Find Us on Map",
+  description:
+    "Our head office is located in Ghaziabad, with branch offices in New Delhi and Mumbai.",
+  buttonLabel: "Open in Google Maps",
+  buttonHref: "https://www.google.com/maps/search/?api=1&query=Design+House+India+Pvt+Ltd%2C+Plot+No.+12%2F29%2C+Site-II+Industrial+Area%2C+Loni+Road%2C+Mohan+Nagar%2C+Ghaziabad+201007",
+  mapEmbedUrl: "https://maps.google.com/maps?q=Design+House+India+Pvt+Ltd%2C+Mohan+Nagar%2C+Ghaziabad&z=15&output=embed",
+};
+
 export const dhContactSections: Section[] = [
-  pageHero("Contact", "Us", "Get a free consultation — we reply within one working day.", img.project("corporate-office-lounge.jpg")),
-  {
-    key: "contact-form",
-    name: "Contact Form",
-    enabled: true,
-    eyebrow: "GET IN TOUCH",
-    title: "Let's Discuss Your Project",
-    phoneNumber: CONTACT.phone,
-    altPhoneNumber: CONTACT.whatsapp,
-    contactEmail: CONTACT.email,
-    contactAddress: CONTACT.address,
-    submitLabel: "Send Message",
-    successMessage: "Thank you! Our team will contact you shortly.",
-  },
-  locationSection,
+  topbarSection,
+  navbarSection,
+  contactHeroSection,
+  contactInfoSection,
+  contactFormSection,
+  contactOfficesSection,
+  contactMapSection,
+  footerSection,
 ];
 
 const legalPage = (title: string, intro: string, points: [string, string][]): Section[] => [
@@ -1467,6 +1563,8 @@ export const DH_DEFAULT_SECTIONS: Record<string, Section[]> = {
   blogPage: dhBlogSections,
   careersPage: dhCareerSections,
   contactPage: dhContactSections,
+  contact: dhContactSections,
+  "contact-us": dhContactSections,
   privacyPolicyPage: dhPrivacySections,
   termsAndConditionsPage: dhTermsSections,
 };

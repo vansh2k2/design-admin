@@ -155,6 +155,8 @@ export function SectionItemsEditor({
     if (sectionId === "sponsorship-categories") return "Add Sponsorship Package Tier";
     if (sectionId === "buyer-seller-meet") return "Add B2B Matchmaking Feature";
     if (sectionId === "career-hero") return "Add Hero Highlight";
+    if (sectionId === "contact-hero") return "Add Hero Highlight";
+    if (sectionId === "offices" || sectionId === "contact-offices") return "Add Regional Office";
     if (sectionId === "why-work-with-us") return "Add Value Card";
     if (sectionId === "life-at-design-house") return "Add Workplace Photo";
     if (sectionId === "footer") return "Add Footer Link / Information";
@@ -205,7 +207,8 @@ export function SectionItemsEditor({
     if (sectionId === "expo-categories") return `Sector ${index + 1}`;
     if (sectionId === "beyond-exhibition") return `Award Category ${index + 1}`;
     if (sectionId === "sponsorship-categories") return `Sponsorship Tier ${index + 1}`;
-    if (sectionId === "career-hero") return item.label || item.title ? `Highlight: ${String(item.label || item.title).replace(/\n/g, " ")}` : `Highlight ${index + 1}`;
+    if (sectionId === "career-hero" || sectionId === "contact-hero") return item.label || item.title ? `Highlight: ${String(item.label || item.title).replace(/\n/g, " ")}` : `Highlight ${index + 1}`;
+    if (sectionId === "offices" || sectionId === "contact-offices") return item.label ? `${item.label} (${item.city || ""})` : item.city ? `Office: ${item.city}` : `Office ${index + 1}`;
     if (sectionId === "why-work-with-us") return item.title ? String(item.title) : `Value Card ${index + 1}`;
     if (sectionId === "life-at-design-house") return item.title ? String(item.title) : `Workplace Photo ${index + 1}`;
     if (sectionId === "navbar" || sectionId === "footer") return `Link ${index + 1}`;
@@ -218,7 +221,8 @@ export function SectionItemsEditor({
         <div className="flex items-center gap-[6px]">
           <span className="text-[11px] font-bold text-[#1e40af]">
             {sectionId === "hero" ? "Hero Carousel Slides" :
-              sectionId === "career-hero" ? "Hero Highlight Points (Icons & Labels)" :
+              sectionId === "career-hero" || sectionId === "contact-hero" ? "Hero Highlight Points (Icons & Labels)" :
+              sectionId === "offices" || sectionId === "contact-offices" ? "Regional Office Locations (Address, Image & Maps)" :
               sectionId === "why-work-with-us" ? "Why Work With Us Cards (Icons, Titles & Texts)" :
               sectionId === "life-at-design-house" ? "Workplace Photo Gallery (Photos & Alt Tags)" :
               sectionId === "navbar" ? "Header Navigation Links" :

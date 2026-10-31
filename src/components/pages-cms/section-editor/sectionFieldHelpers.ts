@@ -6,12 +6,23 @@
 ========================================================= */
 
 export const SECTION_SKIP_KEYS = new Set(["_id", "key", "slides", "items", "enabled", "name"]);
-export const LONG_TEXT_KEY_PATTERN = /description|desc|shortDescription|subtitle|quote|message|statement|notice|bullets|content|missionContent|visionContent|ctaDescription|feedback|answer/i;
+export const LONG_TEXT_KEY_PATTERN = /description|desc|shortDescription|subtitle|quote|message|statement|notice|bullets|content|missionContent|visionContent|ctaDescription|feedback|answer|lines|address/i;
 export const RICH_TEXT_KEY_PATTERN = /description|desc|missionContent|visionContent|ctaDescription|content|feedback|quote|answer|statement/i;
 export const IMAGE_KEY_PATTERN = /image|img|logo|photo|banner|picture|bg|avatar|thumbnail|image1|image2|image3|image4|footBg|ctaBanner|badge|icon/i;
 export const VIDEO_KEY_PATTERN = /video|youtube|embed|vimeo|clip|mediaUrl/i;
 
 export function humanizeKey(key: string) {
+  if (key === "lines") return "Full Address Lines (one per line)";
+  if (key === "query") return "Google Maps Search Query";
+  if (key === "city") return "City / Region Name";
+  if (key === "workingHoursWeekday") return "Weekday Working Hours";
+  if (key === "workingHoursWeekend") return "Weekend Working Hours";
+  if (key === "phoneNumber1") return "Primary Phone Number";
+  if (key === "phoneNumber2") return "Secondary / WhatsApp Phone";
+  if (key === "securityNote") return "Privacy / Security Disclaimer";
+  if (key === "successTitle") return "Submission Success Title";
+  if (key === "successMessage") return "Submission Success Message";
+  if (key === "mapEmbedUrl") return "Google Maps Embed URL";
   if (key === "ctaEyebrow") return "CTA Eyebrow";
   if (key === "ctaTitle") return "CTA Headline";
   if (key === "ctaDescription") return "CTA Description";

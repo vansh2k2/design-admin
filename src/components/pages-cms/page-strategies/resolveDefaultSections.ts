@@ -93,7 +93,7 @@ export function resolveDefaultSectionsForPage(page: CmsPage): SectionsDraft {
   if (key === "buyerloginpage" || title.includes("buyer login") || slug.includes("buyer-login")) return defaultBuyerLoginSections;
   if (key === "delegatesloginpage" || title.includes("delegates login") || slug.includes("delegates-login")) return defaultDelegatesLoginSections;
   if (key === "userloginpage" || title.includes("user login") || slug.includes("/login")) return defaultUserLoginSections;
-  if (key === "contactpage" || title.includes("contact") || title.includes("advisor") || slug.includes("contact")) return defaultContactSections;
+  if (key === "contactpage" || title.includes("contact") || title.includes("advisor") || slug.includes("contact")) return DH_DEFAULT_SECTIONS.contactPage || defaultContactSections;
   return defaultLandingSections;
 }
 
@@ -154,7 +154,7 @@ export function resolveResetDefaultsForPage(page: CmsPage): SectionsDraft {
   else if (key === "buyerloginpage" || title.includes("buyer login") || slug.includes("buyer-login")) defaults = defaultBuyerLoginSections;
   else if (key === "delegatesloginpage" || title.includes("delegates login") || slug.includes("delegates-login")) defaults = defaultDelegatesLoginSections;
   else if (key === "userloginpage" || title.includes("user login") || slug.includes("/login")) defaults = defaultUserLoginSections;
-  else if (key === "contactpage" || title.includes("contact") || title.includes("advisor") || slug.includes("contact")) defaults = defaultContactSections;
+  else if (key === "contactpage" || title.includes("contact") || title.includes("advisor") || slug.includes("contact")) defaults = DH_DEFAULT_SECTIONS.contactPage || defaultContactSections;
 
   return defaults;
 }

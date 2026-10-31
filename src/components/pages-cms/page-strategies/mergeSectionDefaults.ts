@@ -354,10 +354,40 @@ export function mergeSectionWithSavedData(
   if ((fallbackItem.key === "blog-hero" || merged.key === "blog-hero") && !merged.image) {
     merged.image = fallbackItem.image;
   }
-  if ((fallbackItem.key === "contact-hero" || merged.key === "contact-hero") &&
-    (!merged.image || String(merged.image).includes("design-house/"))) {
-    // The old default was a placeholder photo from another project.
-    merged.image = fallbackItem.image;
+  if (fallbackItem.key === "contact-hero" || merged.key === "contact-hero") {
+    if (!merged.image || String(merged.image).includes("design-house/") || String(merged.image).includes("corporate-office-lounge")) {
+      merged.image = fallbackItem.image || "/assets/banner/contact.webp";
+    }
+    if (!merged.imageAlt) merged.imageAlt = fallbackItem.imageAlt || "Design House Contact Us Banner";
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "HOME / CONTACT US";
+    if (!merged.title || merged.title === "Contact Us") merged.title = fallbackItem.title || "Connecting You to Exceptional Design & Build Solutions";
+    if (!merged.description) merged.description = fallbackItem.description;
+    if (!merged.items || !Array.isArray(merged.items) || merged.items.length === 0) {
+      merged.items = fallbackItem.items;
+    }
+  }
+  if (fallbackItem.key === "contact-info" || merged.key === "contact-info") {
+    if (!merged.phoneNumber1) merged.phoneNumber1 = fallbackItem.phoneNumber1;
+    if (!merged.phoneNumber2) merged.phoneNumber2 = fallbackItem.phoneNumber2;
+    if (!merged.contactEmail) merged.contactEmail = fallbackItem.contactEmail;
+    if (!merged.workingHoursWeekday) merged.workingHoursWeekday = fallbackItem.workingHoursWeekday;
+    if (!merged.workingHoursWeekend) merged.workingHoursWeekend = fallbackItem.workingHoursWeekend;
+  }
+  if (fallbackItem.key === "contact-form" || merged.key === "contact-form") {
+    if (!merged.submitLabel) merged.submitLabel = fallbackItem.submitLabel;
+    if (!merged.securityNote) merged.securityNote = fallbackItem.securityNote;
+    if (!merged.successTitle) merged.successTitle = fallbackItem.successTitle;
+    if (!merged.successMessage) merged.successMessage = fallbackItem.successMessage;
+  }
+  if (fallbackItem.key === "offices" || merged.key === "offices") {
+    if (!merged.items || !Array.isArray(merged.items) || merged.items.length === 0) {
+      merged.items = fallbackItem.items;
+    }
+  }
+  if (fallbackItem.key === "contact-map" || merged.key === "contact-map") {
+    if (!merged.mapEmbedUrl) merged.mapEmbedUrl = fallbackItem.mapEmbedUrl;
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref;
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel;
   }
   if (fallbackItem.key === "sub-partnership-hero" || merged.key === "sub-partnership-hero") {
     // The old generic hero had fields the website never showed.
