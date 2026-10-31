@@ -1055,7 +1055,7 @@ export default function DashboardPage() {
   const exhibitorCount = useMemo(() => {
     if (internal?.actionRequired?.exhibitor !== undefined) return internal.actionRequired.exhibitor;
     const matched = enquiriesList.filter((e) =>
-      (e.service + " " + e.subject + " " + e.message).toLowerCase().match(/exhibition|stall|stand|event/)
+      (e.service + " " + (e.subService || "") + " " + e.message).toLowerCase().match(/exhibition|stall|stand|event/)
     ).length;
     return matched > 0 ? matched : 3;
   }, [enquiriesList, internal]);
@@ -1063,7 +1063,7 @@ export default function DashboardPage() {
   const buyerCount = useMemo(() => {
     if (internal?.actionRequired?.buyer !== undefined) return internal.actionRequired.buyer;
     const matched = enquiriesList.filter((e) =>
-      (e.service + " " + e.subject + " " + e.message).toLowerCase().match(/kiosk|display|bulk|fixture/)
+      (e.service + " " + (e.subService || "") + " " + e.message).toLowerCase().match(/kiosk|display|bulk|fixture/)
     ).length;
     return matched > 0 ? matched : 12;
   }, [enquiriesList, internal]);
@@ -1071,7 +1071,7 @@ export default function DashboardPage() {
   const sponsorCount = useMemo(() => {
     if (internal?.actionRequired?.sponsor !== undefined) return internal.actionRequired.sponsor;
     const matched = enquiriesList.filter((e) =>
-      (e.service + " " + e.subject + " " + e.message).toLowerCase().match(/corporate|office|workspace/)
+      (e.service + " " + (e.subService || "") + " " + e.message).toLowerCase().match(/corporate|office|workspace/)
     ).length;
     return matched > 0 ? matched : 2;
   }, [enquiriesList, internal]);
@@ -1079,7 +1079,7 @@ export default function DashboardPage() {
   const visitorCount = useMemo(() => {
     if (internal?.actionRequired?.visitor !== undefined) return internal.actionRequired.visitor;
     const matched = enquiriesList.filter((e) =>
-      (e.service + " " + e.subject + " " + e.message).toLowerCase().match(/visit|showroom|meeting/)
+      (e.service + " " + (e.subService || "") + " " + e.message).toLowerCase().match(/visit|showroom|meeting/)
     ).length;
     return matched > 0 ? matched : 5;
   }, [enquiriesList, internal]);

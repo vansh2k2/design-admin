@@ -495,7 +495,7 @@ export default function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
             ) : (
               <h1
                 className="truncate text-[15px] font-bold tracking-tight"
-                style={{ color: "#4B1426" }}
+                style={{ color: "#d9560b" }}
               >
                 {currentPageTitle(pathname)}
               </h1>

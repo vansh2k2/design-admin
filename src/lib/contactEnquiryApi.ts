@@ -2,17 +2,19 @@ import { api } from "./api";
 
 export type ContactEnquiryStatus = "pending" | "contacted" | "resolved";
 
+// One submission of the website Contact page's "Enquire Now" form
 export interface ContactEnquiry {
   _id: string;
   name: string;
   email: string;
   phone: string;
-  alternatePhone?: string;
-  subject?: string;
   service?: string;
+  subService?: string;
+  location?: string;
+  // "Project Details / Your Requirement"
   message: string;
-  eventName?: string;
   status: ContactEnquiryStatus;
+  source?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -32,5 +34,5 @@ export const contactEnquiryApi = {
   list: () => api.get<ContactEnquiryListResponse>("/contact-enquiry?limit=1000"),
   updateStatus: (id: string, status: ContactEnquiryStatus) =>
     api.put<ContactEnquiry>(`/contact-enquiry/${id}`, { status }),
-  remove: (id: string) => api.delete<{ message: string }>(`/contact-enquiry/${id}`),
+  remove: (id: string) => api.delete<{ id: string }>(`/contact-enquiry/${id}`),
 };

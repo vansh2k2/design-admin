@@ -1,47 +1,15 @@
 import type { CmsPage } from "@/lib/cmsPages";
+import { DH_PAGE_DEFINITIONS } from "@/lib/designHouseCmsContent";
+
+// "Select Template" choices: the website's pages, same list and order as the Pages screen
+export const WEBSITE_PAGE_TEMPLATES: string[] = DH_PAGE_DEFINITIONS.map(([, title]) => title);
 
 export function getTemplateForPage(p: { type?: string; configKey?: string; title: string }): string {
-  if (p.type === "home" || p.configKey === "landingPage") return "Homepage";
-  // "Talk to Expo Advisor" and "Contact Us" are the same page; only "Contact Us" is offered as a template.
-  if (p.configKey === "contactPage") return "Contact Us";
-  return p.title;
+  return DH_PAGE_DEFINITIONS.find(([key]) => key === p.configKey)?.[1] ?? p.title;
 }
 
 export function getPageForTemplate(templateName: string, allPages: CmsPage[]): CmsPage | undefined {
-  if (templateName === "Homepage" || templateName === "Home") {
-    return allPages.find((p) => p.configKey === "landingPage") ?? allPages[0];
-  }
-  const byExactTitle = allPages.find((p) => p.title.toLowerCase() === templateName.toLowerCase());
-  if (byExactTitle) return byExactTitle;
-  if (templateName.includes("Contact") || templateName.includes("ADVISOR")) {
-    return allPages.find((p) => p.configKey === "contactPage");
-  }
-  if (templateName.includes("Why Exhibit")) {
-    return allPages.find((p) => p.configKey === "whyExhibitPage");
-  }
-  if (templateName.includes("Why Visit")) {
-    return allPages.find((p) => p.configKey === "whyVisitPage");
-  }
-  if (templateName.includes("About")) {
-    return allPages.find((p) => p.configKey === "aboutPage");
-  }
-  if (templateName.includes("MSME")) {
-    return allPages.find((p) => p.configKey === "msmePage");
-  }
-  if (templateName.includes("Exhibitor List")) {
-    return allPages.find((p) => p.configKey === "exhibitorsPage");
-  }
-  if (templateName.includes("Buyer-Seller")) {
-    return allPages.find((p) => p.configKey === "buyerSellerMeetPage");
-  }
-  if (templateName.includes("Gallery")) {
-    return allPages.find((p) => p.configKey === "galleryPage");
-  }
-  if (templateName.includes("Awards")) {
-    return allPages.find((p) => p.configKey === "awardsPage");
-  }
-  if (templateName.includes("Sponsorship")) {
-    return allPages.find((p) => p.configKey === "sponsorshipPage");
-  }
-  return undefined;
+  const configKey = DH_PAGE_DEFINITIONS.find(([, title]) => title.toLowerCase() === templateName.toLowerCase())?.[0];
+  if (configKey) return allPages.find((p) => p.configKey === configKey);
+  return allPages.find((p) => p.title.toLowerCase() === templateName.toLowerCase());
 }

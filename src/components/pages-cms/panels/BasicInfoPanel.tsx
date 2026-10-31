@@ -2,52 +2,10 @@ import { PUBLIC_SITE_URL, type CmsPage } from "@/lib/cmsPages";
 import { FieldLabel, SearchableSelectField, SelectField, TextInput } from "../fields";
 import { SectionTitle } from "../section-editor";
 import type { FormState } from "../types";
+import { WEBSITE_PAGE_TEMPLATES } from "../utils/templateMapping";
 
-const TEMPLATE_OPTIONS = [
-  "Homepage",
-  "About Expo",
-  "Advisory Board Members",
-  "Nominate Advisory Board Member",
-  // "Support Services Helpdesk",
-  "Blogs & News",
-  "Participate as Exhibitor",
-  "Exhibition Categories",
-  "BOOK A STALL",
-  "REGISTER AS VISITOR",
-  "DELEGATE REGISTRATION",
-  "REGISTER AS BUYER",
-  "SPONSORSHIP OPPORTUNITIES",
-  "Terms & Conditions",
-  "Privacy Policy",
-  "Refund Policy",
-  "Why Visit Design House",
-  "Why Exhibit with Design House?",
-  "MSME PMS Scheme",
-  "PMS Eligibility Check Calculator",
-  "Apply for PMS Support Stepper",
-  "PMS Participation Details",
-  "PMS Payment Details",
-  "Exhibitor List",
-  "Buyer-Seller Meet",
-  "Glimpses & Gallery",
-  "Excellence Awards",
-  "Awards Nomination Form",
-  "E-Promotion Opportunity",
-  "Partnership / Collaboration",
-  "Printing & Branding Partner",
-  "Travel Partner",
-  "Manpower Supply Partner",
-  "Logistics Partner",
-  "Stall Design Partner",
-  "Hotel & Stay Partner",
-  "Exhibitor Login Portal",
-  "Buyer Login Portal",
-  "Delegates Login Portal",
-  "User Login Portal",
-  "Our Services",
-  "Careers",
-  "Contact Us",
-];
+// The main pages of the website (as in its top menu)
+const TEMPLATE_OPTIONS = WEBSITE_PAGE_TEMPLATES;
 
 const BASE_PARENT_OPTIONS = [
   "— No Parent (Top Level) —",

@@ -267,3 +267,18 @@ div:where(.swal2-container) .swal-toast-popup {
     display: none;
   }
 }
+
+/* Sidebar logo (same effect as the website footer logo): white sparkles fade, grow and turn */
+@keyframes logo-twinkle {
+  0%, 100% { opacity: 0; transform: scale(0.3) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(45deg); }
+}
+/* Sidebar logo: a light band sweeps across, then rests before the next pass */
+@keyframes logo-shine {
+  0% { background-position: 100% 0; }
+  45%, 100% { background-position: 0% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [class*="logo-twinkle"] { animation: none !important; opacity: 0.7; }
+  [class*="logo-shine"] { animation: none !important; opacity: 0; }
+}

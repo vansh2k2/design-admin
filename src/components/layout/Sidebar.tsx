@@ -47,6 +47,19 @@ function isActive(
   return true;
 }
 
+// Small four-point stars scattered around the logo (position, size, twinkle delay) - as on the website footer
+const LOGO_SPARKLES = [
+  { x: "8%", y: "6%", size: 9, delay: "0s" },
+  { x: "22%", y: "30%", size: 6, delay: "1.1s" },
+  { x: "82%", y: "4%", size: 11, delay: "0.5s" },
+  { x: "92%", y: "38%", size: 7, delay: "1.7s" },
+  { x: "-3%", y: "58%", size: 8, delay: "0.8s" },
+  { x: "97%", y: "70%", size: 9, delay: "2.1s" },
+  { x: "46%", y: "-4%", size: 7, delay: "1.4s" },
+  { x: "70%", y: "88%", size: 6, delay: "0.3s" },
+  { x: "14%", y: "92%", size: 7, delay: "1.9s" },
+];
+
 function SidebarContent({
   onNavigate,
 }: {
@@ -210,7 +223,7 @@ function SidebarContent({
 
           ${active
             ? `
-                bg-[linear-gradient(90deg,#1e5e1a_0%,#2a6d21_48%,#66871c_68%,#cb620c_92%,#b85208_100%)]
+                bg-[linear-gradient(90deg,#fd6e15_0%,#E9902B_100%)]
                 text-white
                 shadow-[0_3px_10px_rgba(0,0,0,0.32)]
               `
@@ -251,47 +264,14 @@ function SidebarContent({
         flex-col
         overflow-hidden
         border-r
-        border-[#183E59]
-        bg-[#071f3c]
+        border-[#0f2d52]
+        bg-[linear-gradient(180deg,#0A2B5E_0%,#071d3f_45%,#01182a_100%)]
         text-white
         shadow-[4px_0_18px_rgba(0,0,0,0.20)]
       "
     >
-      {/* BACKGROUND IMAGE */}
-      <div
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          z-0
-          bg-cover
-          bg-bottom
-          bg-no-repeat
-        "
-        style={{
-          backgroundImage:
-            'url("/sidebar/sidebar-background.png")',
-          backgroundPosition: "center bottom",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-        }}
-      />
-
-      {/* LIGHT OVERLAY */}
-      <div
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          z-[1]
-          bg-[linear-gradient(
-            180deg,
-            rgba(3,22,47,0.06)_0%,
-            rgba(3,25,50,0.04)_55%,
-            rgba(2,20,40,0.02)_100%
-          )]
-        "
-      />
+      {/* Soft orange glow in the bottom corner, as on the website's dark sections */}
+      <div className="pointer-events-none absolute -bottom-24 -left-24 z-0 h-72 w-72 rounded-full bg-[#fd6e15]/10 blur-3xl" />
 
       {/* LOGO AREA */}
       <div
@@ -305,39 +285,44 @@ function SidebarContent({
           text-center
         "
       >
-        <Link
-          href="/"
-          className="
-            group
-            relative
-            flex
-            h-[78px]
-            items-center
-            justify-center
-            rounded-[12px]
-            bg-white
-            px-2
-            py-1
-            shadow-[0_2px_8px_rgba(0,0,0,0.18)]
-            transition-all
-            duration-200
-            hover:shadow-[0_4px_14px_rgba(0,0,0,0.25)]
-          "
-        >
+        <Link href="/" aria-label="Design House India Pvt. Ltd. Admin home" className="group relative mx-auto block w-[204px]">
+          {/* Soft white glow behind the logo so it stands out on the navy */}
+          <span aria-hidden="true" className="pointer-events-none absolute left-[2%] top-[52%] h-[34%] w-[62%] rounded-full bg-white/[0.08] blur-xl" />
+          <span aria-hidden="true" className="pointer-events-none absolute left-[25%] top-[8%] h-[45%] w-[55%] rounded-full bg-white/[0.025] blur-2xl" />
+          {/* Twinkling white sparkles around the logo */}
+          {LOGO_SPARKLES.map((sp, i) => (
+            <svg
+              key={i}
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              className="pointer-events-none absolute text-white animate-[logo-twinkle_2.8s_ease-in-out_infinite]"
+              style={{ left: sp.x, top: sp.y, width: sp.size, height: sp.size, animationDelay: sp.delay, filter: "drop-shadow(0 0 3px rgba(255,255,255,0.9))" }}
+            >
+              <path fill="currentColor" d="M12 0c.6 5.6 2.4 9.4 12 12-9.6 2.6-11.4 6.4-12 12-.6-5.6-2.4-9.4-12-12C9.6 9.4 11.4 5.6 12 0z" />
+            </svg>
+          ))}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logoland.png"
             alt="Design House India Pvt. Ltd. Admin"
-            className="
-              h-full
-              max-h-[70px]
-              w-auto
-              max-w-[196px]
-              object-contain
-              transition-transform
-              duration-200
-              group-hover:scale-[1.03]
-            "
+            width={2115}
+            height={576}
+            className="relative h-auto w-full transition-transform duration-200 group-hover:scale-[1.03] [filter:drop-shadow(0_0_4px_rgba(255,255,255,0.12))]"
+          />
+          {/* Shine sweep, masked to the logo's shape */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 animate-[logo-shine_4s_ease-in-out_infinite]"
+            style={{
+              background: "linear-gradient(110deg, transparent 38%, rgba(255,255,255,0.85) 50%, transparent 62%)",
+              backgroundSize: "260% 100%",
+              WebkitMaskImage: "url(/logoland.png)",
+              maskImage: "url(/logoland.png)",
+              WebkitMaskSize: "100% 100%",
+              maskSize: "100% 100%",
+              WebkitMaskRepeat: "no-repeat",
+              maskRepeat: "no-repeat",
+            }}
           />
         </Link>
       </div>
@@ -368,7 +353,7 @@ function SidebarContent({
               className={`
                 mb-[7px]
                 ${index > 0
-                  ? "border-t border-[#668196]/40 pt-[7px]"
+                  ? "border-t border-white/10 pt-[7px]"
                   : ""
                 }
               `}
@@ -390,7 +375,7 @@ function SidebarContent({
                     uppercase
                     leading-[13px]
                     tracking-[0.035em]
-                    text-[#facc15]
+                    text-[#fd6e15]
                   "
                   style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.4)" }}
                 >
@@ -401,7 +386,7 @@ function SidebarContent({
                   className="
                     h-px
                     flex-1
-                    bg-[#668196]/20
+                    bg-[#fd6e15]/25
                   "
                 />
               </div>
@@ -438,8 +423,8 @@ function SidebarContent({
             overflow-hidden
             rounded-[9px]
             border
-            border-emerald-500/30
-            bg-[linear-gradient(90deg,#14532d_0%,#16a34a_55%,#15803d_100%)]
+            border-[#fd6e15]/40
+            bg-[linear-gradient(90deg,#E9902B_0%,#fd6e15_100%)]
             px-[13px]
             text-white
             shadow-[0_4px_14px_rgba(0,0,0,0.24)]
@@ -506,7 +491,7 @@ export default function Sidebar({
   onNavigate?: () => void;
 }) {
   return (
-    <Suspense fallback={<aside className="flex h-screen w-[218px] shrink-0 flex-col border-r border-[#e8ecef] bg-white" />}>
+    <Suspense fallback={<aside className="flex h-screen w-[240px] shrink-0 flex-col bg-[#0A2B5E]" />}>
       <SidebarContent onNavigate={onNavigate} />
     </Suspense>
   );

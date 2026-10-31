@@ -184,6 +184,7 @@ export const NAV_SECTIONS: NavSection[] = [
     items: [
       { label: "Users & Roles", href: "/roles", icon: Users },
       { label: "Staff Management", href: "/staff", icon: UserCog },
+      { label: "WhatsApp Templates", href: "/whatsapp-templates", icon: MessagesSquare, badge: "NEW" },
       { label: "Security Center", href: "/system-services", icon: LockKeyhole },
       { label: "Servers & Domains", href: "/infrastructure", icon: Server, badge: "NEW" },
       { label: "Backups & Restore", icon: DatabaseBackup, disabled: true },

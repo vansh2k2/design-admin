@@ -11,6 +11,7 @@ import {
   Eye,
   Inbox,
   Mail,
+  MapPin,
   MessageSquareText,
   Phone,
   PhoneCall,
@@ -19,6 +20,7 @@ import {
   Trash2,
   type LucideIcon,
 } from "lucide-react";
+import { animate, motion } from "framer-motion";
 import Swal from "sweetalert2";
 import typography from "../pages/PagesTypography.module.css";
 import Modal from "@/components/ui/Modal";
@@ -58,6 +60,14 @@ function formatDateTime(value: string): string {
     hour12: true,
   });
 }
+
+// Numbers are saved as 10 digits; WhatsApp needs the 91 country code in front
+const whatsappLink = (phone: string) => {
+  const digits = phone.replace(/\D/g, "");
+  return `https://wa.me/${digits.length === 10 ? `91${digits}` : digits}`;
+};
+
+const serviceLabel = (e: ContactEnquiry) => [e.service, e.subService].filter(Boolean).join(" — ");
 
 const isSameDay = (a: Date, b: Date) =>
   a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
@@ -108,6 +118,24 @@ interface StatCardItem {
   numColor: string;
   footer: string;
   onClick: () => void;
+}
+
+// Counts up from the last shown number to the new value
+function CountUp({ value }: { value: number }) {
+  const [display, setDisplay] = useState(0);
+  const from = useRef(0);
+  useEffect(() => {
+    const controls = animate(from.current, value, {
+      duration: 1.2,
+      ease: "easeOut",
+      onUpdate: (v) => {
+        from.current = v;
+        setDisplay(Math.round(v));
+      },
+    });
+    return () => controls.stop();
+  }, [value]);
+  return <>{display}</>;
 }
 
 const PAGE_SIZE = 10;
@@ -228,7 +256,8 @@ export default function ContactUsPage() {
         e.name.toLowerCase().includes(q) ||
         e.email.toLowerCase().includes(q) ||
         e.phone.toLowerCase().includes(q) ||
-        (e.subject || "").toLowerCase().includes(q) ||
+        serviceLabel(e).toLowerCase().includes(q) ||
+        (e.location || "").toLowerCase().includes(q) ||
         e.message.toLowerCase().includes(q)
       );
     });
@@ -247,9 +276,9 @@ export default function ContactUsPage() {
         value: counts.all,
         icon: Inbox,
         tone: "slate",
-        gradient: "linear-gradient(135deg, #ffffff 0%, #ffffff 42%, #e2e8f0 100%)",
-        borderColor: "#e2e8f0",
-        numColor: "#334155",
+        gradient: "linear-gradient(135deg, #eef3fb 0%, #d6e2f5 100%)",
+        borderColor: "#c3d3ee",
+        numColor: "#0A2B5E",
         footer: "View all messages",
         onClick: () => changeTab("all"),
       },
@@ -258,8 +287,8 @@ export default function ContactUsPage() {
         value: counts.pending,
         icon: Clock3,
         tone: "amber",
-        gradient: "linear-gradient(135deg, #ffffff 0%, #ffffff 42%, #fed7aa 100%)",
-        borderColor: "#fed7aa",
+        gradient: "linear-gradient(135deg, #fff4ea 0%, #ffdcbf 100%)",
+        borderColor: "#fdc89c",
         numColor: "#c2410c",
         footer: "View pending",
         onClick: () => changeTab("pending"),
@@ -269,8 +298,8 @@ export default function ContactUsPage() {
         value: counts.contacted,
         icon: PhoneCall,
         tone: "blue",
-        gradient: "linear-gradient(135deg, #ffffff 0%, #ffffff 42%, #bae6fd 100%)",
-        borderColor: "#bae6fd",
+        gradient: "linear-gradient(135deg, #ecf8ff 0%, #c8eafd 100%)",
+        borderColor: "#a9dcfb",
         numColor: "#0284c7",
         footer: "View contacted",
         onClick: () => changeTab("contacted"),
@@ -280,8 +309,8 @@ export default function ContactUsPage() {
         value: counts.resolved,
         icon: CheckCircle2,
         tone: "emerald",
-        gradient: "linear-gradient(135deg, #ffffff 0%, #ffffff 42%, #bbf7d0 100%)",
-        borderColor: "#bbf7d0",
+        gradient: "linear-gradient(135deg, #effdf4 0%, #c9f5d9 100%)",
+        borderColor: "#a7ebc0",
         numColor: "#15803d",
         footer: "View resolved",
         onClick: () => changeTab("resolved"),
@@ -291,8 +320,8 @@ export default function ContactUsPage() {
         value: counts.today,
         icon: Sparkles,
         tone: "violet",
-        gradient: "linear-gradient(135deg, #ffffff 0%, #ffffff 42%, #ddd6fe 100%)",
-        borderColor: "#ddd6fe",
+        gradient: "linear-gradient(135deg, #f6f2ff 0%, #e2d9fe 100%)",
+        borderColor: "#cfc2fc",
         numColor: "#6d28d9",
         footer: "New today",
         onClick: () => changeTab("all"),
@@ -302,8 +331,8 @@ export default function ContactUsPage() {
         value: counts.week,
         icon: MessageSquareText,
         tone: "teal",
-        gradient: "linear-gradient(135deg, #ffffff 0%, #ffffff 42%, #99f6e4 100%)",
-        borderColor: "#99f6e4",
+        gradient: "linear-gradient(135deg, #ecfdf9 0%, #bff4e8 100%)",
+        borderColor: "#94e9d6",
         numColor: "#0f766e",
         footer: "This week",
         onClick: () => changeTab("all"),
@@ -320,10 +349,10 @@ export default function ContactUsPage() {
         ================================================= */}
         <div className="mb-[14px] flex flex-wrap items-start justify-between gap-[10px] border-b-[2px] border-[#293681] pb-[10px]">
           <div>
-            <h1 className="text-[19px] font-bold leading-[1.15] tracking-[-0.018em] text-[#23471d]">
+            <h1 className="text-[19px] font-bold leading-[1.15] tracking-[-0.018em] text-[#0A2B5E]">
               Contact Us Messages
             </h1>
-            <p className="mt-0.5 text-[9px] font-medium text-[#6c7587]">
+            <p className="mt-0.5 text-[9px] font-medium text-black">
               WhatsApp-verified submissions from the website&apos;s &quot;Send Us a Message&quot; contact form.
             </p>
           </div>
@@ -333,11 +362,14 @@ export default function ContactUsPage() {
             STATS ROW
         ================================================= */}
         <div className="mb-[12px] grid grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-6">
-          {statCards.map((item) => {
+          {statCards.map((item, index) => {
             const Icon = item.icon;
             return (
-              <div
+              <motion.div
                 key={item.title}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: index * 0.08, ease: "easeOut" }}
                 className="relative flex h-[82px] flex-col overflow-hidden rounded-[10px] border border-[#e5e7e6] bg-white p-1.5 !pb-4.5 transition-all hover:translate-y-[-1px]"
                 style={{
                   background: item.gradient,
@@ -358,7 +390,7 @@ export default function ContactUsPage() {
                     </p>
                     <div className="mt-1 flex items-end justify-between">
                       <span className="text-[16px] !font-semibold leading-none tracking-[-0.04em]" style={{ color: item.numColor, fontWeight: 600 }}>
-                        {item.value}
+                        <CountUp value={item.value} />
                       </span>
                     </div>
                   </div>
@@ -371,7 +403,7 @@ export default function ContactUsPage() {
                   {item.footer}
                   <ArrowRight className="h-2.5 w-2.5" />
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -408,7 +440,7 @@ export default function ContactUsPage() {
                   setSearch(e.target.value);
                   setPage(1);
                 }}
-                placeholder="Search by name, email, WhatsApp number, subject or message..."
+                placeholder="Search by name, phone, email, service, location or project details..."
                 className="h-[30px] w-full rounded-[5px] border border-[#e5e6e2] bg-white pl-[26px] pr-[9px] text-[9.5px] font-medium text-[#414b5e] outline-none placeholder:text-[#9aa0aa] focus:border-[#8fa98e]"
               />
             </div>
@@ -416,57 +448,71 @@ export default function ContactUsPage() {
 
           {/* TABLE */}
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[980px] border-collapse text-left">
+            <table className="w-full min-w-[1120px] border-collapse text-left">
               <thead>
-                <tr className="h-[32px] border-b border-[#e8e5df] bg-[#233D4D]">
-                  <th className="w-[36px] px-[12px] py-[6px] text-[8.5px] font-bold text-white uppercase tracking-wider">S.No</th>
-                  <th className="px-[12px] py-[6px] text-[8.5px] font-bold text-white uppercase tracking-wider">Name</th>
-                  <th className="px-[12px] py-[6px] text-[8.5px] font-bold text-white uppercase tracking-wider">Email</th>
-                  <th className="px-[12px] py-[6px] text-[8.5px] font-bold text-white uppercase tracking-wider">WhatsApp No.</th>
-                  <th className="px-[12px] py-[6px] text-[8.5px] font-bold text-white uppercase tracking-wider">Alternate No.</th>
-                  <th className="px-[12px] py-[6px] text-[8.5px] font-bold text-white uppercase tracking-wider">Subject</th>
-                  <th className="px-[12px] py-[6px] text-[8.5px] font-bold text-white uppercase tracking-wider">Status</th>
-                  <th className="px-[12px] py-[6px] text-[8.5px] font-bold text-white uppercase tracking-wider">Received</th>
-                  <th className="px-[12px] py-[6px] text-right text-[8.5px] font-bold text-white uppercase tracking-wider">Actions</th>
+                <tr className="h-[32px] border-b border-[#e8e5df] bg-[#0A2B5E]">
+                  <th className="w-[36px] px-[12px] py-[6px] whitespace-nowrap text-[7.5px] font-bold text-white uppercase tracking-wide">S.No</th>
+                  <th className="px-[12px] py-[6px] whitespace-nowrap text-[7.5px] font-bold text-white uppercase tracking-wide">Full Name</th>
+                  <th className="px-[12px] py-[6px] whitespace-nowrap text-[7.5px] font-bold text-white uppercase tracking-wide">Phone Number</th>
+                  <th className="px-[12px] py-[6px] whitespace-nowrap text-[7.5px] font-bold text-white uppercase tracking-wide">Email Address</th>
+                  <th className="px-[12px] py-[6px] whitespace-nowrap text-[7.5px] font-bold text-white uppercase tracking-wide">Services</th>
+                  <th className="px-[12px] py-[6px] whitespace-nowrap text-[7.5px] font-bold text-white uppercase tracking-wide">Location</th>
+                  <th className="px-[12px] py-[6px] whitespace-nowrap text-[7.5px] font-bold text-white uppercase tracking-wide">Project Details</th>
+                  <th className="px-[12px] py-[6px] whitespace-nowrap text-[7.5px] font-bold text-white uppercase tracking-wide">Status</th>
+                  <th className="px-[12px] py-[6px] whitespace-nowrap text-[7.5px] font-bold text-white uppercase tracking-wide">Received</th>
+                  <th className="px-[12px] py-[6px] text-right whitespace-nowrap text-[7.5px] font-bold text-white uppercase tracking-wide">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#f0f0ec]">
                 {loading ? (
                   <tr>
-                    <td colSpan={9} className="py-12 text-center text-[10px] text-[#6c7587]">
+                    <td colSpan={10} className="py-12 text-center text-[10px] text-[#6c7587]">
                       Loading contact messages…
                     </td>
                   </tr>
                 ) : loadError ? (
                   <tr>
-                    <td colSpan={9} className="py-12 text-center text-[10px] font-semibold text-red-600">
+                    <td colSpan={10} className="py-12 text-center text-[10px] font-semibold text-red-600">
                       {loadError}
                     </td>
                   </tr>
                 ) : paginatedRows.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="py-12 text-center text-[10px] text-[#6c7587]">
+                    <td colSpan={10} className="py-12 text-center text-[10px] text-[#6c7587]">
                       No messages match your filters.
                     </td>
                   </tr>
                 ) : (
                   paginatedRows.map((enquiry, rowIndex) => (
                     <tr key={enquiry._id} className="transition hover:bg-slate-50/80">
-                      <td className="px-[12px] py-[8px] text-[9px] font-semibold text-[#6c7587]">{startIndex + rowIndex + 1}</td>
+                      <td className="px-[12px] py-[8px] text-[8px] font-semibold text-[#6c7587]">{startIndex + rowIndex + 1}</td>
                       <td className="px-[12px] py-[8px]">
                         <button
                           type="button"
                           onClick={() => setViewing(enquiry)}
-                          className="text-[9px] font-bold text-[#4B1426] hover:underline"
+                          className="text-[8px] font-bold text-[#4B1426] hover:underline"
                         >
                           {enquiry.name}
                         </button>
                       </td>
-                      <td className="px-[12px] py-[8px] text-[9px] font-medium text-[#334155]">{enquiry.email}</td>
-                      <td className="px-[12px] py-[8px] text-[9px] font-bold text-[#166534]">{enquiry.phone}</td>
-                      <td className="px-[12px] py-[8px] text-[9px] font-medium text-[#334155]">{enquiry.alternatePhone || "—"}</td>
-                      <td className="max-w-[160px] truncate px-[12px] py-[8px] text-[9px] font-medium text-[#334155]" title={enquiry.subject}>
-                        {enquiry.subject || "—"}
+                      <td className="px-[12px] py-[8px] text-[8px] font-bold text-[#166534]">{enquiry.phone}</td>
+                      <td className="px-[12px] py-[8px] text-[8px] font-medium text-[#334155]">{enquiry.email}</td>
+                      <td className="max-w-[150px] px-[12px] py-[8px] text-[8px] font-medium text-[#334155]" title={serviceLabel(enquiry)}>
+                        <span className="block truncate">{enquiry.service || "—"}</span>
+                        {enquiry.subService && <span className="block truncate text-[7px] text-[#6c7587]">{enquiry.subService}</span>}
+                      </td>
+                      <td className="max-w-[130px] truncate px-[12px] py-[8px] text-[8px] font-medium text-[#334155]" title={enquiry.location}>
+                        {enquiry.location || "—"}
+                      </td>
+                      <td className="px-[12px] py-[8px]">
+                        <button
+                          type="button"
+                          onClick={() => setViewing(enquiry)}
+                          className="inline-flex h-[20px] items-center gap-1 rounded-[4px] border border-[#0A2B5E]/20 bg-[#0A2B5E]/[0.06] px-[8px] text-[7.5px] font-bold text-[#0A2B5E] transition hover:border-[#0A2B5E]/50 hover:bg-[#0A2B5E]/[0.14]"
+                        >
+                          <Eye className="h-[10px] w-[10px]" />
+                          View
+                        </button>
                       </td>
                       <td className="px-[12px] py-[8px]">
                         <select
@@ -474,7 +520,7 @@ export default function ContactUsPage() {
                           disabled={updatingId === enquiry._id}
                           onClick={(e) => e.stopPropagation()}
                           onChange={(e) => handleStatusChange(enquiry._id, e.target.value as ContactEnquiryStatus)}
-                          className={`h-[22px] cursor-pointer appearance-none rounded-[4px] px-[8px] pr-[22px] text-[8px] font-bold outline-none bg-no-repeat bg-[right_6px_center] shadow-xs transition disabled:opacity-50 ${STATUS_STYLES[enquiry.status]}`}
+                          className={`h-[20px] cursor-pointer appearance-none rounded-[4px] px-[7px] pr-[20px] text-[7px] font-bold outline-none bg-no-repeat bg-[right_6px_center] shadow-xs transition disabled:opacity-50 ${STATUS_STYLES[enquiry.status]}`}
                           style={{
                             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
                           }}
@@ -484,7 +530,7 @@ export default function ContactUsPage() {
                           <option value="resolved" className="bg-white font-bold text-[#23714a]">Resolved</option>
                         </select>
                       </td>
-                      <td className="px-[12px] py-[8px] text-[8.5px] font-medium text-[#6c7587]">{formatDateTime(enquiry.createdAt)}</td>
+                      <td className="px-[12px] py-[8px] text-[7.5px] font-medium text-[#6c7587]">{formatDateTime(enquiry.createdAt)}</td>
                       <td className="px-[12px] py-[8px]">
                         <div className="flex items-center justify-end gap-1.5">
                           <button
@@ -496,7 +542,7 @@ export default function ContactUsPage() {
                             <Eye className="h-[12px] w-[12px] text-orange-600" />
                           </button>
                           <a
-                            href={`https://wa.me/${enquiry.phone.replace(/\D/g, "")}`}
+                            href={whatsappLink(enquiry.phone)}
                             target="_blank"
                             rel="noreferrer"
                             title="Message on WhatsApp"
@@ -590,7 +636,7 @@ export default function ContactUsPage() {
                 Delete
               </button>
               <a
-                href={`https://wa.me/${viewing.phone.replace(/\D/g, "")}`}
+                href={whatsappLink(viewing.phone)}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex h-[32px] items-center gap-1.5 px-[14px] text-[12px] font-semibold text-white transition-all hover:opacity-90 active:scale-95"
@@ -631,10 +677,10 @@ export default function ContactUsPage() {
 
             <div className="grid grid-cols-2 gap-2">
               {[
-                { label: "Email", value: viewing.email, icon: Mail },
-                { label: "WhatsApp Number", value: viewing.phone, icon: Phone },
-                ...(viewing.alternatePhone ? [{ label: "Alternate Number", value: viewing.alternatePhone, icon: Phone }] : []),
-                { label: "Subject", value: viewing.subject || "—", icon: MessageSquareText },
+                { label: "Phone Number", value: viewing.phone, icon: Phone },
+                { label: "Email Address", value: viewing.email, icon: Mail },
+                { label: "Service Interested In", value: serviceLabel(viewing) || "—", icon: MessageSquareText },
+                { label: "Project Location", value: viewing.location || "—", icon: MapPin },
               ].map(({ label, value, icon: FieldIcon }) => (
                 <div key={label} className="rounded-[4px] border border-[#e4e7eb] bg-[#f8fafc] px-2.5 py-1.5">
                   <div className="flex items-center justify-between gap-2">
@@ -657,7 +703,7 @@ export default function ContactUsPage() {
             </div>
 
             <div>
-              <p className="mb-1 text-[8px] font-bold uppercase tracking-wide text-[#94a3b8]">Message</p>
+              <p className="mb-1 text-[8px] font-bold uppercase tracking-wide text-[#94a3b8]">Project Details / Requirement</p>
               <div className="rounded-[4px] border border-[#e4e7eb] bg-[#f8fafc] p-3 text-[11px] leading-relaxed text-[#334155] whitespace-pre-wrap">
                 {viewing.message}
               </div>

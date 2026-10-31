@@ -552,9 +552,10 @@ export default function PagesCmsPage() {
       value: pages.length.toString(),
       note: `Published: ${publishedCount}`,
       icon: FileText,
-      tone: "violet",
-      gradient: "linear-gradient(135deg, #ffffff 0%, #ffffff 55%, #f8f5ff 100%)",
-      numColor: "#6d28d9",
+      tone: "navy",
+      gradient: "linear-gradient(135deg, #f6f9fd 0%, #e5edf9 100%)",
+      borderColor: "#d3dff2",
+      numColor: "#0A2B5E",
       footer: "View all pages",
     },
     {
@@ -563,8 +564,9 @@ export default function PagesCmsPage() {
       note: `Unpublished: ${draftCount}`,
       icon: Pencil,
       tone: "amber",
-      gradient: "linear-gradient(135deg, #ffffff 0%, #ffffff 55%, #fffdf0 100%)",
-      numColor: "#b45309",
+      gradient: "linear-gradient(135deg, #fffaf5 0%, #ffeadb 100%)",
+      borderColor: "#fed9bc",
+      numColor: "#c2410c",
       footer: "View drafts",
     },
     {
@@ -573,8 +575,9 @@ export default function PagesCmsPage() {
       note: "Across all pages",
       icon: Layers,
       tone: "blue",
-      gradient: "linear-gradient(135deg, #ffffff 0%, #ffffff 55%, #f0f7ff 100%)",
-      numColor: "#1d4ed8",
+      gradient: "linear-gradient(135deg, #f5fbff 0%, #dff3fe 100%)",
+      borderColor: "#c4e6fc",
+      numColor: "#0284c7",
       footer: "Manage sections",
     },
 
@@ -585,13 +588,15 @@ export default function PagesCmsPage() {
       note: averageSeoRating,
       icon: TrendingUp,
       tone: "emerald",
-      gradient: "linear-gradient(135deg, #ffffff 0%, #ffffff 55%, #f0fdf4 100%)",
-      numColor: "#047857",
+      gradient: "linear-gradient(135deg, #f6fef9 0%, #ddf8e7 100%)",
+      borderColor: "#c2f0d3",
+      numColor: "#15803d",
       footer: "View SEO report",
     },
   ];
 
   const toneClass = {
+    navy: "bg-white/80 text-[#0A2B5E] ring-[#c3d3ee]",
     emerald: "bg-emerald-50 text-emerald-700 ring-emerald-100",
     violet: "bg-violet-50 text-violet-700 ring-violet-100",
     amber: "bg-amber-50 text-amber-700 ring-amber-100",
@@ -685,9 +690,10 @@ export default function PagesCmsPage() {
                 return (
                   <div
                     key={item.title}
-                    className="relative flex flex-col justify-center overflow-hidden rounded-[7px] p-2"
+                    className="relative flex flex-col justify-center overflow-hidden rounded-[7px] border p-2"
                     style={{
                       background: item.gradient,
+                      borderColor: item.borderColor,
                       boxShadow: "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px",
                     }}
                   >
@@ -701,16 +707,16 @@ export default function PagesCmsPage() {
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-[8px] tracking-[0.01em] text-slate-900" style={{ color: "#0f172a" }}>
+                        <p className="truncate text-[8px] !font-semibold tracking-[0.01em] text-slate-900" style={{ color: "#0f172a", fontWeight: 600 }}>
                           {item.title}
                         </p>
 
                         <div className="mt-1.5 flex items-end gap-1">
                           <span
-                            className={`tracking-[-0.04em] ${
+                            className={`!font-semibold tracking-[-0.04em] ${
                               item.title === "LAST UPDATED" ? "text-[11px] leading-[1.2]" : "text-[17px] leading-none"
                             }`}
-                            style={{ color: item.numColor }}
+                            style={{ color: item.numColor, fontWeight: 600 }}
                           >
                             {item.value}
                           </span>
@@ -723,7 +729,7 @@ export default function PagesCmsPage() {
                         </div>
 
                         <p
-                          className={`mt-0.5 text-[7.5px] ${
+                          className={`mt-0.5 text-[7.5px] font-semibold ${
                             item.title === "DRAFT PAGES"
                               ? "text-amber-600"
                               : item.title === "TOTAL SECTIONS"
@@ -821,28 +827,28 @@ export default function PagesCmsPage() {
 
               {/* TABLE HEADER */}
 
-              <div className="grid h-[32px] shrink-0 grid-cols-[minmax(0,2.7fr)_minmax(0,1.8fr)_minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1.15fr)_minmax(0,1.45fr)] items-center border-b border-[#e8e5df] bg-[#233D4D] px-[10px]">
-                <div className="min-w-0 overflow-hidden px-[4px] text-[8.5px] font-bold text-white">
+              <div className="grid h-[32px] shrink-0 grid-cols-[minmax(0,2.7fr)_minmax(0,1.8fr)_minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1.15fr)_minmax(0,1.45fr)] items-center border-b border-[#e8e5df] bg-[#0A2B5E] px-[10px]">
+                <div className="min-w-0 overflow-hidden whitespace-nowrap px-[4px] text-[7.5px] font-bold uppercase tracking-wide text-white">
                   Page Title
                 </div>
 
-                <div className="min-w-0 overflow-hidden px-[4px] text-[8.5px] font-bold text-white">
+                <div className="min-w-0 overflow-hidden whitespace-nowrap px-[4px] text-[7.5px] font-bold uppercase tracking-wide text-white">
                   Url
                 </div>
 
-                <div className="min-w-0 overflow-hidden px-[4px] text-[8.5px] font-bold text-white">
+                <div className="min-w-0 overflow-hidden whitespace-nowrap px-[4px] text-[7.5px] font-bold uppercase tracking-wide text-white">
                   Author
                 </div>
 
-                <div className="min-w-0 overflow-hidden px-[4px] text-[8.5px] font-bold text-white">
+                <div className="min-w-0 overflow-hidden whitespace-nowrap px-[4px] text-[7.5px] font-bold uppercase tracking-wide text-white">
                   Status
                 </div>
 
-                <div className="min-w-0 overflow-hidden px-[4px] text-[8.5px] font-bold text-white">
+                <div className="min-w-0 overflow-hidden whitespace-nowrap px-[4px] text-[7.5px] font-bold uppercase tracking-wide text-white">
                   Seo Score
                 </div>
 
-                <div className="min-w-0 overflow-hidden px-[4px] text-[8.5px] font-bold text-white">
+                <div className="min-w-0 overflow-hidden whitespace-nowrap px-[4px] text-[7.5px] font-bold uppercase tracking-wide text-white">
                   Last Updated
                 </div>
               </div>
@@ -884,7 +890,7 @@ export default function PagesCmsPage() {
                         <PageTypeIcon type={page.type} />
 
                         <div className="flex min-w-0 max-w-full items-center gap-[5px] overflow-hidden">
-                          <span className="truncate text-[8px] font-semibold text-[#293681]">
+                          <span className="truncate text-[8px] font-semibold text-[#0A2B5E]">
                             {page.title}
                           </span>
 
@@ -899,7 +905,7 @@ export default function PagesCmsPage() {
                       {/* URL */}
 
                       <div className="flex min-w-0 items-center gap-[5px] overflow-hidden px-[4px]">
-                        <span className="truncate text-[7.5px] font-medium text-[#4B1426]">
+                        <span className="truncate text-[7.5px] font-semibold text-[#d9560b]">
                           {page.slug}
                         </span>
 
@@ -912,7 +918,7 @@ export default function PagesCmsPage() {
                       {/* AUTHOR */}
 
                       <div className="flex min-w-0 items-center gap-[6px] overflow-hidden px-[4px]">
-                        <span className="truncate text-[7.5px] font-medium text-[#BE1A1A]">
+                        <span className="truncate text-[7.5px] font-medium text-[#334155]">
                           {page.author}
                         </span>
                       </div>
@@ -943,7 +949,7 @@ export default function PagesCmsPage() {
                         <SeoRing score={page.seoScore} />
 
                         <div className="min-w-0">
-                          <p className="text-[11px] font-bold leading-none text-[#2c374c]">
+                          <p className="text-[11px] font-bold leading-none text-[#0A2B5E]">
                             {page.seoScore}
                           </p>
 
@@ -961,11 +967,11 @@ export default function PagesCmsPage() {
                       {/* UPDATED */}
 
                       <div className="min-w-0 overflow-hidden px-[4px] pl-[12px]">
-                        <p suppressHydrationWarning className="truncate text-[7.5px] font-semibold leading-[1.3] text-[#293681]">
+                        <p suppressHydrationWarning className="truncate text-[7.5px] font-semibold leading-[1.3] text-[#0A2B5E]">
                           {page.updated.split(",")[0]}
                         </p>
 
-                        <p suppressHydrationWarning className="mt-[2px] truncate text-[7.5px] font-semibold leading-[1.3] text-blue-600">
+                        <p suppressHydrationWarning className="mt-[2px] truncate text-[7.5px] font-medium leading-[1.3] text-[#64748b]">
                           {page.updated.split(",")[1]?.trim()}
                         </p>
                       </div>

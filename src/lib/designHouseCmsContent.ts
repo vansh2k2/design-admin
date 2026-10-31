@@ -1112,6 +1112,9 @@ export const dhServicePages: Record<string, Section[]> = {
   exhibitionsPage: servicePage({ title: "Exhibitions &", highlight: "Events", intro: "Innovative stall designs with flawless execution to maximize brand visibility and generate quality leads — exhibition stalls, trade shows, expo booths and event setups.", image: img.heroExhibition, offerings: ["Custom & island stalls", "Double-decker stalls", "Graphics & lighting", "On-site installation & dismantling", "Product launch events"], gallery: ["exhibition-stall-custom.png", "exhibition-stall-island.png", "exhibition-hall.png", "exhibition-pavilion.webp"] }),
   signagePage: servicePage({ title: "Branding &", highlight: "Signage", intro: "LED and backlit signboards, wayfinding, 3D acrylic and metal lettering that make your brand visible.", image: img.project("brand-store-facade.webp"), offerings: ["LED & backlit signboards", "Wayfinding signage", "3D acrylic & metal letters", "Facade branding"], gallery: ["brand-store-facade.webp"] }),
   officeInteriorPage: servicePage({ title: "Office", highlight: "Interior", intro: "Modular workstations, MD cabins and office chairs designed and manufactured in-house.", image: img.project("md-cabin-executive.jpg"), offerings: ["Modular workstations", "MD cabins", "Office chairs", "Storage & filing"], gallery: ["office-workstations.jpg", "md-cabin-executive.jpg", "office-lounge-seating.webp"] }),
+  manufacturingPage: servicePage({ title: "Manufacturing &", highlight: "Execution", intro: "In-house manufacturing and professional execution to ensure quality and timely delivery.", image: img.hero1, offerings: ["In-house joinery & metal works", "Fixture & furniture manufacturing", "Quality checks at every stage", "Site installation", "Project management & handover"], gallery: ["office-workstations.jpg", "retail-wooden-shelving.jpg"] }),
+  residentialInteriorPage: servicePage({ title: "Residential", highlight: "Interiors", intro: "Beautiful, functional and timeless homes designed to reflect your lifestyle.", image: img.hero1, offerings: ["Space planning", "Modular kitchens & wardrobes", "Living & bedroom interiors", "Lighting & false ceilings", "Turnkey execution"], gallery: ["corporate-office-lounge.jpg"] }),
+  ensisPage: servicePage({ title: "Spa & Panchkarma", highlight: "Furniture", intro: "ENSIS — premium spa and panchkarma furniture that blends traditional wellness practices with modern design.", image: img.hero1, offerings: ["Panchkarma droni tables", "Spa & massage beds", "Therapy room furniture", "Custom finishes & sizes", "Delivery & installation"], gallery: [] }),
 };
 
 // ---------------------------------------------------------------------------------------------
@@ -1513,37 +1516,46 @@ export const dhTermsSections = legalPage("Terms & Conditions", "Terms that apply
   ["Governing Law", "These terms are governed by the laws of India; courts at Ghaziabad have jurisdiction."],
 ]);
 
+export const dhDisclaimerSections = legalPage("Disclaimer", "Important information about the use of this website and its content.", [
+  ["General Information", "All content on this website is provided in good faith for general information and showcase purposes only."],
+  ["Project Images & Intellectual Property", "Project images, designs and creative content belong to Design House India Pvt. Ltd. or their respective owners."],
+  ["External Links", "Links to third-party websites are for convenience; we are not responsible for their content or practices."],
+  ["No Professional Advice", "The content does not constitute professional, legal or commercial advice. Contact our team for project-specific guidance."],
+  ["Limitation of Liability", "Design House India Pvt. Ltd. is not liable for any damages arising from the use of this website."],
+  ["Changes to This Disclaimer", "We may update this disclaimer from time to time without prior notice."],
+]);
+
 // ---------------------------------------------------------------------------------------------
 // Page list and lookup
 // ---------------------------------------------------------------------------------------------
 
-/** [configKey, title, slug, type] — page ids are list positions, so append new pages at the end */
+/**
+ * [configKey, title, slug, type] — the pages of the website, in the order of its menu.
+ * Also the "Select Template" choices in the page editor. Saved content is kept per configKey.
+ */
 export const DH_PAGE_DEFINITIONS = [
   ["landingPage", "Home", "/", "home"],
-  ["aboutPage", "About Us", "/about", "page"],
-  ["teamPage", "Our Team", "/about/team", "page"],
-  ["associatesPage", "Our Associates", "/about/associates", "page"],
-  ["brandApproachPage", "Brand Conscious Approach", "/about/brand-approach", "page"],
-  ["infrastructurePage", "Facility & Infrastructure", "/about/infrastructure", "page"],
-  ["servicesPage", "Services", "/services", "page"],
-  ["retailInteriorPage", "Retail Interior", "/services/retail-interior", "page"],
-  ["corporateInteriorPage", "Corporate Interior", "/services/corporate-interior", "page"],
-  ["restaurantInteriorPage", "Restaurant Interior", "/services/restaurant-interior", "page"],
-  ["shopInShopPage", "Shop in Shop", "/services/shop-in-shop", "page"],
-  ["retailDisplayPage", "Retail Display Merchandising", "/services/retail-display", "page"],
-  ["retailKioskPage", "Retail Kiosk", "/services/retail-kiosk", "page"],
-  ["exhibitionsPage", "Exhibitions & Events", "/services/exhibitions", "page"],
-  ["signagePage", "Branding & Signage", "/services/signage", "page"],
-  ["officeInteriorPage", "Office Interior", "/services/office-interior", "page"],
-  ["portfolioPage", "Portfolio", "/portfolio", "page"],
-  ["galleryPage", "Project Gallery", "/gallery", "page"],
-  ["clientsPage", "Our Clients", "/clients", "page"],
-  ["testimonialsPage", "Testimonials", "/testimonials", "page"],
-  ["blogPage", "Blogs", "/blogs", "page"],
+  ["aboutPage", "About", "/about", "page"],
+  ["servicesPage", "Our Services", "/services", "page"],
+  ["corporateInteriorPage", "Corporate Interiors", "/services/corporate-interiors", "page"],
+  ["retailInteriorPage", "Retail Showroom Interiors", "/services/retail-showrooms", "page"],
+  ["restaurantInteriorPage", "Restaurant Interiors", "/services/restaurant-interiors", "page"],
+  ["exhibitionsPage", "Exhibition Stall Design & Build", "/services/exhibition-stalls", "page"],
+  ["retailKioskPage", "Retail Kiosks", "/services/retail-kiosks", "page"],
+  ["retailDisplayPage", "Retail Display Fixtures", "/services/display-fixtures", "page"],
+  ["signagePage", "Signage & Branding", "/services/signage-branding", "page"],
+  ["manufacturingPage", "Manufacturing & Execution", "/services/manufacturing-execution", "page"],
+  ["residentialInteriorPage", "Residential Interiors", "/services/residential-interiors", "page"],
+  ["ensisPage", "Spa & Panchkarma Furniture (ENSIS)", "/services/ensis", "page"],
+  ["projectsPage", "Projects", "/projects", "page"],
+  ["clientsPage", "Clients", "/clients", "page"],
   ["careersPage", "Career", "/career", "page"],
+  ["blogPage", "Blogs", "/blogs", "page"],
+  ["downloadsPage", "Downloads", "/downloads", "page"],
   ["contactPage", "Contact Us", "/contact", "page"],
   ["privacyPolicyPage", "Privacy Policy", "/privacy-policy", "page"],
   ["termsAndConditionsPage", "Terms & Conditions", "/terms-and-conditions", "page"],
+  ["disclaimerPage", "Disclaimer", "/disclaimer", "page"],
 ] as const;
 
 export const DH_DEFAULT_SECTIONS: Record<string, Section[]> = {
@@ -1568,4 +1580,7 @@ export const DH_DEFAULT_SECTIONS: Record<string, Section[]> = {
   "contact-us": dhContactSections,
   privacyPolicyPage: dhPrivacySections,
   termsAndConditionsPage: dhTermsSections,
+  projectsPage: dhPortfolioSections,
+  downloadsPage: dhDownloadsSections,
+  disclaimerPage: dhDisclaimerSections,
 };

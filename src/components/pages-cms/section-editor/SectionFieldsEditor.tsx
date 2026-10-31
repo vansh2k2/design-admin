@@ -1,5 +1,6 @@
 import { FieldLabel, ImageUploadField, ImageWithAltField, PdfUploadField, TextInput, Textarea, Toggle, VideoUploadField } from "../fields";
 import RichTextEditor from "@/components/RichTextEditor";
+import { TopbarContactFields } from "./TopbarContactFields";
 import {
   IMAGE_KEY_PATTERN,
   LONG_TEXT_KEY_PATTERN,
@@ -42,23 +43,9 @@ export function SectionFieldsEditor({
               hideLimit={true}
             />
           </div>
-          <div>
-            <FieldLabel required>Phone Number</FieldLabel>
-            <TextInput
-              value={String(section.phoneNumber || "")}
-              onChange={(next) => onFieldChange("phoneNumber", next)}
-              placeholder="+91 96549 00525"
-              hideLimit={true}
-            />
-          </div>
-          <div>
-            <FieldLabel required>Contact Email</FieldLabel>
-            <TextInput
-              value={String(section.contactEmail || "")}
-              onChange={(next) => onFieldChange("contactEmail", next)}
-              placeholder="info@designhouse.co.in"
-              hideLimit={true}
-            />
+          {/* Phone numbers, email and quick links: saved to the backend, live on the website */}
+          <div className="md:col-span-2">
+            <TopbarContactFields />
           </div>
           <div className="md:col-span-2 border-t border-gray-100 pt-2.5">
             <ImageWithAltField

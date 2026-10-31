@@ -2,6 +2,12 @@ import { adminPageHeaders } from "./adminPage";
 import { getMockDataForPath } from "./mock/legacy";
 import { MOCK_API, MockHttpError, mockRequest } from "./mock/router";
 
+// Every backend route lives under /api; add it if the configured URL leaves it out
+const withApiPrefix = (url: string): string => {
+  const clean = url.replace(/\/+$/, "");
+  return clean.endsWith("/api") ? clean : `${clean}/api`;
+};
+
 export const getApiBaseUrl = (): string => {
   // If running in browser on production domain
   if (typeof window !== "undefined") {
@@ -19,7 +25,7 @@ export const getApiBaseUrl = (): string => {
     ) {
       return "https://api.designhouse.co.in/api";
     }
-    return process.env.NEXT_PUBLIC_API_URL;
+    return withApiPrefix(process.env.NEXT_PUBLIC_API_URL);
   }
 
   // If running on local network / custom IP in browser
@@ -141,8 +147,13 @@ async function refreshAccessToken(): Promise<boolean> {
   return refreshInFlight;
 }
 
+// Modules already connected to the real backend: they skip the demo data even while
+// NEXT_PUBLIC_USE_MOCK_API is on
+const LIVE_API_PREFIXES = ["/contact-enquiry", "/whatsapp-templates", "/topbar"];
+export const isLivePath = (path: string) => LIVE_API_PREFIXES.some((prefix) => path.startsWith(prefix));
+
 async function request<T>(path: string, options?: ApiRequestOptions, isRetry = false): Promise<T> {
-  if (MOCK_API) {
+  if (MOCK_API && !isLivePath(path)) {
     try {
       return await mockRequest<T>(path, options?.method ?? "GET", options?.body);
     } catch (error) {
@@ -171,6 +182,7 @@ async function request<T>(path: string, options?: ApiRequestOptions, isRetry = f
   // Paths that have real backends — errors should be thrown, not mocked.
   // Writes to settings/uploads/website content must never report a fake success.
   const isRealBackendPath =
+    isLivePath(path) ||
     path.includes("/staff") ||
     path.includes("/roles") ||
     path.includes("/auth") ||

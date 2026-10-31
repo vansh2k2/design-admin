@@ -1,4 +1,4 @@
-import { getAccessToken, getApiBaseUrl, getBackendUrl } from "./api";
+import { getAccessToken, getApiBaseUrl, getBackendUrl, isLivePath } from "./api";
 import { adminPageHeaders } from "./adminPage";
 import { MOCK_API, mockFetchResponse } from "./mock/router";
 
@@ -41,10 +41,12 @@ export function installAdminFetch() {
   const original = window.fetch.bind(window);
   window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
     if (!isBackendApi(input)) return original(input, init);
-    // Frontend-only mode: answer from the sample data instead of the network
-    if (MOCK_API) {
-      const raw = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
-      return mockFetchResponse(new URL(raw, window.location.origin), init);
+    const raw = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+    const url = new URL(raw, window.location.origin);
+    // Frontend-only mode: answer from the sample data instead of the network,
+    // except for modules already connected to the real backend
+    if (MOCK_API && !isLivePath(url.pathname.replace(/^\/api/, ""))) {
+      return mockFetchResponse(url, init);
     }
 
     const headers = new Headers(init?.headers ?? (input instanceof Request ? input.headers : undefined));
