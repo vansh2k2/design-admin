@@ -448,7 +448,7 @@ export function mergeSectionWithSavedData(
     if (!merged.description) merged.description = fallbackItem.description || "Explore our complete range of services designed to create functional, inspiring and future-ready spaces. Click on any service to view our projects.";
     delete merged.items;
   }
-  if (fallbackItem.key === "services-cta" || merged.key === "services-cta") {
+  if (fallbackItem.key === "services-cta" || merged.key === "services-cta" || fallbackItem.key === "cta-banner" || merged.key === "cta-banner") {
     if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Let's Build Together";
     if (!merged.title) merged.title = fallbackItem.title || "Let's Discuss Your Project";
     if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Your Project";
