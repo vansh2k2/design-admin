@@ -19,6 +19,7 @@ import {
   Share2,
 } from "lucide-react";
 import Swal from "sweetalert2";
+import { SITE } from "@/config/site";
 import { api, getBackendUrl } from "@/lib/api";
 import typography from "../pages/PagesTypography.module.css";
 
@@ -447,7 +448,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
           <div className="flex items-center gap-[10px]">
             <a
-              href="http://localhost:3002/sitemap.xml"
+              href={`${SITE.websiteUrl}/sitemap.xml`}
               target="_blank"
               rel="noreferrer"
               className="flex h-[30px] items-center justify-center gap-[5px] rounded-[6px] border border-[#fed7aa] bg-[#fff7ed] px-[14px] text-[8.5px] font-semibold text-[#ea580c] transition hover:bg-[#ffedd5] shadow-sm cursor-pointer"

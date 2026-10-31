@@ -21,12 +21,12 @@ const ACTIVE_KEY = "dh_admin_active";
 
 function toStoreAdmin(user: AdminUser): StoreAdmin {
   return {
-    id: "admin-1",
+    id: user.id || "admin-1",
     name: user.name,
     email: user.email,
-    phone: "+91 98100 00000",
+    phone: user.id ? "" : "+91 98100 00000",
     userType: "INTERNAL",
-    roleSlug: "SUPER_ADMIN",
+    roleSlug: user.roleSlug || "SUPER_ADMIN",
     permissions: ["*"],
   };
 }
@@ -34,9 +34,8 @@ function toStoreAdmin(user: AdminUser): StoreAdmin {
 export function saveSession(user: AdminUser, remember: boolean) {
   localStorage.setItem(REMEMBER_KEY, remember ? "1" : "0");
   sessionStorage.setItem(ACTIVE_KEY, "1");
-  const accessToken = user.accessToken || DEMO_TOKENS.accessToken;
-  const refreshToken = user.refreshToken || DEMO_TOKENS.refreshToken;
-  store.dispatch(setCredentials({ admin: toStoreAdmin(user), accessToken, refreshToken }));
+  // Real tokens when signed in against the backend; placeholders in demo mode
+  store.dispatch(setCredentials({ admin: toStoreAdmin(user), ...(user.tokens ?? DEMO_TOKENS) }));
 }
 
 export function clearSession() {

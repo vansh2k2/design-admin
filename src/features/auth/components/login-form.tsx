@@ -43,7 +43,7 @@ export function LoginForm({ onForgotPassword }: { onForgotPassword: (email: stri
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-      <Field label="Email Address or Username" htmlFor="login-email" required labelClassName={AUTH_LABEL}>
+      <Field label="Username or Email" htmlFor="login-email" required labelClassName={AUTH_LABEL}>
         <Input
           id="login-email"
           type="text"
@@ -52,7 +52,7 @@ export function LoginForm({ onForgotPassword }: { onForgotPassword: (email: stri
           required
           value={email}
           onChange={event => setEmail(event.target.value)}
-          placeholder="email@example.com or username"
+          placeholder="username or you@designhouse.co.in"
           className={AUTH_INPUT}
         />
       </Field>

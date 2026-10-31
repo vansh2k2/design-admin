@@ -58,6 +58,7 @@ import {
   syncExhibitionCategoriesSectionsFromLiveApi,
   syncNominateAdvisorySectionsFromLiveApi,
   syncBlogSectionsFromLiveApi,
+  syncDownloadsSectionsFromLiveApi,
   syncExhibitorsSectionsFromLiveApi,
   syncEPromotionSectionsFromLiveApi,
   syncPartnershipSectionsFromLiveApi,
@@ -67,6 +68,7 @@ import {
   saveExhibitionCategoriesSections,
   saveNominateAdvisorySections,
   saveBlogSections,
+  saveDownloadsSections,
   saveExhibitorsSections,
   saveEPromotionSections,
   savePartnershipSections,
@@ -541,6 +543,10 @@ export default function CmsEditPage() {
       syncBlogSectionsFromLiveApi(setSectionsDraft);
     }
 
+    if (page.configKey === "downloadsPage") {
+      syncDownloadsSectionsFromLiveApi(setSectionsDraft);
+    }
+
     if (page.configKey === "exhibitorsPage") {
       syncExhibitorsSectionsFromLiveApi(setSectionsDraft);
     }
@@ -899,6 +905,10 @@ export default function CmsEditPage() {
 
       if (savingKey === "blogPage") {
         await saveBlogSections(targetSections);
+      }
+
+      if (savingKey === "downloadsPage") {
+        await saveDownloadsSections(targetSections);
       }
 
       if (savingKey === "exhibitorsPage") {

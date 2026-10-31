@@ -1856,7 +1856,12 @@ export function SectionFieldsEditor({
           typeof value === "string";
         const fieldLimit = isLong ? 450 : 140;
         const label =
-          (section.key === "about-hero" || section.name === "AboutHero") && key === "image"
+          // Downloads page H1 = Title + Highlighted word ("Our Company Profiles & Brochures")
+          section.key === "downloads-hero" && key === "title"
+            ? "H1 Title (Part 1)"
+          : section.key === "downloads-hero" && key === "highlightedWord"
+            ? "H1 Highlighted Word (Part 2 – shown in orange)"
+          : (section.key === "about-hero" || section.name === "AboutHero") && key === "image"
             ? "Background Image (Upload)"
             : (section.key === "home-about" || section.name === "HomeAbout (Who We Are)") && key === "image"
               ? "Left Image (Upload)"
@@ -2041,12 +2046,24 @@ export function SectionFieldsEditor({
                 )}
               </>
             ) : (
-              <TextInput
-                value={String(value)}
-                onChange={(next: string) => onFieldChange(key, next)}
-                maxLength={section.key === "why-visit-matters" ? 5000 : 120}
-                hideLimit={section.key === "why-visit-matters"}
-              />
+              <>
+                <TextInput
+                  value={String(value)}
+                  onChange={(next: string) => onFieldChange(key, next)}
+                  maxLength={section.key === "why-visit-matters" ? 5000 : 120}
+                  hideLimit={section.key === "why-visit-matters"}
+                />
+                {section.key === "downloads-hero" && key === "highlightedWord" && (
+                  <p className="mt-1.5 rounded border border-[#bfdbfe] bg-[#eff6ff] px-2.5 py-1.5 text-[11px] text-[#1e3a8a]">
+                    <span className="mr-1.5 rounded bg-[#1e40af] px-1.5 py-0.5 text-[9px] font-bold text-white">H1</span>
+                    {String(section.title || "").trim()}{" "}
+                    <span className="font-semibold text-[#ea580c]">{String(section.highlightedWord || "").trim()}</span>
+                    <span className="block mt-0.5 text-[9.5px] text-[#475569]">
+                      The page&apos;s only H1 (main heading for SEO): Title + Highlighted Word.
+                    </span>
+                  </p>
+                )}
+              </>
             )}
           </div>
         );

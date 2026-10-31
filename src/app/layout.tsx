@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 
 import { SITE } from "@/config/site";
 import { LanguageProvider } from "@/contexts/LanguageContext";
@@ -7,7 +7,13 @@ import StoreProvider from "@/store/StoreProvider";
 
 import "./globals.css";
 
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"], weight: ["400", "500", "600"] });
+// Self-hosted: Turbopack's next/font/google breaks on Google's `/l/font?kit=…&skey=…` file URLs
+const inter = localFont({
+  variable: "--font-inter",
+  src: "../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2",
+  weight: "100 900",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: { default: SITE.adminTitle, template: `%s | ${SITE.adminTitle}` },

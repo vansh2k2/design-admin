@@ -501,6 +501,12 @@ function labelForPath(path: string, id: string): string {
   return tail.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+const isCheckupReport = (value: unknown): value is SeoCheckupReportData =>
+  Boolean(value) &&
+  !Array.isArray(value) &&
+  Array.isArray((value as SeoCheckupReportData).groups) &&
+  Array.isArray((value as SeoCheckupReportData).categories);
+
 export const seoAuditApi = {
   /** Real checkup report for one route from the backend's live audit engine. */
   checkupReport: async (route: string): Promise<SeoCheckupReportData | null> => {
@@ -508,7 +514,9 @@ export const seoAuditApi = {
       const res = await api.get<SeoCheckupReportData | null>(
         `/seo-audit/report?route=${encodeURIComponent(route)}`,
       );
-      return res ?? null;
+      // api.ts answers a missing endpoint with placeholder data (e.g. [] for anything with "/audit" in
+      // the path), so only a real report counts; anything else is "no audit yet"
+      return isCheckupReport(res) ? res : null;
     } catch {
       return null;
     }
@@ -615,7 +623,8 @@ export const seoAuditApi = {
     const res = await api.get<SeoPageDetail>(
       `/seo-audit/pages/${encodeURIComponent(id)}`,
     );
-    if (res) return res;
+    // An empty list is api.ts's placeholder for a missing endpoint, not page data
+    if (res && !Array.isArray(res) && typeof res === "object") return res;
     throw new Error(`No audit data for route "${id}" yet.`);
   },
   /**
@@ -649,40 +658,43 @@ export const seoAuditApi = {
   },
   brokenLinks: async (filters?: Record<string, unknown>) => {
     try {
-      return await api.get<{ links: SeoBrokenLink[] }>(`/seo/broken-links`);
-    } catch {
-      return { links: [] };
-    }
+      const res = await api.get<{ links: SeoBrokenLink[] }>(`/seo/broken-links`);
+      if (Array.isArray(res?.links)) return res;
+    } catch { /* fall through */ }
+    return { links: [] };
   },
-  insights: async () => {
+  insights: async (): Promise<SeoInsights> => {
     try {
-      return await api.get<SeoInsights>("/seo/insights");
-    } catch {
-      return {
-        available: false,
-        message: "Search insights need a live Search Console connection. No data is shown until the console is connected — this panel no longer displays sample numbers.",
-        rangeStart: null,
-        rangeEnd: null,
-        windowDays: null,
-        cannibalization: [],
-        contentGaps: [],
-        risingQueries: [],
-        fallingQueries: [],
-        highImpressionLowCtr: [],
-        strikingDistance: [],
-      };
-    }
+      const res = await api.get<SeoInsights>("/seo/insights");
+      // Placeholder data for a missing endpoint has no `available` flag
+      if (res && typeof (res as SeoInsights).available === "boolean") return res;
+    } catch { /* fall through */ }
+    return {
+      available: false,
+      message: "Search insights need a live Search Console connection. No data is shown until the console is connected — this panel no longer displays sample numbers.",
+      rangeStart: null,
+      rangeEnd: null,
+      windowDays: null,
+      cannibalization: [],
+      contentGaps: [],
+      risingQueries: [],
+      fallingQueries: [],
+      highImpressionLowCtr: [],
+      strikingDistance: [],
+    };
   },
   competitors: async () => {
     try {
-      return await api.get<SeoCompetitor[]>("/seo/competitors");
-    } catch {
-      return [];
-    }
+      const res = await api.get<SeoCompetitor[]>("/seo/competitors");
+      if (Array.isArray(res)) return res;
+    } catch { /* fall through */ }
+    return [];
   },
   competitorComparison: async () => {
     try {
-      return await api.get<SeoCompetitorComparison>("/seo/competitors/comparison");
+      const res = await api.get<SeoCompetitorComparison>("/seo/competitors/comparison");
+      if (res?.primary && Array.isArray(res.competitors)) return res;
+      throw new Error("No comparison data");
     } catch {
       try {
         const overview = await seoAuditApi.overview();
