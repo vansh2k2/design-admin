@@ -1118,25 +1118,147 @@ export const dhServicePages: Record<string, Section[]> = {
 // Other pages
 // ---------------------------------------------------------------------------------------------
 
+const projectsHeroSection: Section = {
+  key: "projects-hero",
+  name: "Projects Hero Banner",
+  enabled: true,
+  eyebrow: "Our Projects",
+  title: "Spaces",
+  titleLine2: "That",
+  highlightedWord: "Inspire",
+  tagline: "From Vision to Reality",
+  description:
+    "Explore our portfolio of thoughtfully designed and expertly executed spaces across industries. Each project reflects our commitment to functionality, aesthetics and long-term value.",
+  buttonLabel: "Discuss Your Project",
+  buttonHref: "/contact",
+  image: "/newproject/p1.png",
+  imageAlt: "Design House India reception lobby",
+};
+
+const projectsFeaturedSection: Section = {
+  key: "projects-featured",
+  name: "Featured Project Showcase",
+  enabled: true,
+  eyebrow: "Featured Project",
+  title: "Axis Business Park",
+  category: "Corporate Interior",
+  location: "Gurugram, Haryana",
+  description:
+    "A modern and functional workspace designed to enhance collaboration, productivity and brand identity. Clean lines, premium finishes and thoughtful spatial planning create an inspiring work environment.",
+  buttonLabel: "View Project Details",
+  buttonHref: "/portfolio/interior/corporate-interior",
+  image: "/newproject/p2.png",
+  imageAlt: "Axis Business Park Reception",
+  items: [
+    {
+      title: "Axis Business Park",
+      category: "Corporate Interior",
+      location: "Gurugram, Haryana",
+      description:
+        "A modern and functional workspace designed to enhance collaboration, productivity and brand identity. Clean lines, premium finishes and thoughtful spatial planning create an inspiring work environment.",
+      image: "/newproject/p2.png",
+      href: "/portfolio/interior/corporate-interior",
+    },
+    {
+      title: "Trends – Retail Store",
+      category: "Retail Showroom",
+      location: "Noida, Uttar Pradesh",
+      description:
+        "A vibrant retail environment with clear sightlines, warm lighting and custom fixtures that put the merchandise first and guide shoppers naturally through the store.",
+      image: "/newproject/p4.png",
+      href: "/portfolio/interior/retail-interior",
+    },
+    {
+      title: "The Palate Restaurant",
+      category: "Restaurant Interior",
+      location: "Delhi NCR",
+      description:
+        "A warm and inviting dining space where layered lighting, rich textures and comfortable seating come together to create a memorable guest experience.",
+      image: "/newproject/p5.png",
+      href: "/portfolio/interior/restaurant-interior",
+    },
+  ],
+};
+
+const projectsGridSection: Section = {
+  key: "projects-gallery",
+  name: "Our Projects (Header & Search)",
+  enabled: true,
+  eyebrow: "Explore Our Work",
+  title: "Our Projects",
+  description: "Browse our delivered projects across corporate, retail, hospitality, exhibition, and residential spaces.",
+};
+
+const diverseSpacesSection: Section = {
+  key: "diverse-spaces",
+  name: "Diverse Spaces Banner",
+  enabled: true,
+  eyebrow: "Diverse Spaces",
+  title: "Diverse Spaces.",
+  subtitle: "Endless Possibilities.",
+  highlightedWord: "Possibilities",
+  description:
+    "From corporate offices to retail environments, restaurants to residential spaces, we create environments that reflect your vision and deliver lasting impact.",
+  buttonLabel: "Start a Conversation",
+  buttonHref: "/contact",
+  image: "/newproject/pb.png",
+  imageAlt: "Diverse Spaces lounge with city view",
+};
+
+const projectsImpactSection: Section = {
+  key: "projects-impact",
+  name: "Our Impact & Track Record",
+  enabled: true,
+  eyebrow: "Our Impact",
+  title: "Delivering Measurable Impact Across India",
+  description: "Numbers that represent our commitment to quality execution and client partnerships.",
+  items: [
+    { value: 500, suffix: "+", label: "Projects Completed", icon: "Building2" },
+    { value: 20, suffix: "+", label: "Industry Segments", icon: "Users" },
+    { value: "Pan India", suffix: "", label: "Presence", icon: "MapPin" },
+    { value: "Long-Term", suffix: "", label: "Client Relationships", icon: "Handshake" },
+  ],
+};
+
+const projectsProcessSection: Section = {
+  key: "projects-process",
+  name: "Our 4-Stage Process",
+  enabled: true,
+  eyebrow: "Our Process",
+  title: "From Concept to Completion",
+  description: "A streamlined approach that ensures quality, efficiency and on-time delivery.",
+  items: [
+    { step: "01", title: "Understand Requirements", description: "We listen, analyse and define project goals.", icon: "Users" },
+    { step: "02", title: "Design & Planning", description: "Creative concepts with functional and technical detailing.", icon: "PencilRuler" },
+    { step: "03", title: "Manufacturing & Execution", description: "Quality production and on-site implementation with precision.", icon: "Factory" },
+    { step: "04", title: "Handover & Support", description: "On-time delivery and continued support for long-term value.", icon: "BadgeCheck" },
+  ],
+};
+
+const projectsCtaSection: Section = {
+  key: "projects-cta",
+  name: "Projects CTA Band",
+  enabled: true,
+  eyebrow: "Let's Work Together",
+  title: "Have a Project in Mind?",
+  description: "Share your requirements with our team for a customized solution.",
+  buttonLabel: "Enquire Now",
+  buttonHref: "/contact",
+  image: "/newproject/p12.png",
+  imageAlt: "Luxury city lounge consultation",
+};
+
 export const dhPortfolioSections: Section[] = [
-  pageHero("Our", "Portfolio", "Retail, corporate, restaurant, kiosk and exhibition projects delivered across India.", img.project("retail-fashion-store.jpg")),
-  {
-    key: "portfolio-categories",
-    name: "Portfolio Categories",
-    enabled: true,
-    eyebrow: "PROJECTS",
-    title: "Explore Our Work",
-    items: [
-      { title: "Interiors Portfolio", href: "/portfolio/interior/retail-interior", image: img.project("retail-fashion-store.jpg") },
-      { title: "Merchandising Portfolio", href: "/portfolio/merchandising/merchandising-images", image: img.project("retail-display-gondolas.jpg") },
-      { title: "Kiosk Portfolio", href: "/portfolio/kiosk/kiosk-images", image: img.project("retail-luxury-display.jpg") },
-      { title: "Exhibition & Events Portfolio", href: "/portfolio/signage/exhibition-events-portfolio", image: img.project("exhibition-stall-custom.png") },
-      { title: "Office Interior Portfolio", href: "/portfolio/office-interior/modular-images", image: img.project("office-workstations.jpg") },
-      { title: "Furniture Portfolio", href: "/portfolio/furniture/kitchen-images", image: img.project("modular-kitchen-white.jpg") },
-    ],
-  },
-  { key: "portfolio-videos", name: "Project Videos", enabled: true, title: "Videos", description: "Videos are managed in Video Highlights.", buttonLabel: "Watch Videos", buttonHref: "/portfolio/videos" },
-  ctaSection(),
+  topbarSection,
+  navbarSection,
+  projectsHeroSection,
+  projectsFeaturedSection,
+  projectsGridSection,
+  diverseSpacesSection,
+  projectsImpactSection,
+  projectsProcessSection,
+  projectsCtaSection,
+  footerSection,
 ];
 
 export const dhGallerySections: Section[] = [
@@ -1521,11 +1643,15 @@ export const dhTermsSections = legalPage("Terms & Conditions", "Terms that apply
 export const DH_PAGE_DEFINITIONS = [
   ["landingPage", "Home", "/", "home"],
   ["aboutPage", "About Us", "/about", "page"],
+  ["servicesPage", "Services", "/services", "page"],
+  ["portfolioPage", "Projects", "/projects", "page"],
+  ["contactPage", "Contact Us", "/contact", "page"],
+  ["blogPage", "Blogs", "/blogs", "page"],
+  ["galleryPage", "Project Gallery", "/gallery", "page"],
   ["teamPage", "Our Team", "/about/team", "page"],
   ["associatesPage", "Our Associates", "/about/associates", "page"],
   ["brandApproachPage", "Brand Conscious Approach", "/about/brand-approach", "page"],
   ["infrastructurePage", "Facility & Infrastructure", "/about/infrastructure", "page"],
-  ["servicesPage", "Services", "/services", "page"],
   ["retailInteriorPage", "Retail Interior", "/services/retail-interior", "page"],
   ["corporateInteriorPage", "Corporate Interior", "/services/corporate-interior", "page"],
   ["restaurantInteriorPage", "Restaurant Interior", "/services/restaurant-interior", "page"],
@@ -1535,13 +1661,9 @@ export const DH_PAGE_DEFINITIONS = [
   ["exhibitionsPage", "Exhibitions & Events", "/services/exhibitions", "page"],
   ["signagePage", "Branding & Signage", "/services/signage", "page"],
   ["officeInteriorPage", "Office Interior", "/services/office-interior", "page"],
-  ["portfolioPage", "Portfolio", "/portfolio", "page"],
-  ["galleryPage", "Project Gallery", "/gallery", "page"],
   ["clientsPage", "Our Clients", "/clients", "page"],
   ["testimonialsPage", "Testimonials", "/testimonials", "page"],
-  ["blogPage", "Blogs", "/blogs", "page"],
   ["careersPage", "Career", "/career", "page"],
-  ["contactPage", "Contact Us", "/contact", "page"],
   ["privacyPolicyPage", "Privacy Policy", "/privacy-policy", "page"],
   ["termsAndConditionsPage", "Terms & Conditions", "/terms-and-conditions", "page"],
 ] as const;
@@ -1558,6 +1680,9 @@ export const DH_DEFAULT_SECTIONS: Record<string, Section[]> = {
   servicesPage: dhServicesSections,
   ...dhServicePages,
   portfolioPage: dhPortfolioSections,
+  projects: dhPortfolioSections,
+  portfolio: dhPortfolioSections,
+  "our-projects": dhPortfolioSections,
   galleryPage: dhGallerySections,
   clientsPage: dhClientsSections,
   testimonialsPage: dhTestimonialsSections,

@@ -156,6 +156,9 @@ export function SectionItemsEditor({
     if (sectionId === "buyer-seller-meet") return "Add B2B Matchmaking Feature";
     if (sectionId === "career-hero") return "Add Hero Highlight";
     if (sectionId === "contact-hero") return "Add Hero Highlight";
+    if (sectionId === "projects-featured") return "Add Featured Project Slide";
+    if (sectionId === "projects-impact") return "Add Impact Stat Counter";
+    if (sectionId === "projects-process") return "Add Process Step";
     if (sectionId === "offices" || sectionId === "contact-offices") return "Add Regional Office";
     if (sectionId === "why-work-with-us") return "Add Value Card";
     if (sectionId === "life-at-design-house") return "Add Workplace Photo";
@@ -209,6 +212,9 @@ export function SectionItemsEditor({
     if (sectionId === "sponsorship-categories") return `Sponsorship Tier ${index + 1}`;
     if (sectionId === "career-hero" || sectionId === "contact-hero") return item.label || item.title ? `Highlight: ${String(item.label || item.title).replace(/\n/g, " ")}` : `Highlight ${index + 1}`;
     if (sectionId === "offices" || sectionId === "contact-offices") return item.label ? `${item.label} (${item.city || ""})` : item.city ? `Office: ${item.city}` : `Office ${index + 1}`;
+    if (sectionId === "projects-featured") return item.title ? `Featured: ${item.title}` : `Featured Slide ${index + 1}`;
+    if (sectionId === "projects-impact") return item.label ? `${item.value ?? item.text ?? ""} ${item.label}` : `Stat ${index + 1}`;
+    if (sectionId === "projects-process") return item.title ? `Step ${item.step || index + 1}: ${item.title}` : `Step ${index + 1}`;
     if (sectionId === "why-work-with-us") return item.title ? String(item.title) : `Value Card ${index + 1}`;
     if (sectionId === "life-at-design-house") return item.title ? String(item.title) : `Workplace Photo ${index + 1}`;
     if (sectionId === "navbar" || sectionId === "footer") return `Link ${index + 1}`;
@@ -223,6 +229,9 @@ export function SectionItemsEditor({
             {sectionId === "hero" ? "Hero Carousel Slides" :
               sectionId === "career-hero" || sectionId === "contact-hero" ? "Hero Highlight Points (Icons & Labels)" :
               sectionId === "offices" || sectionId === "contact-offices" ? "Regional Office Locations (Address, Image & Maps)" :
+              sectionId === "projects-featured" ? "Featured Project Slides (Images, Descriptions & Links)" :
+              sectionId === "projects-impact" ? "Our Impact Milestone Statistics" :
+              sectionId === "projects-process" ? "Our 4-Stage Process Steps (Icons, Titles & Texts)" :
               sectionId === "why-work-with-us" ? "Why Work With Us Cards (Icons, Titles & Texts)" :
               sectionId === "life-at-design-house" ? "Workplace Photo Gallery (Photos & Alt Tags)" :
               sectionId === "navbar" ? "Header Navigation Links" :
@@ -691,6 +700,20 @@ export function SectionItemsEditor({
                                                   ? "Feature Label (e.g. Expertise)"
                                                   : sectionId === "career-hero" && key === "label"
                                                     ? "Highlight Label (e.g. Innovative Work)"
+                                                    : sectionId === "contact-hero" && key === "label"
+                                                      ? "Highlight Point (e.g. Discuss Your Idea)"
+                                                    : (sectionId === "offices" || sectionId === "contact-offices") && key === "label"
+                                                      ? "Branch Name (e.g. Head Office / Delhi Branch)"
+                                                    : (sectionId === "offices" || sectionId === "contact-offices") && key === "city"
+                                                      ? "City / Location (e.g. Ghaziabad / New Delhi)"
+                                                    : (sectionId === "offices" || sectionId === "contact-offices") && key === "lines"
+                                                      ? "Office Full Address (Line by Line)"
+                                                    : (sectionId === "offices" || sectionId === "contact-offices") && key === "query"
+                                                      ? "Google Search / Maps Query"
+                                                    : (sectionId === "offices" || sectionId === "contact-offices") && key === "buttonLabel"
+                                                      ? "Directions Button Text"
+                                                    : (sectionId === "offices" || sectionId === "contact-offices") && key === "buttonHref"
+                                                      ? "Google Maps Link"
                                                     : sectionId === "why-work-with-us" && key === "title"
                                                       ? "Card Title (e.g. Purpose-Driven Work)"
                                                       : sectionId === "why-work-with-us" && key === "text"
@@ -778,6 +801,8 @@ export function SectionItemsEditor({
                                     { label: "Phone", value: "Phone" },
                                     { label: "Mail", value: "Mail" },
                                     { label: "Map Pin", value: "MapPin" },
+                                    { label: "Clipboard Pen / Guidance", value: "ClipboardPen" },
+                                    { label: "Message Circle More / Support", value: "MessageCircleMore" },
                                     { label: "Heart", value: "Heart" },
                                     { label: "Star", value: "Star" },
                                     { label: "Check Circle", value: "CheckCircle" },

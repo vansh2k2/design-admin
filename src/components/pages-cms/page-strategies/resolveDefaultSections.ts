@@ -94,6 +94,7 @@ export function resolveDefaultSectionsForPage(page: CmsPage): SectionsDraft {
   if (key === "delegatesloginpage" || title.includes("delegates login") || slug.includes("delegates-login")) return defaultDelegatesLoginSections;
   if (key === "userloginpage" || title.includes("user login") || slug.includes("/login")) return defaultUserLoginSections;
   if (key === "contactpage" || title.includes("contact") || title.includes("advisor") || slug.includes("contact")) return DH_DEFAULT_SECTIONS.contactPage || defaultContactSections;
+  if (key === "portfoliopage" || title.includes("project") || title.includes("portfolio") || slug.includes("project") || slug.includes("portfolio")) return DH_DEFAULT_SECTIONS.portfolioPage;
   return defaultLandingSections;
 }
 
@@ -118,7 +119,7 @@ export function resolveResetDefaultsForPage(page: CmsPage): SectionsDraft {
     return DH_DEFAULT_SECTIONS.landingPage;
   }
 
-  let defaults = defaultLandingSections;
+  let defaults: SectionsDraft = defaultLandingSections;
   if (key === "careerspage" || slug === "/careers") defaults = defaultCareersSections;
   else if (key === "msmeeligibilitycheckpage" || slug.includes("eligibility-check")) defaults = defaultMsmeEligibilityCheckSections;
   else if (key === "msmeapplypaymentpage" || slug.includes("participate/msme/apply/payment")) defaults = defaultMsmeApplyPaymentSections;
@@ -155,6 +156,7 @@ export function resolveResetDefaultsForPage(page: CmsPage): SectionsDraft {
   else if (key === "delegatesloginpage" || title.includes("delegates login") || slug.includes("delegates-login")) defaults = defaultDelegatesLoginSections;
   else if (key === "userloginpage" || title.includes("user login") || slug.includes("/login")) defaults = defaultUserLoginSections;
   else if (key === "contactpage" || title.includes("contact") || title.includes("advisor") || slug.includes("contact")) defaults = DH_DEFAULT_SECTIONS.contactPage || defaultContactSections;
+  else if (key === "portfoliopage" || title.includes("project") || title.includes("portfolio") || slug.includes("project") || slug.includes("portfolio")) defaults = DH_DEFAULT_SECTIONS.portfolioPage;
 
   return defaults;
 }

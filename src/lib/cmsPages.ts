@@ -71,6 +71,8 @@ const routeAliases: Record<string, string> = {
   "office-interior": "officeInteriorPage",
   "portfolio": "portfolioPage",
   "projects": "portfolioPage",
+  "our-projects": "portfolioPage",
+  "portfoliopage": "portfolioPage",
   "gallery": "galleryPage",
   "clients": "clientsPage",
   "testimonials": "testimonialsPage",
