@@ -15,7 +15,9 @@ import { emptyServiceDetail } from "@/lib/servicesDetailSeed";
 import RichTextEditor from "@/components/RichTextEditor";
 import {
   ArrowLeft,
+  ExternalLink,
   Eye,
+  FolderClosed,
   Link2,
   Plus,
   Save,
@@ -302,23 +304,6 @@ function ImageField({
             <Upload className="h-3 w-3" /> Upload
           </button>
         </div>
-      </div>
-      <div className="mt-2 flex flex-wrap gap-1.5">
-        {AVAILABLE_IMAGES.map((img) => (
-          <button
-            type="button"
-            key={img.src}
-            onClick={() => onChange(img.src)}
-            title={img.label}
-            className={`h-[30px] overflow-hidden rounded-[4px] border transition ${
-              value === img.src
-                ? "border-[#134698] ring-2 ring-[#134698]/30"
-                : "border-slate-200 opacity-75 hover:opacity-100"
-            }`}
-          >
-            <img src={img.src} alt={img.label} className="h-full w-[44px] object-cover" />
-          </button>
-        ))}
       </div>
     </div>
   );
@@ -1485,81 +1470,24 @@ function AddEditServiceContent() {
               </div>
             </div>
 
-            <div className="mt-4">
-              <div className="mb-2 flex items-center justify-between">
-                <label className="block text-[8.5px] font-bold text-slate-700 uppercase tracking-wider">
-                  Project Cards ({detail.projects.items.length})
-                </label>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setProjects({ items: [...detail.projects.items, { title: "New Project", place: "", image: "/services/os1.webp" }] })
-                  }
-                  className={addBtnCls}
+            <div className="mt-4 rounded-[6px] border border-[#dbeafe] bg-[#eff6ff]/70 p-3">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
+                <div>
+                  <p className="text-[9.5px] font-bold text-[#1e40af] flex items-center gap-1.5">
+                    <FolderClosed className="h-3.5 w-3.5" />
+                    Projects are managed from the Projects section
+                  </p>
+                  <p className="mt-0.5 text-[8.5px] font-medium text-[#3b82f6]">
+                    Project cards for this service are automatically linked and rendered from the portfolio database (/projects).
+                  </p>
+                </div>
+                <Link
+                  href="/projects"
+                  target="_blank"
+                  className="inline-flex h-[28px] items-center gap-1.5 rounded-[5px] border border-[#93c5fd] bg-white px-3 text-[8.5px] font-bold text-[#1d4ed8] shadow-xs hover:bg-[#dbeafe] transition shrink-0"
                 >
-                  <Plus className="h-3 w-3" /> Add Project
-                </button>
-              </div>
-              <div className="space-y-3">
-                {detail.projects.items.map((item, i) => (
-                  <div key={i} className="rounded-[6px] border border-[#edf0f2] bg-[#fbfcfc] p-2">
-                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_24px]">
-                      <input
-                        type="text"
-                        value={item.title}
-                        onChange={(e) => {
-                          const next = [...detail.projects.items];
-                          next[i] = { ...item, title: e.target.value };
-                          setProjects({ items: next });
-                        }}
-                        placeholder="Project title"
-                        className={inputCls}
-                      />
-                      <input
-                        type="text"
-                        value={item.place}
-                        onChange={(e) => {
-                          const next = [...detail.projects.items];
-                          next[i] = { ...item, place: e.target.value };
-                          setProjects({ items: next });
-                        }}
-                        placeholder="Place / location"
-                        className={inputCls}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setProjects({ items: detail.projects.items.filter((_, idx) => idx !== i) })}
-                        className={delBtnCls}
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </button>
-                    </div>
-                    <div className="mt-2 flex items-center gap-2">
-                      <div className="h-[38px] w-[60px] shrink-0 overflow-hidden rounded-[4px] border border-slate-200 bg-white">
-                        <img
-                          src={item.image}
-                          alt={item.title}
-                          className="h-full w-full object-cover"
-                          onError={(e) => ((e.target as HTMLImageElement).src = "/services/os1.webp")}
-                        />
-                      </div>
-                      <input
-                        type="text"
-                        value={item.image}
-                        onChange={(e) => {
-                          const next = [...detail.projects.items];
-                          next[i] = { ...item, image: e.target.value };
-                          setProjects({ items: next });
-                        }}
-                        placeholder="/services/detail/b2.webp"
-                        className={inputCls}
-                      />
-                    </div>
-                  </div>
-                ))}
-                {detail.projects.items.length === 0 && (
-                  <p className="text-[9px] text-slate-400">No project cards yet.</p>
-                )}
+                  <ExternalLink className="h-3 w-3" /> Go to Projects (/projects)
+                </Link>
               </div>
             </div>
           </div>
