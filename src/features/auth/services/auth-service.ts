@@ -1,25 +1,45 @@
 import type { AdminUser } from "../types";
-
-/*
- * Demo implementation — the backend isn't connected yet. Replace these bodies with calls to
- * `${process.env.NEXT_PUBLIC_API_URL}/api/auth/...`; the screens only depend on these signatures.
- */
-
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+import { getApiBaseUrl } from "@/lib/api";
 
 export class AuthError extends Error {}
 
-export async function login(email: string, password: string): Promise<AdminUser> {
-  await wait(600);
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new AuthError("Enter a valid email address.");
-  if (password.length < 6) throw new AuthError("Password must be at least 6 characters.");
-  const name = email
-    .split("@")[0]!
-    .split(/[._-]/)
-    .filter(Boolean)
-    .map(part => part[0]!.toUpperCase() + part.slice(1))
-    .join(" ");
-  return { name: name || "Admin", email, role: "Super Admin" };
+export async function login(identifier: string, password: string): Promise<AdminUser> {
+  const cleanId = String(identifier || "").trim();
+  if (!cleanId) throw new AuthError("Enter your username or email address.");
+  if (!password) throw new AuthError("Password is required.");
+
+  try {
+    const res = await fetch(`${getApiBaseUrl()}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: cleanId,
+        username: cleanId,
+        password,
+      }),
+    });
+
+    const data = await res.json().catch(() => null);
+
+    if (!res.ok || !data?.success) {
+      throw new AuthError(data?.message || "Invalid email or password. Please try again.");
+    }
+
+    const admin = data.admin || data.data?.admin || {};
+    const accessToken = data.accessToken || data.token || data.data?.accessToken;
+    const refreshToken = data.refreshToken || data.data?.refreshToken || accessToken;
+
+    return {
+      name: admin.name || admin.username || cleanId.split("@")[0] || "Admin User",
+      email: admin.email || cleanId,
+      role: admin.role || "Super Admin",
+      accessToken,
+      refreshToken,
+    };
+  } catch (err: any) {
+    if (err instanceof AuthError) throw err;
+    throw new AuthError(err.message || "Could not connect to authentication server.");
+  }
 }
 
 export async function requestPasswordReset(email: string): Promise<void> {

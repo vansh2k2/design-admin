@@ -1529,8 +1529,7 @@ export default function DashboardPage() {
 
             note:
               growthText(
-                internal.growth
-                  .enquiriesMtd,
+                internal.growth?.enquiriesMtd ?? null,
               ),
           };
         }
@@ -1541,9 +1540,9 @@ export default function DashboardPage() {
           analytics
         ) {
           const rate =
-            analytics.sessions >
+            (analytics.sessions ?? 0) >
               0
-              ? (analytics.conversions /
+              ? ((analytics.conversions ?? 0) /
                 analytics.sessions) *
               100
               : 0;
@@ -1557,8 +1556,7 @@ export default function DashboardPage() {
 
             note:
               growthText(
-                analytics.growth
-                  .conversionRate,
+                analytics.growth?.conversionRate ?? null,
               ),
           };
         }

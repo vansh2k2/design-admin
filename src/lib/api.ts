@@ -160,6 +160,7 @@ const LIVE_API_PREFIXES = [
   "/seo",
   "/dashboard",
   "/seo-settings",
+  "/auth",
 ];
 export const isLivePath = (path: string) => LIVE_API_PREFIXES.some((prefix) => path.startsWith(prefix));
 
