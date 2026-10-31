@@ -12,6 +12,7 @@ import {
   DEFAULT_SERVICE_LINKS,
 } from "@/lib/servicesApi";
 import { emptyServiceDetail } from "@/lib/servicesDetailSeed";
+import RichTextEditor from "@/components/RichTextEditor";
 import {
   ArrowLeft,
   Eye,
@@ -578,12 +579,11 @@ function AddEditServiceContent() {
 
                 <div>
                   <label className={labelInput}>Service Description</label>
-                  <textarea
-                    rows={4}
+                  <RichTextEditor
                     value={formData.desc}
-                    onChange={(e) => setFormData({ ...formData, desc: e.target.value })}
-                    placeholder={"Workspaces designed for\nproductivity, brand identity\nand growth."}
-                    className={textareaCls}
+                    onChange={(val) => setFormData({ ...formData, desc: val })}
+                    placeholder="Workspaces designed for productivity, brand identity and growth. Write the card description here..."
+                    minHeight="130px"
                   />
                 </div>
 
@@ -986,12 +986,11 @@ function AddEditServiceContent() {
               </div>
               <div className="lg:col-span-2">
                 <label className={labelInput}>Hero Text</label>
-                <textarea
-                  rows={3}
+                <RichTextEditor
                   value={detail.hero.text}
-                  onChange={(e) => setHero({ text: e.target.value })}
+                  onChange={(val) => setHero({ text: val })}
                   placeholder="We create modern, functional and inspiring corporate spaces..."
-                  className={textareaCls}
+                  minHeight="130px"
                 />
               </div>
               <div className="lg:col-span-2">
@@ -1273,11 +1272,11 @@ function AddEditServiceContent() {
               </div>
               <div className="lg:col-span-2">
                 <label className={labelInput}>Section Text</label>
-                <textarea
-                  rows={3}
+                <RichTextEditor
                   value={detail.why.text}
-                  onChange={(e) => setWhy({ text: e.target.value })}
-                  className={textareaCls}
+                  onChange={(val) => setWhy({ text: val })}
+                  placeholder="We combine design thinking, technical expertise and industry experience..."
+                  minHeight="130px"
                 />
               </div>
               <div className="lg:col-span-2">
@@ -1761,17 +1760,18 @@ function AddEditServiceContent() {
                         <Trash2 className="h-3 w-3" />
                       </button>
                     </div>
-                    <textarea
-                      rows={2}
-                      value={f.a}
-                      onChange={(e) => {
-                        const next = [...detail.faqs];
-                        next[i] = { ...f, a: e.target.value };
-                        setDetail({ faqs: next });
-                      }}
-                      placeholder="Answer"
-                      className={`${textareaCls} mt-2`}
-                    />
+                    <div className="mt-2">
+                      <RichTextEditor
+                        value={f.a}
+                        onChange={(val) => {
+                          const next = [...detail.faqs];
+                          next[i] = { ...f, a: val };
+                          setDetail({ faqs: next });
+                        }}
+                        placeholder="Answer"
+                        minHeight="80px"
+                      />
+                    </div>
                   </div>
                 ))}
                 {detail.faqs.length === 0 && <p className="text-[9px] text-slate-400">No FAQs yet.</p>}

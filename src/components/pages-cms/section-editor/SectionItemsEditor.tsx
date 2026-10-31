@@ -232,6 +232,7 @@ export function SectionItemsEditor({
               sectionId === "projects-featured" ? "Featured Project Slides (Images, Descriptions & Links)" :
               sectionId === "projects-impact" ? "Our Impact Milestone Statistics" :
               sectionId === "projects-process" ? "Our 4-Stage Process Steps (Icons, Titles & Texts)" :
+              sectionId === "services-intro" ? "Intro Highlights (4 Pillars)" :
               sectionId === "why-work-with-us" ? "Why Work With Us Cards (Icons, Titles & Texts)" :
               sectionId === "life-at-design-house" ? "Workplace Photo Gallery (Photos & Alt Tags)" :
               sectionId === "navbar" ? "Header Navigation Links" :
@@ -270,7 +271,7 @@ export function SectionItemsEditor({
           </span>
         </div>
 
-        {sectionId !== "audience-strip" && sectionId !== "beyond-exhibition" && sectionId !== "reasons-to-exhibit" && sectionId !== "industry-segments" && (
+        {sectionId !== "services-grid" && sectionId !== "projects-gallery" && sectionId !== "audience-strip" && sectionId !== "beyond-exhibition" && sectionId !== "reasons-to-exhibit" && sectionId !== "industry-segments" && (
           <button
             type="button"
             onClick={onAddItem}
@@ -289,6 +290,11 @@ export function SectionItemsEditor({
       <div className="space-y-3 pt-1">
         {items.map((item, index) => {
           let itemToEdit = { ...item };
+          if (sectionId === "services-intro") {
+            delete itemToEdit.text;
+            if (itemToEdit.description === undefined) itemToEdit.description = item.description || item.text || "";
+            if (!itemToEdit.icon) itemToEdit.icon = "Lightbulb";
+          }
           if (sectionId === "expo-categories") {
             delete itemToEdit.icon;
             delete itemToEdit.desc;
@@ -714,7 +720,13 @@ export function SectionItemsEditor({
                                                       ? "Directions Button Text"
                                                     : (sectionId === "offices" || sectionId === "contact-offices") && key === "buttonHref"
                                                       ? "Google Maps Link"
-                                                    : sectionId === "why-work-with-us" && key === "title"
+                                                    : sectionId === "services-intro" && key === "title"
+                                                        ? "Pillar Heading (e.g. Creative Design Solutions)"
+                                                      : sectionId === "services-intro" && (key === "description" || key === "text")
+                                                        ? "Pillar Description (e.g. Concepts tailored to your brand and lifestyle)"
+                                                      : sectionId === "services-intro" && key === "icon"
+                                                        ? "Pillar Icon (e.g. Lightbulb, Settings, Users, BadgeCheck)"
+                                                      : sectionId === "why-work-with-us" && key === "title"
                                                       ? "Card Title (e.g. Purpose-Driven Work)"
                                                       : sectionId === "why-work-with-us" && key === "text"
                                                         ? "Card Description Text"

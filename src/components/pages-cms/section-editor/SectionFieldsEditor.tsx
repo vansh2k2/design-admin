@@ -744,6 +744,250 @@ export function SectionFieldsEditor({
     );
   }
 
+  if (section.key === "services-hero" || section.name === "Services Hero Banner") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Services Hero Banner & Headline</span>
+          <span className="text-[10px] text-gray-500 font-normal">Title, Eyebrow, Gold Accent & Reception Banner</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="md:col-span-2">
+            <FieldLabel>Eyebrow Label</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "Our Services")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="Our Services"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Main Title (Line 1)</FieldLabel>
+            <TextInput
+              value={String(section.title || "Spaces")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Spaces"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Title Line 2 (Gold Accent)</FieldLabel>
+            <TextInput
+              value={String(section.titleLine2 || "That Work Better")}
+              onChange={(next) => {
+                onFieldChange("titleLine2", next);
+                onFieldChange("highlightedWord", next);
+              }}
+              placeholder="That Work Better"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Tagline / Motto</FieldLabel>
+            <TextInput
+              value={String(section.tagline || "Design. Build. Deliver.")}
+              onChange={(next) => onFieldChange("tagline", next)}
+              placeholder="Design. Build. Deliver."
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Gold Accent Word</FieldLabel>
+            <TextInput
+              value={String(section.highlightedWord || "That Work Better")}
+              onChange={(next) => onFieldChange("highlightedWord", next)}
+              placeholder="That Work Better"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Description</FieldLabel>
+            <TextInput
+              value={String(section.description || "A complete range of interior, design, manufacturing and turnkey solutions for modern businesses and homes.")}
+              onChange={(next) => onFieldChange("description", next)}
+              placeholder="A complete range of interior, design, manufacturing and turnkey solutions..."
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2 border-t border-gray-100 pt-2.5">
+            <ImageWithAltField
+              label="Services Reception Banner (Upload / URL)"
+              image={String(section.image || "/assets/banner/services.webp")}
+              alt={String(section.imageAlt || "Design House India Services Reception Banner")}
+              onImageChange={(next) => onFieldChange("image", next)}
+              onAltChange={(next) => onFieldChange("imageAlt", next)}
+              altLabel="Banner Image Alt Tag"
+              altPlaceholder="e.g. Design House India Services Reception Banner"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (section.key === "services-intro" || section.name === "Concept to Completion Intro") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>From Concept to Completion Intro</span>
+          <span className="text-[10px] text-gray-500 font-normal">Left text intro (4 highlight pillars in items below)</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <FieldLabel>Eyebrow Label</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "Our Services")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="Our Services"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Section Heading</FieldLabel>
+            <TextInput
+              value={String(section.title || "From Concept to Completion")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="From Concept to Completion"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Golden Subheading</FieldLabel>
+            <TextInput
+              value={String(section.subtitle || "Designing Spaces for Businesses and Homes")}
+              onChange={(next) => onFieldChange("subtitle", next)}
+              placeholder="Designing Spaces for Businesses and Homes"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Intro Narrative</FieldLabel>
+            <Textarea
+              value={String(section.description || "At Design House India Pvt. Ltd., we offer end-to-end interior, design, manufacturing and turnkey solutions. With innovative ideas, in-house manufacturing and expert execution, we create functional, aesthetic and future-ready spaces for corporate, retail, hospitality, residential and wellness environments.")}
+              onChange={(next) => onFieldChange("description", next)}
+              rows={3}
+              noLimit={true}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (section.key === "services-grid" || section.name === "Our Services (Intro & Filter)") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Our Services Grid Header</span>
+          <span className="text-[10px] text-gray-500 font-normal">Section Heading & Overview Text (Service cards are managed from services route)</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="md:col-span-2">
+            <FieldLabel required>Section Title</FieldLabel>
+            <TextInput
+              value={String(section.title || "Our Services")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Our Services"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FieldLabel>Section Description</FieldLabel>
+            <Textarea
+              value={String(section.description || "Explore our complete range of services designed to create functional, inspiring and future-ready spaces. Click on any service to view our projects.")}
+              onChange={(next) => onFieldChange("description", next)}
+              rows={2}
+              noLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2 bg-[#f8fafc] border border-slate-200 rounded p-2.5">
+            <p className="text-[10px] text-slate-600 font-medium">
+              ℹ️ Individual turnkey service cards link directly to service detail routes and portfolio projects.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (section.key === "services-cta" || section.name === "Discuss Your Project CTA") {
+    return (
+      <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">
+        <div className="text-[11px] font-bold text-[#1e40af] border-b border-gray-100 pb-1.5 flex items-center justify-between">
+          <span>Discuss Your Project CTA Banner</span>
+          <span className="text-[10px] text-gray-500 font-normal">Call to Action Heading, Subtitle & Button Link</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <FieldLabel>Eyebrow Label</FieldLabel>
+            <TextInput
+              value={String(section.eyebrow || "Let's Build Together")}
+              onChange={(next) => onFieldChange("eyebrow", next)}
+              placeholder="Let's Build Together"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel required>Main Title</FieldLabel>
+            <TextInput
+              value={String(section.title || "Let's Discuss Your Project")}
+              onChange={(next) => onFieldChange("title", next)}
+              placeholder="Let's Discuss Your Project"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Highlighted Accent Word</FieldLabel>
+            <TextInput
+              value={String(section.highlightedWord || "Your Project")}
+              onChange={(next) => onFieldChange("highlightedWord", next)}
+              placeholder="Your Project"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Subtitle</FieldLabel>
+            <TextInput
+              value={String(section.subtitle || "Get in touch with our team for a customized solution.")}
+              onChange={(next) => onFieldChange("subtitle", next)}
+              placeholder="Get in touch with our team for a customized solution."
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Button Label</FieldLabel>
+            <TextInput
+              value={String(section.buttonLabel || "Enquire Now")}
+              onChange={(next) => onFieldChange("buttonLabel", next)}
+              placeholder="Enquire Now"
+              hideLimit={true}
+            />
+          </div>
+          <div>
+            <FieldLabel>Button Link</FieldLabel>
+            <TextInput
+              value={String(section.buttonHref || "/contact")}
+              onChange={(next) => onFieldChange("buttonHref", next)}
+              placeholder="/contact"
+              hideLimit={true}
+            />
+          </div>
+          <div className="md:col-span-2 border-t border-gray-100 pt-2.5">
+            <ImageWithAltField
+              label="CTA Background / Diagonal Image (Upload / URL)"
+              image={String(section.image || "/assets/image/t2.webp")}
+              alt={String(section.imageAlt || "Let's Discuss Your Project Banner")}
+              onImageChange={(next) => onFieldChange("image", next)}
+              onAltChange={(next) => onFieldChange("imageAlt", next)}
+              altLabel="Banner Image Alt Tag"
+              altPlaceholder="e.g. Let's Discuss Your Project Consultation Lounge"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (section.key === "projects-hero" || section.name === "Projects Hero Banner") {
     return (
       <div className="bg-white p-3 border border-[#e2e8f0] rounded-[6px] flex flex-col gap-3">

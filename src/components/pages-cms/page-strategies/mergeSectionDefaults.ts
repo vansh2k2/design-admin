@@ -424,6 +424,40 @@ export function mergeSectionWithSavedData(
     if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "https://www.google.com/maps/search/?api=1&query=Design+House+India+Pvt+Ltd%2C+Plot+No.+12%2F29%2C+Site-II+Industrial+Area%2C+Loni+Road%2C+Mohan+Nagar%2C+Ghaziabad+201007";
     if (!merged.mapEmbedUrl) merged.mapEmbedUrl = fallbackItem.mapEmbedUrl || "https://maps.google.com/maps?q=Design+House+India+Pvt+Ltd%2C+Mohan+Nagar%2C+Ghaziabad&z=15&output=embed";
   }
+  if (fallbackItem.key === "services-hero" || merged.key === "services-hero") {
+    if (!merged.image) merged.image = fallbackItem.image || "/assets/banner/services.webp";
+    if (!merged.imageAlt) merged.imageAlt = fallbackItem.imageAlt || "Design House India Services Reception Banner";
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Our Services";
+    if (!merged.title) merged.title = fallbackItem.title || "Spaces";
+    if (!merged.titleLine2) merged.titleLine2 = fallbackItem.titleLine2 || "That Work Better";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "That Work Better";
+    if (!merged.tagline) merged.tagline = fallbackItem.tagline || "Design. Build. Deliver.";
+    if (!merged.description) merged.description = fallbackItem.description || "A complete range of interior, design, manufacturing and turnkey solutions for modern businesses and homes.";
+  }
+  if (fallbackItem.key === "services-intro" || merged.key === "services-intro") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Our Services";
+    if (!merged.title) merged.title = fallbackItem.title || "From Concept to Completion";
+    if (!merged.subtitle) merged.subtitle = fallbackItem.subtitle || "Designing Spaces for Businesses and Homes";
+    if (!merged.description) merged.description = fallbackItem.description || "At Design House India Pvt. Ltd., we offer end-to-end interior, design, manufacturing and turnkey solutions. With innovative ideas, in-house manufacturing and expert execution, we create functional, aesthetic and future-ready spaces for corporate, retail, hospitality, residential and wellness environments.";
+    if (!merged.items || !Array.isArray(merged.items) || merged.items.length === 0) {
+      merged.items = fallbackItem.items;
+    }
+  }
+  if (fallbackItem.key === "services-grid" || merged.key === "services-grid") {
+    if (!merged.title) merged.title = fallbackItem.title || "Our Services";
+    if (!merged.description) merged.description = fallbackItem.description || "Explore our complete range of services designed to create functional, inspiring and future-ready spaces. Click on any service to view our projects.";
+    delete merged.items;
+  }
+  if (fallbackItem.key === "services-cta" || merged.key === "services-cta") {
+    if (!merged.eyebrow) merged.eyebrow = fallbackItem.eyebrow || "Let's Build Together";
+    if (!merged.title) merged.title = fallbackItem.title || "Let's Discuss Your Project";
+    if (!merged.highlightedWord) merged.highlightedWord = fallbackItem.highlightedWord || "Your Project";
+    if (!merged.subtitle) merged.subtitle = fallbackItem.subtitle || "Get in touch with our team for a customized solution.";
+    if (!merged.buttonLabel) merged.buttonLabel = fallbackItem.buttonLabel || "Enquire Now";
+    if (!merged.buttonHref) merged.buttonHref = fallbackItem.buttonHref || "/contact";
+    if (!merged.image) merged.image = fallbackItem.image || "/assets/image/t2.webp";
+    if (!merged.imageAlt) merged.imageAlt = fallbackItem.imageAlt || "Let's Discuss Your Project Consultation Banner";
+  }
   if (fallbackItem.key === "projects-hero" || merged.key === "projects-hero") {
     if (!merged.image) merged.image = fallbackItem.image || "/newproject/p1.png";
     if (!merged.imageAlt) merged.imageAlt = fallbackItem.imageAlt || "Design House India reception lobby";
