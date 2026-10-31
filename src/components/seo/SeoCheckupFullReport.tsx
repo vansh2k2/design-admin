@@ -537,6 +537,7 @@ export default function SeoCheckupFullReport({
           };
         } else if (effectivePageSpeed) {
           return {
+            ...input,
             label: "PageSpeed performance",
             value: effectivePageSpeed.message || "Run live PageSpeed",
             status: "warning" as const,

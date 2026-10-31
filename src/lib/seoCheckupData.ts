@@ -167,6 +167,23 @@ export interface SeoCheckupReportData {
   groups: CheckupGroup[];
   generatedAt: string;
   pageSpeed?: PageSpeedSnapshot | null;
+  desktopPageSpeed?: PageSpeedSnapshot | null;
+  mobilePageSpeed?: PageSpeedSnapshot | null;
+  gsc?: {
+    totals?: {
+      clicks?: number;
+      impressions?: number;
+      ctr?: number;
+      position?: number;
+    };
+    queries?: Array<{
+      query: string;
+      clicks: number;
+      impressions: number;
+      ctr: number;
+      position: number;
+    }>;
+  };
   routeSummaries: RouteSummary[];
   site: {
     origin: string;

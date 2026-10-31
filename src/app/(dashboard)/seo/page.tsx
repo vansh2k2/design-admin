@@ -818,7 +818,7 @@ export default function SeoDashboardPage() {
                     { query: "Corporate Office Interior Design", clicks: 215, impressions: 3400, ctr: 6.32, position: 5.0 },
                     { query: "Exhibition Stall Design & Build", clicks: 175, impressions: 2800, ctr: 6.25, position: 5.8 },
                     { query: "Showroom Interior Fit-Outs", clicks: 140, impressions: 2100, ctr: 6.67, position: 6.5 },
-                  ]).map((q) => (
+                  ]).map((q: { query: string; clicks: number; impressions: number; ctr: number; position: number }) => (
                     <tr key={q.query} className="hover:bg-slate-50/80 transition-colors">
                       <td className="px-3 py-2 font-semibold text-slate-900">{q.query}</td>
                       <td className="px-3 py-2 text-right text-blue-700 font-bold">{q.clicks}</td>
