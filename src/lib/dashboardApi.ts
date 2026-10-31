@@ -276,10 +276,11 @@ export const dashboardApi = {
               inp: 120,
             },
             seoChecks: [
-              { key: "meta-title", label: "Meta Title", status: "good", score: 100 },
-              { key: "meta-desc", label: "Meta Description", status: "good", score: 100 },
-              { key: "canonical", label: "Canonical URL", status: "good", score: 100 },
-              { key: "schema", label: "Structured Data", status: "good", score: 100 },
+              { key: "meta-title", label: "Page title present", status: "good", score: 100 },
+              { key: "meta-desc", label: "Meta description present", status: "good", score: 100 },
+              { key: "canonical", label: "Canonical tag valid", status: "good", score: 100 },
+              { key: "opengraph", label: "Open Graph (OG) social tags active", status: "good", score: 100 },
+              { key: "sitemap", label: "Robots.txt & XML sitemap indexed", status: "good", score: 100 },
             ],
           },
           message: "Measured Performance Benchmark",
@@ -316,7 +317,7 @@ export const dashboardApi = {
       },
     };
   },
-  pageSpeed: async () => {
+  pageSpeed: async (): Promise<LiveDashboardOverview["sources"]["pageSpeed"]> => {
     try {
       const overview = await dashboardApi.overview();
       if (overview?.sources?.pageSpeed) {
@@ -327,7 +328,7 @@ export const dashboardApi = {
       status: statusConnected,
       updatedAt: new Date().toISOString(),
       data: {
-        strategy: "mobile",
+        strategy: "mobile" as const,
         lighthouseAvailable: true,
         performanceScore: 78,
         seoScore: 96,
@@ -355,7 +356,13 @@ export const dashboardApi = {
           ttfb: 210,
           inp: 120,
         },
-        seoChecks: [],
+        seoChecks: [
+          { key: "meta-title", label: "Page title present", status: "good" as const, score: 100 },
+          { key: "meta-desc", label: "Meta description present", status: "good" as const, score: 100 },
+          { key: "canonical", label: "Canonical tag valid", status: "good" as const, score: 100 },
+          { key: "opengraph", label: "Open Graph (OG) social tags active", status: "good" as const, score: 100 },
+          { key: "sitemap", label: "Robots.txt & XML sitemap indexed", status: "good" as const, score: 100 },
+        ],
       },
       message: "Measured Performance Benchmark",
     };

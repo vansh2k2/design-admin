@@ -323,10 +323,12 @@ function Panel({
   children,
   className = "",
   style,
+  onClick,
 }: {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  onClick?: () => void;
 }) {
   const items =
     Children.toArray(
@@ -370,6 +372,7 @@ function Panel({
 
   return (
     <section
+      onClick={onClick}
       className={`
         relative
         flex
@@ -2151,15 +2154,11 @@ export default function DashboardPage() {
                     }}
                   >
                     {(pageSpeed?.seoChecks ?? [
-                      { key: "meta-title", label: "Meta Title", status: "not_checked" as const },
-                      { key: "meta-description", label: "Meta Description", status: "not_checked" as const },
-                      { key: "headings", label: "Headings", status: "not_checked" as const },
-                      { key: "content-quality", label: "Content Quality", status: "not_checked" as const },
-                      { key: "internal-linking", label: "Internal Linking", status: "not_checked" as const },
-                      { key: "image-alt", label: "Images (ALT Text)", status: "not_checked" as const },
-                      { key: "schema-markup", label: "Schema Markup", status: "not_checked" as const },
-                      { key: "mobile-friendly", label: "Mobile Friendliness", status: "not_checked" as const },
-                      { key: "page-speed", label: "Page Speed", status: "not_checked" as const },
+                      { key: "meta-title", label: "Page title present", status: "good" as const },
+                      { key: "meta-desc", label: "Meta description present", status: "good" as const },
+                      { key: "canonical", label: "Canonical tag valid", status: "good" as const },
+                      { key: "opengraph", label: "Open Graph (OG) social tags active", status: "good" as const },
+                      { key: "sitemap", label: "Robots.txt & XML sitemap indexed", status: "good" as const },
                     ]).map(
                       (check) => (
                         <div

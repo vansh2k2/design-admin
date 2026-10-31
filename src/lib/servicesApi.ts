@@ -1,3 +1,4 @@
+import { api } from "./api";
 import {
   DETAIL_SEEDS,
   emptyServiceDetail,
@@ -213,25 +214,46 @@ export const INITIAL_SERVICES: ServiceItem[] = [
   },
 ];
 
-const STORAGE_KEY = "admin_services_data";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mapBackendCardToItem = (card: any, index: number): ServiceItem => {
+  const title = card.title || "Service";
+  const desc = card.description || "";
+  const image = card.image || "/services/os1.webp";
+  const href = card.buttonUrl || `/services/${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+  const id = card._id || `svc-${index + 1}`;
+  return {
+    id,
+    _id: id,
+    title,
+    desc,
+    image,
+    imageAlt: card.altText || `${title} image`,
+    logo: card.logo || "",
+    href,
+    status: card.isPublished !== false ? "Published" : "Draft",
+    views: card.views || 1000 + index * 120,
+    date: card.updatedAt ? new Date(card.updatedAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "28 Oct 2026",
+    dateTime: card.updatedAt ? new Date(card.updatedAt).toLocaleString("en-GB") : "28 Oct 2026, 11:30 AM",
+    author: card.author || "Design House Team",
+    metaTitle: card.metaTitle || title,
+    metaDescription: card.metaDescription || desc,
+    metaKeywords: card.metaKeywords || "",
+  };
+};
 
 export const servicesApi = {
   list: async (): Promise<ServiceItem[]> => {
-    if (typeof window === "undefined") return INITIAL_SERVICES.map(withDetail);
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return (parsed as ServiceItem[]).map(withDetail);
-        }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const res: any = await api.get("/featured-services");
+      const data = res?.data || res;
+      const cards = Array.isArray(data?.services) ? data.services : [];
+      if (cards.length > 0) {
+        return cards.map((c: unknown, i: number) => withDetail(mapBackendCardToItem(c, i)));
       }
     } catch (e) {
-      console.warn("Error reading services from storage:", e);
+      console.warn("Error fetching services from backend, using fallback:", e);
     }
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_SERVICES));
-    } catch {}
     return INITIAL_SERVICES.map(withDetail);
   },
 
@@ -245,20 +267,53 @@ export const servicesApi = {
         s.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") === str ||
         s.href.toLowerCase().endsWith(str)
     );
-    return found ? withDetail(found) : null;
-  },
+    if (found) return withDetail(found);
 
-  saveAll: async (items: ServiceItem[]): Promise<void> => {
-    if (typeof window === "undefined") return;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    } catch (e) {
-      console.warn("Error saving services:", e);
-    }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const detailRes: any = await api.get(`/service-details/${encodeURIComponent(str)}`);
+      const detailData = detailRes?.data || detailRes;
+      if (detailData && detailData.serviceName) {
+        return {
+          id: detailData._id || str,
+          _id: detailData._id,
+          title: detailData.serviceName,
+          desc: detailData.tagline || "",
+          image: detailData.bgImage || "/services/os1.webp",
+          href: `/services/${str}`,
+          status: "Published",
+          views: 1500,
+          date: "28 Oct 2026",
+          author: "Design House Team",
+          detail: detailData,
+        };
+      }
+    } catch {}
+
+    return null;
   },
 
   create: async (data: Partial<ServiceItem>): Promise<ServiceItem> => {
-    const list = await servicesApi.list();
+    try {
+      const payload = {
+        title: data.title || "New Service",
+        description: data.desc || "",
+        image: data.image || "/services/os1.webp",
+        altText: data.imageAlt || "",
+        icon: "ShoppingBag",
+        buttonText: "Learn More",
+        buttonUrl: data.href || "#",
+      };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const res: any = await api.post("/featured-services/cards", payload);
+      const createdCard = res?.data || res;
+      if (createdCard) {
+        return withDetail(mapBackendCardToItem(createdCard, 0));
+      }
+    } catch (e) {
+      console.warn("Failed to create service in backend:", e);
+    }
+
     const now = new Date();
     const dateFormatted = now.toLocaleDateString("en-GB", {
       day: "2-digit",
@@ -289,59 +344,46 @@ export const servicesApi = {
       metaKeywords: data.metaKeywords || "",
       detail: data.detail || emptyServiceDetail((data.title || "New Service").replace(/\n/g, " ")),
     };
-
-    const updated = [newService, ...list];
-    await servicesApi.saveAll(updated);
     return newService;
   },
 
   update: async (id: string | number, data: Partial<ServiceItem>): Promise<ServiceItem> => {
-    const list = await servicesApi.list();
-    const index = list.findIndex(
-      (s) => String(s.id) === String(id) || String(s._id) === String(id)
-    );
-    if (index === -1) {
-      throw new Error(`Service ${id} not found`);
+    try {
+      const payload = {
+        title: data.title,
+        description: data.desc,
+        image: data.image,
+        altText: data.imageAlt,
+        buttonUrl: data.href,
+      };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const res: any = await api.put(`/featured-services/cards/${id}`, payload);
+      const updatedCard = res?.data || res;
+      if (updatedCard) {
+        return withDetail(mapBackendCardToItem(updatedCard, 0));
+      }
+    } catch (e) {
+      console.warn("Failed to update service in backend:", e);
     }
-
-    const now = new Date();
-    const dateFormatted = now.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-    const timeFormatted = now.toLocaleTimeString("en-GB", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    const updatedItem: ServiceItem = {
-      ...list[index],
-      ...data,
-      date: dateFormatted,
-      dateTime: `${dateFormatted}, ${timeFormatted}`,
-    };
-
-    list[index] = updatedItem;
-    await servicesApi.saveAll(list);
-    return updatedItem;
+    const list = await servicesApi.list();
+    const existing = list.find((s) => String(s.id) === String(id) || String(s._id) === String(id));
+    if (existing) {
+      return { ...existing, ...data };
+    }
+    throw new Error(`Service ${id} not found`);
   },
 
   delete: async (id: string | number): Promise<boolean> => {
-    const list = await servicesApi.list();
-    const filtered = list.filter(
-      (s) => String(s.id) !== String(id) && String(s._id) !== String(id)
-    );
-    await servicesApi.saveAll(filtered);
-    return true;
+    try {
+      await api.delete(`/featured-services/cards/${id}`);
+      return true;
+    } catch (e) {
+      console.warn("Failed to delete service from backend:", e);
+      throw e;
+    }
   },
 
   resetDefaults: async (): Promise<ServiceItem[]> => {
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_SERVICES));
-      } catch {}
-    }
-    return INITIAL_SERVICES.map(withDetail);
+    return servicesApi.list();
   },
 };
