@@ -11,6 +11,7 @@ import {
 
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import typography from "./DashboardTypography.module.css";
 
@@ -112,7 +113,7 @@ const defaultTopStats = [
     numColor: "#15803d",
     footer:
       "View full SEO report",
-    href: "/pages",
+    href: "/seo",
   },
 
   {
@@ -173,8 +174,8 @@ const defaultTopStats = [
     borderColor: "#fecdd3",
     numColor: "#be123c",
     footer:
-      "View all submissions",
-    href: "/submissions",
+      "View all enquiries",
+    href: "/general-enquiries",
   },
 
   {
@@ -190,7 +191,7 @@ const defaultTopStats = [
     numColor: "#0f766e",
     footer:
       "View analytics",
-    href: "/analytics",
+    href: "/seo",
   },
 ];
 
@@ -727,6 +728,7 @@ function RangeDropdown({
 ========================================================= */
 
 export default function DashboardPage() {
+  const router = useRouter();
   const { admin } = useAppSelector((state) => state.auth);
   const [cachedPageSpeed, setCachedPageSpeed] = useState<LiveDashboardOverview["sources"]["pageSpeed"]["data"]>(null);
   const [
@@ -1758,10 +1760,22 @@ export default function DashboardPage() {
                               setActiveMenuItem(
                                 item,
                               );
-
                               setOpenDropdown(
                                 null,
                               );
+                              const navRoutes: Record<string, string> = {
+                                "Dashboard": "/",
+                                "Website Pages": "/pages",
+                                "Blog Posts": "/blogs",
+                                "SEO Manager": "/seo",
+                                "Analytics": "/seo",
+                                "Form Submissions": "/general-enquiries",
+                                "Media Library": "/gallery",
+                                "Settings": "/settings",
+                              };
+                              if (navRoutes[item]) {
+                                router.push(navRoutes[item]);
+                              }
                             }}
                             className={`
                             mt-1
@@ -1888,12 +1902,17 @@ export default function DashboardPage() {
                       key={
                         item.title
                       }
+                      onClick={() => router.push(item.href || "/pages")}
                       className="
                         flex
                         flex-col
                         !overflow-hidden
                         p-2
                         !pb-5.5
+                        cursor-pointer
+                        group
+                        hover:shadow-md
+                        transition-all
                       "
                       style={{
                         background:
@@ -1989,14 +2008,17 @@ export default function DashboardPage() {
                       </div>
 
                       <div
-                        onClick={() => window.open(item.href || "/pages", "_blank")}
-                        className="absolute bottom-1 left-2 right-2 flex cursor-pointer items-center justify-center gap-1 text-[8px] font-semibold text-[#293957] transition hover:text-blue-600"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(item.href || "/pages");
+                        }}
+                        className="absolute bottom-1 left-2 right-2 flex cursor-pointer items-center justify-center gap-1 text-[8px] font-semibold text-[#293957] transition group-hover:text-blue-600 hover:text-blue-600"
                       >
                         {
                           item.footer
                         }
 
-                        <ArrowRight className="h-3 w-3" />
+                        <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
                       </div>
                     </Panel>
                   );
@@ -2026,7 +2048,7 @@ export default function DashboardPage() {
                   right={
                     <button
                       type="button"
-                      onClick={() => window.open("/seo", "_blank")}
+                      onClick={() => router.push("/seo")}
                       className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700"
                     >
                       View Data
@@ -2184,7 +2206,7 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={() => window.open("/seo", "_blank")}
+                        onClick={() => router.push("/seo")}
                         className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700"
                       >
                         View Console
@@ -2542,7 +2564,7 @@ export default function DashboardPage() {
                       </select>
                       <button
                         type="button"
-                        onClick={() => window.open("/submissions", "_blank")}
+                        onClick={() => router.push("/general-enquiries")}
                         className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700"
                       >
                         View All
@@ -2599,6 +2621,7 @@ export default function DashboardPage() {
                       return (
                         <div
                           key={row.id + index}
+                          onClick={() => router.push("/general-enquiries")}
                           className={`
                             flex
                             items-center
@@ -2611,6 +2634,9 @@ export default function DashboardPage() {
                             text-[10px]
                             transition-all
                             shadow-xs
+                            cursor-pointer
+                            hover:opacity-90
+                            hover:shadow-sm
                             ${cardTheme.bg}
                           `}
                         >
@@ -2684,6 +2710,7 @@ export default function DashboardPage() {
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
+                          onClick={() => router.push("/seo")}
                           className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700"
                         >
                           View Report
@@ -3044,7 +3071,7 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={() => window.open("/analytics", "_blank")}
+                        onClick={() => router.push("/auditpage")}
                         className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700"
                       >
                         View Performance
@@ -3444,7 +3471,7 @@ export default function DashboardPage() {
                 <PanelTitle
                   right={
                     <Link
-                      href="#"
+                      href="/seo"
                       className="text-[9px] font-bold text-blue-600 hover:underline"
                     >
                       View Site Health
@@ -3612,14 +3639,12 @@ export default function DashboardPage() {
               <Panel>
                 <PanelTitle
                   right={
-                    <a
+                    <Link
                       href="/pages"
-                      target="_blank"
-                      rel="noopener noreferrer"
                       className="text-[9px] font-bold text-blue-600 hover:underline"
                     >
                       View All
-                    </a>
+                    </Link>
                   }
                 >
                   Top Pages by
@@ -3636,6 +3661,7 @@ export default function DashboardPage() {
                         key={
                           row[0]
                         }
+                        onClick={() => router.push("/pages")}
                         className="
                           grid
                           grid-cols-[16px_1fr_76px_42px_14px]
@@ -3643,6 +3669,11 @@ export default function DashboardPage() {
                           gap-2
                           py-1.5
                           font-bold
+                          cursor-pointer
+                          hover:bg-slate-50
+                          rounded
+                          px-1
+                          transition-colors
                         "
                       >
                         <span>
@@ -3683,14 +3714,12 @@ export default function DashboardPage() {
               <Panel>
                 <PanelTitle
                   right={
-                    <a
+                    <Link
                       href="/seo"
-                      target="_blank"
-                      rel="noopener noreferrer"
                       className="text-[9px] font-bold text-blue-600 hover:underline"
                     >
                       View Data
-                    </a>
+                    </Link>
                   }
                 >
                   Keyword Performance
@@ -3758,14 +3787,12 @@ export default function DashboardPage() {
               <Panel>
                 <PanelTitle
                   right={
-                    <a
-                      href="/analytics"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link
+                      href="/general-enquiries"
                       className="text-[9px] font-bold text-blue-600 hover:underline"
                     >
                       View Report
-                    </a>
+                    </Link>
                   }
                 >
                   Top Enquiry
@@ -3840,14 +3867,12 @@ export default function DashboardPage() {
               <Panel>
                 <PanelTitle
                   right={
-                    <a
+                    <Link
                       href="/seo"
-                      target="_blank"
-                      rel="noopener noreferrer"
                       className="text-[9px] font-bold text-blue-600 hover:underline"
                     >
                       View Indexing
-                    </a>
+                    </Link>
                   }
                 >
                   Google Indexing
