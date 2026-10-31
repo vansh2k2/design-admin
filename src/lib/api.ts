@@ -30,10 +30,10 @@ export const getApiBaseUrl = (): string => {
 
   // If running on local network / custom IP in browser
   if (typeof window !== "undefined" && window.location.hostname !== "localhost") {
-    return `http://${window.location.hostname}:4001/api`;
+    return `http://${window.location.hostname}:5000/api`;
   }
 
-  return "http://localhost:4001/api";
+  return "http://localhost:5000/api";
 };
 
 export const getBackendUrl = (): string => {
@@ -50,7 +50,7 @@ export const getBackendUrl = (): string => {
     }
     return process.env.NEXT_PUBLIC_BACKEND_URL;
   }
-  return "http://localhost:4001";
+  return "http://localhost:5000";
 };
 
 export const API_BASE_URL = getApiBaseUrl();
@@ -149,7 +149,18 @@ async function refreshAccessToken(): Promise<boolean> {
 
 // Modules already connected to the real backend: they skip the demo data even while
 // NEXT_PUBLIC_USE_MOCK_API is on
-const LIVE_API_PREFIXES = ["/contact-enquiry", "/whatsapp-templates", "/topbar", "/contact-page", "/uploads", "/page-seo"];
+const LIVE_API_PREFIXES = [
+  "/contact-enquiry",
+  "/whatsapp-templates",
+  "/topbar",
+  "/contact-page",
+  "/uploads",
+  "/page-seo",
+  "/seo-audit",
+  "/seo",
+  "/dashboard",
+  "/seo-settings",
+];
 export const isLivePath = (path: string) => LIVE_API_PREFIXES.some((prefix) => path.startsWith(prefix));
 
 async function request<T>(path: string, options?: ApiRequestOptions, isRetry = false): Promise<T> {
