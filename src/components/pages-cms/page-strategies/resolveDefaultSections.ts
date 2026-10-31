@@ -48,54 +48,80 @@ export function resolveDefaultSectionsForPage(page: CmsPage): SectionsDraft {
   const title = (page.title || "").toLowerCase();
   const slug = (page.slug || "").toLowerCase();
 
+  const isHomeEdit =
+    key === "home" ||
+    key === "landingpage" ||
+    slug === "/" ||
+    title === "home" ||
+    page.type === "home";
+
+  let sections: SectionsDraft = defaultLandingSections;
+
   // Design House website pages
   const dhSections = page.configKey
     ? (DH_DEFAULT_SECTIONS[page.configKey] || DH_DEFAULT_SECTIONS[key])
     : undefined;
-  if (dhSections) return dhSections;
 
-  if (key === "home" || key === "landingpage" || slug === "/" || title === "home" || page.type === "home") {
-    return DH_DEFAULT_SECTIONS.landingPage;
+  if (dhSections) {
+    sections = dhSections;
+  } else if (isHomeEdit) {
+    sections = DH_DEFAULT_SECTIONS.landingPage;
+  } else if (key === "careerspage" || slug === "/careers") sections = defaultCareersSections;
+  else if (key === "msmeeligibilitycheckpage" || slug.includes("eligibility-check")) sections = defaultMsmeEligibilityCheckSections;
+  else if (key === "msmeapplypaymentpage" || slug.includes("participate/msme/apply/payment")) sections = defaultMsmeApplyPaymentSections;
+  else if (key === "msmeapplyparticipationdetailspage" || slug.includes("participation-details")) sections = defaultMsmeParticipationDetailsSections;
+  else if (key === "msmeapplypage" || (slug.includes("participate/msme/apply") && !slug.includes("participation-details") && !slug.includes("payment"))) sections = defaultMsmeApplySections;
+  else if (key.includes("partnerpage") || (slug.includes("partnership/") && slug !== "/partnership")) sections = defaultSubPartnershipSections;
+  else if (key === "awardsnominationpage" || slug.includes("awards/nominations") || (slug.includes("nomination") && !slug.includes("advisory")) || (title.includes("nomination") && !title.includes("advisory"))) sections = defaultAwardsNominationSections;
+  else if (key === "nominateadvisorypage" || slug.includes("nominate_advisory_board")) sections = defaultNominateAdvisorySections;
+  else if (key === "supportservicespage" || slug.includes("suport_services")) sections = defaultSupportServicesSections;
+  else if (key === "aboutpage" || title.includes("about") || slug === "/about") sections = defaultAboutSections;
+  else if (key === "advisorypage" || title.includes("advisory") || slug.includes("advisory")) sections = defaultAdvisorySections;
+  else if (key === "blogpage" || title.includes("blog") || slug.includes("blog")) sections = defaultBlogSections;
+  else if (key === "participateasexhibitorpage" || title.includes("participate as exhibitor") || slug.includes("participate-as-exhibitor")) sections = defaultParticipateAsExhibitorSections;
+  else if (key === "exhibitioncategoriespage" || title.includes("exhibition categories") || slug.includes("exhibition-categories")) sections = defaultExhibitionCategoriesSections;
+  else if (key === "bookastandpage" || title.includes("book a stall") || title.includes("book a stand") || slug.includes("book-a-stand")) sections = defaultBookAStandSections;
+  else if (key === "visitorregistrationpage" || title.includes("register as visitor") || title.includes("visitor registration") || slug.includes("visitor-registration")) sections = defaultVisitorRegistrationSections;
+  else if (key === "delegateregistrationpage" || title.includes("delegate registration") || slug.includes("delegate-registration")) sections = defaultDelegateRegistrationSections;
+  else if (key === "buyerregistrationpage" || title.includes("register as buyer") || title.includes("buyer registration") || slug.includes("buyer-registration")) sections = defaultBuyerRegistrationSections;
+  else if (key === "termsandconditionspage" || title.includes("terms") || slug.includes("terms")) sections = defaultTermsAndConditionsSections;
+  else if (key === "privacypolicypage" || title.includes("privacy") || slug.includes("privacy")) sections = defaultPrivacyPolicySections;
+  else if (key === "refundpolicypage" || title.includes("refund") || slug.includes("refund")) sections = defaultRefundPolicySections;
+  else if (key === "whyvisitpage" || title.includes("why visit") || slug.includes("why-visit")) sections = defaultWhyVisitSections;
+  else if (key === "whyexhibitpage" || title.includes("why exhibit") || slug.includes("why-exhibit")) sections = defaultWhyExhibitSections;
+  else if (key === "msmepage" || title.includes("msme") || slug.includes("msme")) sections = defaultMsmeSections;
+  else if (key === "exhibitorspage" || title.includes("exhibitors") || slug.includes("exhibitors")) sections = defaultExhibitorsSections;
+  else if (key === "buyersellermeetpage" || title.includes("buyer-seller") || slug.includes("buyer-seller")) sections = defaultBuyerSellerMeetSections;
+  else if (key === "gallerypage" || title.includes("gallery") || slug.includes("gallery")) sections = defaultGallerySections;
+  else if (key === "awardspage" || title.includes("award") || slug.includes("awards")) sections = defaultAwardsSections;
+  else if (key === "sponsorshippage" || title.includes("sponsorship") || slug.includes("sponsorship")) sections = defaultSponsorshipSections;
+  else if (key === "epromotionpage" || title.includes("e-promotion") || slug.includes("e-promotion")) sections = defaultEPromotionSections;
+  else if (key === "partnershippage" || title.includes("partnership") || slug.includes("partnership")) sections = defaultPartnershipPageSections;
+  else if (key === "exhibitorloginpage" || title.includes("exhibitor login") || slug.includes("exhibitor-login")) sections = defaultExhibitorLoginSections;
+  else if (key === "buyerloginpage" || title.includes("buyer login") || slug.includes("buyer-login")) sections = defaultBuyerLoginSections;
+  else if (key === "delegatesloginpage" || title.includes("delegates login") || slug.includes("delegates-login")) sections = defaultDelegatesLoginSections;
+  else if (key === "userloginpage" || title.includes("user login") || slug.includes("/login")) sections = defaultUserLoginSections;
+  else if (key === "contactpage" || title.includes("contact") || title.includes("advisor") || slug.includes("contact")) sections = DH_DEFAULT_SECTIONS.contactPage || defaultContactSections;
+  else if (key === "portfoliopage" || title.includes("project") || title.includes("portfolio") || slug.includes("project") || slug.includes("portfolio")) sections = DH_DEFAULT_SECTIONS.portfolioPage;
+  else sections = defaultLandingSections;
+
+  if (!isHomeEdit) {
+    sections = sections.filter((s) => {
+      const sk = (s.key || "").toLowerCase();
+      const sn = (s.name || "").toLowerCase();
+      return (
+        sk !== "topbar" &&
+        sk !== "navbar" &&
+        sk !== "footer" &&
+        !sn.includes("topbar") &&
+        !sn.includes("header") &&
+        !sn.includes("navbar") &&
+        !sn.includes("footer")
+      );
+    });
   }
 
-  if (key === "careerspage" || slug === "/careers") return defaultCareersSections;
-  if (key === "msmeeligibilitycheckpage" || slug.includes("eligibility-check")) return defaultMsmeEligibilityCheckSections;
-  if (key === "msmeapplypaymentpage" || slug.includes("participate/msme/apply/payment")) return defaultMsmeApplyPaymentSections;
-  if (key === "msmeapplyparticipationdetailspage" || slug.includes("participation-details")) return defaultMsmeParticipationDetailsSections;
-  if (key === "msmeapplypage" || (slug.includes("participate/msme/apply") && !slug.includes("participation-details") && !slug.includes("payment"))) return defaultMsmeApplySections;
-  if (key.includes("partnerpage") || (slug.includes("partnership/") && slug !== "/partnership")) return defaultSubPartnershipSections;
-  if (key === "awardsnominationpage" || slug.includes("awards/nominations") || (slug.includes("nomination") && !slug.includes("advisory")) || (title.includes("nomination") && !title.includes("advisory"))) return defaultAwardsNominationSections;
-  if (key === "nominateadvisorypage" || slug.includes("nominate_advisory_board")) return defaultNominateAdvisorySections;
-  if (key === "supportservicespage" || slug.includes("suport_services")) return defaultSupportServicesSections;
-  if (key === "aboutpage" || title.includes("about") || slug === "/about") return defaultAboutSections;
-  if (key === "advisorypage" || title.includes("advisory") || slug.includes("advisory")) return defaultAdvisorySections;
-  if (key === "blogpage" || title.includes("blog") || slug.includes("blog")) return defaultBlogSections;
-  if (key === "participateasexhibitorpage" || title.includes("participate as exhibitor") || slug.includes("participate-as-exhibitor")) return defaultParticipateAsExhibitorSections;
-  if (key === "exhibitioncategoriespage" || title.includes("exhibition categories") || slug.includes("exhibition-categories")) return defaultExhibitionCategoriesSections;
-  if (key === "bookastandpage" || title.includes("book a stall") || title.includes("book a stand") || slug.includes("book-a-stand")) return defaultBookAStandSections;
-  if (key === "visitorregistrationpage" || title.includes("register as visitor") || title.includes("visitor registration") || slug.includes("visitor-registration")) return defaultVisitorRegistrationSections;
-  if (key === "delegateregistrationpage" || title.includes("delegate registration") || slug.includes("delegate-registration")) return defaultDelegateRegistrationSections;
-  if (key === "buyerregistrationpage" || title.includes("register as buyer") || title.includes("buyer registration") || slug.includes("buyer-registration")) return defaultBuyerRegistrationSections;
-  if (key === "termsandconditionspage" || title.includes("terms") || slug.includes("terms")) return defaultTermsAndConditionsSections;
-  if (key === "privacypolicypage" || title.includes("privacy") || slug.includes("privacy")) return defaultPrivacyPolicySections;
-  if (key === "refundpolicypage" || title.includes("refund") || slug.includes("refund")) return defaultRefundPolicySections;
-  if (key === "whyvisitpage" || title.includes("why visit") || slug.includes("why-visit")) return defaultWhyVisitSections;
-  if (key === "whyexhibitpage" || title.includes("why exhibit") || slug.includes("why-exhibit")) return defaultWhyExhibitSections;
-  if (key === "msmepage" || title.includes("msme") || slug.includes("msme")) return defaultMsmeSections;
-  if (key === "exhibitorspage" || title.includes("exhibitors") || slug.includes("exhibitors")) return defaultExhibitorsSections;
-  if (key === "buyersellermeetpage" || title.includes("buyer-seller") || slug.includes("buyer-seller")) return defaultBuyerSellerMeetSections;
-  if (key === "gallerypage" || title.includes("gallery") || slug.includes("gallery")) return defaultGallerySections;
-  if (key === "awardspage" || title.includes("award") || slug.includes("awards")) return defaultAwardsSections;
-  if (key === "sponsorshippage" || title.includes("sponsorship") || slug.includes("sponsorship")) return defaultSponsorshipSections;
-  if (key === "epromotionpage" || title.includes("e-promotion") || slug.includes("e-promotion")) return defaultEPromotionSections;
-  if (key === "partnershippage" || title.includes("partnership") || slug.includes("partnership")) return defaultPartnershipPageSections;
-  if (key === "exhibitorloginpage" || title.includes("exhibitor login") || slug.includes("exhibitor-login")) return defaultExhibitorLoginSections;
-  if (key === "buyerloginpage" || title.includes("buyer login") || slug.includes("buyer-login")) return defaultBuyerLoginSections;
-  if (key === "delegatesloginpage" || title.includes("delegates login") || slug.includes("delegates-login")) return defaultDelegatesLoginSections;
-  if (key === "userloginpage" || title.includes("user login") || slug.includes("/login")) return defaultUserLoginSections;
-  if (key === "contactpage" || title.includes("contact") || title.includes("advisor") || slug.includes("contact")) return DH_DEFAULT_SECTIONS.contactPage || defaultContactSections;
-  if (key === "portfoliopage" || title.includes("project") || title.includes("portfolio") || slug.includes("project") || slug.includes("portfolio")) return DH_DEFAULT_SECTIONS.portfolioPage;
-  return defaultLandingSections;
+  return sections;
 }
 
 /**
@@ -110,12 +136,37 @@ export function resolveResetDefaultsForPage(page: CmsPage): SectionsDraft {
   const title = (page.title || "").toLowerCase();
   const slug = (page.slug || "").toLowerCase();
 
+  const isHomeEdit =
+    key === "home" ||
+    key === "landingpage" ||
+    slug === "/" ||
+    title === "home" ||
+    page.type === "home";
+
   const dhSections = page.configKey
     ? (DH_DEFAULT_SECTIONS[page.configKey] || DH_DEFAULT_SECTIONS[key])
     : undefined;
-  if (dhSections) return dhSections;
+  if (dhSections) {
+    let defaults = dhSections;
+    if (!isHomeEdit) {
+      defaults = defaults.filter((s) => {
+        const sk = (s.key || "").toLowerCase();
+        const sn = (s.name || "").toLowerCase();
+        return (
+          sk !== "topbar" &&
+          sk !== "navbar" &&
+          sk !== "footer" &&
+          !sn.includes("topbar") &&
+          !sn.includes("header") &&
+          !sn.includes("navbar") &&
+          !sn.includes("footer")
+        );
+      });
+    }
+    return defaults;
+  }
 
-  if (key === "home" || key === "landingpage" || slug === "/" || title === "home" || page.type === "home") {
+  if (isHomeEdit) {
     return DH_DEFAULT_SECTIONS.landingPage;
   }
 
@@ -157,6 +208,22 @@ export function resolveResetDefaultsForPage(page: CmsPage): SectionsDraft {
   else if (key === "userloginpage" || title.includes("user login") || slug.includes("/login")) defaults = defaultUserLoginSections;
   else if (key === "contactpage" || title.includes("contact") || title.includes("advisor") || slug.includes("contact")) defaults = DH_DEFAULT_SECTIONS.contactPage || defaultContactSections;
   else if (key === "portfoliopage" || title.includes("project") || title.includes("portfolio") || slug.includes("project") || slug.includes("portfolio")) defaults = DH_DEFAULT_SECTIONS.portfolioPage;
+
+  if (!isHomeEdit) {
+    defaults = defaults.filter((s) => {
+      const sk = (s.key || "").toLowerCase();
+      const sn = (s.name || "").toLowerCase();
+      return (
+        sk !== "topbar" &&
+        sk !== "navbar" &&
+        sk !== "footer" &&
+        !sn.includes("topbar") &&
+        !sn.includes("header") &&
+        !sn.includes("navbar") &&
+        !sn.includes("footer")
+      );
+    });
+  }
 
   return defaults;
 }
