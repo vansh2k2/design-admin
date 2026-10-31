@@ -1509,8 +1509,8 @@ const contactHeroSection: Section = {
   name: "Contact Hero Banner",
   enabled: true,
   eyebrow: "Contact Us",
-  title: "Let's Build",
-  highlightedWord: "Your Next Space",
+  // The page's H1: new line = next line, *stars* = orange
+  headline: "Let's Build\nYour *Next Space*",
   description:
     "From concept to completion, our team is here to understand your requirements and create the right solution for your brand.",
   image: "/assets/banner/contact.webp",
@@ -1535,22 +1535,6 @@ const contactInfoSection: Section = {
   contactEmail: "info@designhouse.co.in",
   workingHoursWeekday: "Monday – Saturday: 9:00 AM – 6:00 PM",
   workingHoursWeekend: "Sunday: Closed",
-};
-
-const contactFormSection: Section = {
-  key: "contact-form",
-  name: "Contact & Enquiry Form",
-  enabled: true,
-  eyebrow: "Send Us a Message",
-  title: "Enquire Now",
-  description:
-    "Share your requirements and we will get back to you shortly.",
-  submitLabel: "Send Enquiry",
-  securityNote:
-    "Your information is safe with us. We typically respond during business hours.",
-  successTitle: "Enquiry Sent!",
-  successMessage:
-    "Thank you for contacting us. Our team will get back to you within 24 hours.",
 };
 
 const contactOfficesSection: Section = {
@@ -1613,7 +1597,6 @@ export const dhContactSections: Section[] = [
   navbarSection,
   contactHeroSection,
   contactInfoSection,
-  contactFormSection,
   contactOfficesSection,
   contactMapSection,
   footerSection,

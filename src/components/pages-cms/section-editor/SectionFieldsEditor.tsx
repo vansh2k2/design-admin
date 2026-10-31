@@ -430,23 +430,18 @@ export function SectionFieldsEditor({
               hideLimit={true}
             />
           </div>
-          <div>
-            <FieldLabel required>Main Headline (Line 1)</FieldLabel>
-            <TextInput
-              value={String(section.title || "Let's Build")}
-              onChange={(next) => onFieldChange("title", next)}
-              placeholder="Let's Build"
-              hideLimit={true}
+          <div className="md:col-span-2">
+            <FieldLabel required>Main Headline (H1)</FieldLabel>
+            <Textarea
+              value={String(section.headline ?? [section.title, section.highlightedWord ? `*${section.highlightedWord}*` : ""].filter(Boolean).join("\n"))}
+              onChange={(next) => onFieldChange("headline", next)}
+              placeholder={"Let's Build\nYour *Next Space*"}
+              rows={2}
+              noLimit={true}
             />
-          </div>
-          <div>
-            <FieldLabel>Orange Accent Headline (Line 2)</FieldLabel>
-            <TextInput
-              value={String(section.highlightedWord || "Your Next Space")}
-              onChange={(next) => onFieldChange("highlightedWord", next)}
-              placeholder="Your Next Space"
-              hideLimit={true}
-            />
+            <p className="mt-1 text-[10px] text-slate-500">
+              The page&apos;s only H1. Press Enter for a new line; put words between *stars* to show them in orange.
+            </p>
           </div>
           <div className="md:col-span-2">
             <FieldLabel>Subtitle / Description</FieldLabel>
@@ -728,15 +723,17 @@ export function SectionFieldsEditor({
             />
           </div>
           <div className="md:col-span-2">
-            <FieldLabel required>Google Maps Embed URL (Iframe src)</FieldLabel>
-            <TextInput
+            <FieldLabel required>Google Map (Iframe embed code or URL)</FieldLabel>
+            <Textarea
               value={String(section.mapEmbedUrl || "https://maps.google.com/maps?q=Design+House+India+Pvt+Ltd%2C+Mohan+Nagar%2C+Ghaziabad&z=15&output=embed")}
               onChange={(next) => onFieldChange("mapEmbedUrl", next)}
-              placeholder="https://maps.google.com/maps?q=...&output=embed"
-              hideLimit={true}
+              placeholder={'<iframe src="https://www.google.com/maps/embed?pb=..."></iframe>'}
+              rows={3}
+              mono={true}
+              noLimit={true}
             />
             <p className="text-[10px] text-slate-500 mt-1">
-              Google Maps embed URL with &amp;output=embed or full maps iframe URL.
+              In Google Maps: Share → Embed a map → Copy HTML, and paste it here (or paste just the embed link).
             </p>
           </div>
         </div>

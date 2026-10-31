@@ -3,6 +3,9 @@ import type { CmsPage } from "@/lib/cmsPages";
 import { EditorToolbar, Toggle } from "../fields";
 import type { FormState } from "../types";
 
+// The website while developing locally (canonical "Set Local")
+const LOCAL_SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3010").replace(/\/$/, "");
+
 export function SeoSettingsPanel({
   form,
   updateField,
@@ -201,14 +204,14 @@ export function SeoSettingsPanel({
                 type="button"
                 onClick={() => {
                   const p = page.slug === "/" ? "" : (page.slug?.startsWith("/") ? page.slug : `/${page.slug || ""}`);
-                  const tag = `<link rel="canonical" href="http://localhost:3002${p}" />`;
+                  const tag = `<link rel="canonical" href="${LOCAL_SITE_URL}${p}" />`;
                   updateField("canonicalTag", tag);
-                  updateField("canonicalUrl", `http://localhost:3002${p}`);
+                  updateField("canonicalUrl", `${LOCAL_SITE_URL}${p}`);
                   if (canonicalEditorRef.current) canonicalEditorRef.current.innerText = tag;
                 }}
                 className="text-[11px] px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded hover:bg-blue-100 cursor-pointer font-medium"
               >
-                Set Local (3002)
+                Set Local
               </button>
               <button
                 type="button"
