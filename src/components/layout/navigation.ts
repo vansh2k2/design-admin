@@ -1,4 +1,5 @@
 import {
+  CalendarCheck,
   Activity,
   Award,
   BarChart3,
@@ -66,8 +67,9 @@ export const NAV_SECTIONS: NavSection[] = [
     title: "Main Navigation",
     items: [
       { label: "Dashboard", href: "/", icon: LayoutDashboard },
-      { label: "General Enquiries", href: "/general-enquiries", icon: Mail },
+      { label: "Book a Meeting", href: "/meeting-requests", icon: CalendarCheck },
       { label: "Contact Us Messages", href: "/contact-us", icon: MessageSquareText },
+      { label: "Get In Touch", href: "/get-in-touch", icon: Handshake },
       { label: "Communication / Follow-ups", href: "/communication", icon: MessageSquare, badge: "NEW" },
     ],
   },
@@ -118,7 +120,7 @@ export const NAV_SECTIONS: NavSection[] = [
     items: [
       { label: "Pages & CMS", href: "/pages", icon: FileText },
       { label: "Our Projects", href: "/projects", icon: LayoutGrid, badge: "NEW" },
-      { label: "Downloads", href: "/downloads", icon: Download },
+      { label: "Downloads Management", href: "/downloads", icon: Download },
       { label: "Services Management", href: "/services", icon: BriefcaseBusiness },
       { label: "Blog & Insights", href: "/blogs", icon: BookOpenText },
       { label: "Media Library", href: "/gallery", icon: GalleryHorizontalEnd },

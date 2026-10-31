@@ -4,6 +4,7 @@ import { useMemo, useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/store/hooks";
 import { getBackendUrl } from "@/lib/api";
+import { uploadApi } from "@/lib/uploadApi";
 import Modal from "@/components/ui/Modal";
 import { Input, Label, Textarea } from "@/components/ui/Input";
 import typography from "@/app/(dashboard)/pages/PagesTypography.module.css";
@@ -190,6 +191,9 @@ export interface Testimonial {
   logo?: string;
   logoAlt?: string;
   logoText?: string;
+  // Photo on the right of the website card (a project photo is shown when empty)
+  image?: string;
+  imageAlt?: string;
 }
 
 const COLOR_PRESETS = [
@@ -278,6 +282,8 @@ type RawTestimonial = {
   logo?: string;
   logoAlt?: string;
   logoText?: string;
+  image?: string;
+  imageAlt?: string;
 };
 
 export default function TestimonialsManager({ config }: { config: TestimonialsManagerConfig }) {
@@ -350,6 +356,10 @@ export default function TestimonialsManager({ config }: { config: TestimonialsMa
   const [formLogoAlt, setFormLogoAlt] = useState("");
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const logoFileInputRef = useRef<HTMLInputElement>(null);
+  const [formImage, setFormImage] = useState("");
+  const [formImageAlt, setFormImageAlt] = useState("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const imageFileInputRef = useRef<HTMLInputElement>(null);
 
   // Settings Modal Rules
   const [autoApprove, setAutoApprove] = useState(true);
@@ -378,6 +388,8 @@ export default function TestimonialsManager({ config }: { config: TestimonialsMa
           logo: t.logo || "",
           logoAlt: t.logoAlt || "",
           logoText: t.logoText || "",
+          image: t.image || "",
+          imageAlt: t.imageAlt || "",
         }));
         setTestimonials(mapped);
         if (mapped.length > 0) {
@@ -414,6 +426,8 @@ export default function TestimonialsManager({ config }: { config: TestimonialsMa
           logo: t.logo || "",
           logoAlt: t.logoAlt || "",
           logoText: t.logoText || "",
+          image: t.image || "",
+          imageAlt: t.imageAlt || "",
           status: t.status,
           author: t.author || getAdminDisplayName(),
           date: t.date || formatDateTime(),
@@ -512,6 +526,8 @@ export default function TestimonialsManager({ config }: { config: TestimonialsMa
     setFormColor("#1b5e20");
     setFormLogo("");
     setFormLogoAlt("");
+    setFormImage("");
+    setFormImageAlt("");
     setIsAddModalOpen(true);
   };
 
@@ -527,6 +543,8 @@ export default function TestimonialsManager({ config }: { config: TestimonialsMa
     setFormColor(item.color || "#1b5e20");
     setFormLogo(item.logo || "");
     setFormLogoAlt(item.logoAlt || "");
+    setFormImage(item.image || "");
+    setFormImageAlt(item.imageAlt || "");
     setIsEditModalOpen(true);
   };
 
@@ -537,48 +555,41 @@ export default function TestimonialsManager({ config }: { config: TestimonialsMa
   // 300KB–2MB text blob sitting in the database; since the homepage embeds
   // all published testimonials into its server-rendered payload, that
   // alone was adding several megabytes to every single homepage load.
+  // Uploads an image to the backend (Cloudinary) and returns its URL
+  const uploadImageFile = async (file: File): Promise<string> => {
+    if (file.size > 2 * 1024 * 1024) throw new Error("Image size must be less than 2MB");
+    const res = await uploadApi.file(file, config.uploadFolder);
+    if (!res?.url) throw new Error("Upload server did not return an image URL.");
+    return res.url;
+  };
+
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    if (file.size > 2 * 1024 * 1024) {
-      showError("Image size must be less than 2MB");
-      e.target.value = "";
-      return;
-    }
-
     setIsUploadingLogo(true);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", config.uploadFolder);
-
-      let res = await fetch(`/api/uploads?folder=${encodeURIComponent(config.uploadFolder)}`, {
-        method: "POST",
-        body: formData,
-      }).catch(() => null);
-
-      if (!res) {
-        res = await fetch(`${BACKEND_URL}/api/uploads?folder=${encodeURIComponent(config.uploadFolder)}`, {
-          method: "POST",
-          body: formData,
-        }).catch(() => null);
-      }
-
-      if (!res || !res.ok) {
-        throw new Error(`Upload failed${res ? ` (status ${res.status})` : " — could not reach the upload server"}.`);
-      }
-
-      const json = await res.json().catch(() => null);
-      const url = json?.data?.url || json?.url || json?.data?.secure_url || json?.secure_url;
-      if (!url) throw new Error("Upload server did not return an image URL.");
-
-      setFormLogo(url);
+      setFormLogo(await uploadImageFile(file));
       showSuccess("Logo photo uploaded successfully!");
     } catch (err) {
       showError((err instanceof Error ? err.message : "") || "Could not upload logo photo. Please try again.");
     } finally {
       setIsUploadingLogo(false);
+      e.target.value = "";
+    }
+  };
+
+  const handleCardImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploadingImage(true);
+    try {
+      setFormImage(await uploadImageFile(file));
+      if (!formImageAlt.trim()) setFormImageAlt(`${formName.trim() || "Client"} project by Design House India`);
+      showSuccess("Card photo uploaded successfully!");
+    } catch (err) {
+      showError((err instanceof Error ? err.message : "") || "Could not upload the card photo. Please try again.");
+    } finally {
+      setIsUploadingImage(false);
       e.target.value = "";
     }
   };
@@ -617,6 +628,8 @@ export default function TestimonialsManager({ config }: { config: TestimonialsMa
               color: formColor,
               logo: formLogo.trim(),
               logoAlt: formLogo.trim() ? formLogoAlt.trim() : "",
+              image: formImage.trim(),
+              imageAlt: formImage.trim() ? formImageAlt.trim() : "",
               author: adminName,
               date: nowFormatted,
             }
@@ -641,6 +654,8 @@ export default function TestimonialsManager({ config }: { config: TestimonialsMa
         color: formColor,
         logo: formLogo.trim(),
         logoAlt: formLogo.trim() ? formLogoAlt.trim() : "",
+        image: formImage.trim(),
+        imageAlt: formImage.trim() ? formImageAlt.trim() : "",
       };
 
       updatedList = [newTestimonial, ...testimonials];
@@ -1770,6 +1785,65 @@ export default function TestimonialsManager({ config }: { config: TestimonialsMa
                         : `Leave blank to auto-use First & Last name initials (${getInitials(formName) || "AK"}).`}
                     </p>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* CARD PHOTO (right side of the website card) */}
+            <div className="rounded-[6px] border border-[#e2e8f0] bg-white p-3">
+              <div className="mb-2 flex items-center justify-between">
+                <Label>Card Photo (right side of the card)</Label>
+                {formImage && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormImage("");
+                      setFormImageAlt("");
+                    }}
+                    className="text-[8.5px] font-bold text-red-600 hover:underline cursor-pointer"
+                  >
+                    ✕ Remove (use a project photo)
+                  </button>
+                )}
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="h-[72px] w-[96px] shrink-0 overflow-hidden rounded-[4px] border border-[#e2e8f0] bg-slate-50">
+                  {formImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={formImage} alt={formImageAlt || ""} className="h-full w-full object-cover" />
+                  ) : (
+                    <span className="flex h-full items-center justify-center px-1 text-center text-[8px] text-slate-400">No photo — a project photo is shown</span>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <input type="file" ref={imageFileInputRef} accept="image/*" onChange={handleCardImageUpload} className="hidden" />
+                    <button
+                      type="button"
+                      disabled={isUploadingImage}
+                      onClick={() => imageFileInputRef.current?.click()}
+                      className="inline-flex h-[30px] shrink-0 items-center gap-1.5 rounded-[4px] border border-[#cbd5e1] bg-[#f8fafc] px-2.5 text-[9.5px] font-semibold text-[#1e293b] hover:bg-slate-100 cursor-pointer active:scale-95 shadow-xs disabled:opacity-50"
+                    >
+                      <Upload className={`h-3 w-3 text-emerald-600 ${isUploadingImage ? "animate-spin" : ""}`} />
+                      {isUploadingImage ? "Uploading..." : "Upload Photo"}
+                    </button>
+                    <input
+                      type="text"
+                      value={formImage}
+                      onChange={(e) => setFormImage(e.target.value)}
+                      placeholder="Or paste image URL..."
+                      className="w-full h-[30px] rounded-[4px] border border-[#cbd5e1] px-2 text-[10px] text-slate-700 placeholder:text-slate-400 outline-none focus:border-[#0284c7]"
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    value={formImageAlt}
+                    onChange={(e) => setFormImageAlt(e.target.value)}
+                    disabled={!formImage}
+                    placeholder={formImage ? "Describe the photo, e.g. Retail store designed by Design House" : "Upload a photo first to add alt text"}
+                    maxLength={160}
+                    className="w-full h-[30px] rounded-[4px] border border-[#cbd5e1] px-2 text-[10px] text-slate-700 placeholder:text-slate-400 outline-none focus:border-[#0284c7] disabled:bg-slate-50 disabled:cursor-not-allowed"
+                  />
                 </div>
               </div>
             </div>

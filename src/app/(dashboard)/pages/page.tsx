@@ -877,7 +877,7 @@ export default function PagesCmsPage() {
                         }
                       }}
                       className={`grid min-h-[44px] w-full grid-cols-[minmax(0,2.7fr)_minmax(0,1.8fr)_minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1.15fr)_minmax(0,1.45fr)] items-center border-b border-[#f0f0ec] px-[10px] text-left transition last:border-b-0 ${selected
-                        ? "bg-[#E4DA72]/20"
+                        ? "bg-[#fff3ea] shadow-[inset_3px_0_0_#fd6e15]"
                         : page.status !== "Published"
                           ? "bg-rose-50/60 hover:bg-rose-100/60"
                           : "bg-white hover:bg-slate-50"

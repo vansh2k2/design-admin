@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, Plus, Save, Trash2 } from "lucide-react";
+import { FileUp, Loader2, Plus, Save, Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
 import { api, ApiRequestError } from "@/lib/api";
+import { uploadApi } from "@/lib/uploadApi";
 import { FieldLabel, TextInput } from "../fields";
 
 interface TopbarLink {
@@ -41,6 +42,7 @@ export function TopbarContactFields() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState(false);
+  const [uploadingLink, setUploadingLink] = useState<number | null>(null);
 
   useEffect(() => {
     api
@@ -57,6 +59,25 @@ export function TopbarContactFields() {
   const setPhone = (i: number, value: string) => data && change({ phones: data.phones.map((p, idx) => (idx === i ? value : p)) });
   const setLink = (i: number, key: keyof TopbarLink, value: string) =>
     data && change({ links: data.links.map((l, idx) => (idx === i ? { ...l, [key]: value } : l)) });
+
+  // A link can point to an uploaded PDF (e.g. the brochure or company profile)
+  const uploadLinkPdf = async (i: number, file?: File) => {
+    if (!file) return;
+    if (file.type !== "application/pdf" && !/\.pdf$/i.test(file.name)) {
+      Toast.fire({ icon: "error", iconColor: "#f87171", title: "Please choose a PDF file." });
+      return;
+    }
+    setUploadingLink(i);
+    try {
+      const res = await uploadApi.file(file, "design-house/topbar");
+      setLink(i, "href", res.url);
+      Toast.fire({ icon: "success", iconColor: "#34d399", title: "PDF uploaded — click Save Topbar" });
+    } catch (err) {
+      Toast.fire({ icon: "error", iconColor: "#f87171", title: err instanceof Error ? err.message : "PDF upload failed" });
+    } finally {
+      setUploadingLink(null);
+    }
+  };
 
   const save = async () => {
     if (!data) return;
@@ -141,7 +162,7 @@ export function TopbarContactFields() {
         <p className="mb-1.5 text-[10px] font-bold text-[#334155]">Quick Links (right side of the topbar)</p>
         <div className="flex flex-col gap-2">
           {data.links.map((link, i) => (
-            <div key={i} className="grid grid-cols-[1fr_1.4fr_auto] items-end gap-2">
+            <div key={i} className="grid grid-cols-[1fr_1.4fr_auto_auto] items-end gap-2">
               <div>
                 <FieldLabel>{`Link ${i + 1} Label`}</FieldLabel>
                 <TextInput value={link.label} onChange={(next) => setLink(i, "label", next)} placeholder="Brochure" hideLimit={true} />
@@ -150,6 +171,22 @@ export function TopbarContactFields() {
                 <FieldLabel>{`Link ${i + 1} URL`}</FieldLabel>
                 <TextInput value={link.href} onChange={(next) => setLink(i, "href", next)} placeholder="/downloads" hideLimit={true} />
               </div>
+              <label
+                title="Upload a PDF for this link"
+                className={`mb-[1px] inline-flex h-[28px] cursor-pointer items-center gap-1 rounded-[4px] border border-[#0A2B5E]/25 bg-[#0A2B5E]/[0.05] px-2 text-[10px] font-semibold text-[#0A2B5E] transition hover:bg-[#0A2B5E]/[0.12] ${uploadingLink !== null ? "pointer-events-none opacity-60" : ""}`}
+              >
+                {uploadingLink === i ? <Loader2 className="h-3 w-3 animate-spin" /> : <FileUp className="h-3 w-3" />}
+                {uploadingLink === i ? "Uploading…" : "Upload PDF"}
+                <input
+                  type="file"
+                  accept="application/pdf,.pdf"
+                  className="hidden"
+                  onChange={(e) => {
+                    void uploadLinkPdf(i, e.target.files?.[0]);
+                    e.target.value = "";
+                  }}
+                />
+              </label>
               <button
                 type="button"
                 onClick={() => change({ links: data.links.filter((_, idx) => idx !== i) })}
@@ -170,7 +207,7 @@ export function TopbarContactFields() {
             <Plus className="h-3 w-3" /> Add link
           </button>
         )}
-        <p className="mt-1.5 text-[9.5px] text-[#94a3b8]">Links can be a website page (/downloads) or a full address (https://…).</p>
+        <p className="mt-1.5 text-[9.5px] text-[#94a3b8]">Links can be a website page (/downloads), a full address (https://…) or an uploaded PDF (Upload PDF).</p>
       </div>
     </div>
   );

@@ -174,7 +174,10 @@ export function SeoSettingsPanel({
             onChange={(e) => updateField("openGraphTags", e.target.value)}
             placeholder="Paste OG tags here..."
             rows={6}
-            className="w-full p-4 bg-[#1e1e1e] text-[#d4d4d4] font-mono text-[11px] focus:outline-none focus:ring-2 focus:ring-blue-500 border-2 border-gray-200 shadow-inner overflow-auto rounded"
+            spellCheck={false}
+            className="w-full p-4 bg-[#1e1e1e] !text-[#e5e7eb] font-mono text-[11px] leading-[1.6] opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500 border-2 border-gray-200 shadow-inner overflow-auto rounded placeholder:text-[#8b8b8b]"
+            // Light text on the black code editor, kept even if other styles try to recolour it
+            style={{ color: "#e5e7eb", WebkitTextFillColor: "#e5e7eb", caretColor: "#ffffff" }}
           />
         </div>
 
@@ -189,7 +192,10 @@ export function SeoSettingsPanel({
             onChange={(e) => updateField("schemaMarkup", e.target.value)}
             placeholder="Paste JSON-LD schema here..."
             rows={10}
-            className="w-full p-4 bg-[#1e1e1e] text-[#d4d4d4] font-mono text-[11px] focus:outline-none focus:ring-2 focus:ring-blue-500 border-2 border-gray-200 shadow-inner overflow-auto rounded"
+            spellCheck={false}
+            className="w-full p-4 bg-[#1e1e1e] !text-[#e5e7eb] font-mono text-[11px] leading-[1.6] opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500 border-2 border-gray-200 shadow-inner overflow-auto rounded placeholder:text-[#8b8b8b]"
+            // Light text on the black code editor, kept even if other styles try to recolour it
+            style={{ color: "#e5e7eb", WebkitTextFillColor: "#e5e7eb", caretColor: "#ffffff" }}
           />
         </div>
 
