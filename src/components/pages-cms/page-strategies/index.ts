@@ -16,6 +16,7 @@ export { syncBuyerSellerMeetSectionsFromLiveApi, saveBuyerSellerMeetSections } f
 export { syncExhibitionCategoriesSectionsFromLiveApi, saveExhibitionCategoriesSections } from "./exhibitionCategories";
 export { syncNominateAdvisorySectionsFromLiveApi, saveNominateAdvisorySections } from "./nominateAdvisory";
 export { syncBlogSectionsFromLiveApi, saveBlogSections } from "./blog";
+export { syncDownloadsSectionsFromLiveApi, saveDownloadsSections } from "./downloads";
 export { syncExhibitorsSectionsFromLiveApi, saveExhibitorsSections } from "./exhibitors";
 export { syncEPromotionSectionsFromLiveApi, saveEPromotionSections } from "./epromotion";
 export { syncPartnershipSectionsFromLiveApi, savePartnershipSections } from "./partnership";

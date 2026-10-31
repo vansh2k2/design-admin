@@ -145,7 +145,9 @@ export const authApi = {
         userType: "INTERNAL",
         roleSlug: res.user.roleName || (res.user.role === "superadmin" ? "SUPER_ADMIN" : "EXPO_ADMIN"),
         permissions: ["*"],
-        twoFactorPending: !res.user.isTwoFactorEnabled,
+        // Only when the backend asks for it: the Design House backend has no two-factor sign-in, and
+        // treating "not enabled" as pending sent every signed-in admin straight back to /login
+        twoFactorPending: Boolean((res.user as AuthAdmin & { twoFactorPending?: boolean }).twoFactorPending),
       };
     }
     throw new Error("No active session");

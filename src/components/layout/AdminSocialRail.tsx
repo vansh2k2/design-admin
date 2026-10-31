@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import { api } from "@/lib/api";
 
 type IconProps = {
   className?: string;
@@ -118,32 +120,38 @@ const ShareIcon = ({ className }: IconProps) => (
   </svg>
 );
 
-const links = [
+// Defaults; replaced by the links saved under Advanced SEO → Social Media Links once those load
+const DEFAULT_LINKS = [
   {
+    key: "twitter",
     label: "X",
     href: "https://x.com/designhouseindia",
     color: "#000000",
     icon: XIcon,
   },
   {
+    key: "facebook",
     label: "Facebook",
     href: "https://www.facebook.com/designhouseindia/",
     color: "#1877F2",
     icon: FacebookIcon,
   },
   {
+    key: "instagram",
     label: "Instagram",
     href: "https://www.instagram.com/designhouseindia/",
     color: "#E4405F",
     icon: InstagramIcon,
   },
   {
+    key: "linkedin",
     label: "LinkedIn",
     href: "https://www.linkedin.com/company/designhouseindia/",
     color: "#0077B5",
     icon: LinkedinIcon,
   },
   {
+    key: "youtube",
     label: "YouTube",
     href: "https://www.youtube.com/@designhouseindia",
     color: "#FF0000",
@@ -153,6 +161,16 @@ const links = [
 
 export default function AdminSocialRail() {
   const [collapsed, setCollapsed] = useState(false);
+  const [saved, setSaved] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    api
+      .get<Record<string, string>>("/social-media")
+      .then((res) => setSaved(res || {}))
+      .catch(() => {});
+  }, []);
+
+  const links = DEFAULT_LINKS.map((l) => ({ ...l, href: saved[l.key]?.trim() || l.href }));
 
   return (
     <nav

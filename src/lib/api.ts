@@ -188,6 +188,11 @@ async function request<T>(path: string, options?: ApiRequestOptions, isRetry = f
     path.includes("/auth") ||
     path.includes("/system-services") ||
     path.includes("/seo-settings") ||
+    // Design House backend: downloads, Pages & CMS sections / page SEO, social links
+    path.startsWith("/downloads") ||
+    path.startsWith("/page-sections") ||
+    path.startsWith("/page-seo") ||
+    path.startsWith("/social-media") ||
     path.includes("/careers") ||
     path.includes("/msme") ||
     path.includes("/awards/nominations") ||
