@@ -1,4 +1,20 @@
+import {
+  DETAIL_SEEDS,
+  emptyServiceDetail,
+  type ServiceDetailData,
+} from "./servicesDetailSeed";
+
+export type { ServiceDetailData };
+
 export type ServiceStatus = "Published" | "Draft" | "Scheduled";
+
+const withDetail = (s: ServiceItem): ServiceItem => ({
+  ...s,
+  detail:
+    s.detail ||
+    DETAIL_SEEDS[String(s._id || s.id)] ||
+    emptyServiceDetail(s.title.replace(/\n/g, " ")),
+});
 
 export interface ServiceItem {
   id: string | number;
@@ -17,6 +33,7 @@ export interface ServiceItem {
   metaTitle?: string;
   metaDescription?: string;
   metaKeywords?: string;
+  detail?: ServiceDetailData;
 }
 
 export const DEFAULT_SERVICE_LINKS = [
@@ -200,13 +217,13 @@ const STORAGE_KEY = "admin_services_data";
 
 export const servicesApi = {
   list: async (): Promise<ServiceItem[]> => {
-    if (typeof window === "undefined") return INITIAL_SERVICES;
+    if (typeof window === "undefined") return INITIAL_SERVICES.map(withDetail);
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          return (parsed as ServiceItem[]).map(withDetail);
         }
       }
     } catch (e) {
@@ -215,7 +232,7 @@ export const servicesApi = {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_SERVICES));
     } catch {}
-    return INITIAL_SERVICES;
+    return INITIAL_SERVICES.map(withDetail);
   },
 
   get: async (idOrSlug: string | number): Promise<ServiceItem | null> => {
@@ -228,7 +245,7 @@ export const servicesApi = {
         s.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") === str ||
         s.href.toLowerCase().endsWith(str)
     );
-    return found || null;
+    return found ? withDetail(found) : null;
   },
 
   saveAll: async (items: ServiceItem[]): Promise<void> => {
@@ -270,6 +287,7 @@ export const servicesApi = {
       metaTitle: data.metaTitle || data.title,
       metaDescription: data.metaDescription || data.desc,
       metaKeywords: data.metaKeywords || "",
+      detail: data.detail || emptyServiceDetail((data.title || "New Service").replace(/\n/g, " ")),
     };
 
     const updated = [newService, ...list];
@@ -324,6 +342,6 @@ export const servicesApi = {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_SERVICES));
       } catch {}
     }
-    return INITIAL_SERVICES;
+    return INITIAL_SERVICES.map(withDetail);
   },
 };

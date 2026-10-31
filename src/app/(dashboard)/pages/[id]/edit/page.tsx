@@ -596,6 +596,14 @@ export default function CmsEditPage() {
       previous.map((section, index) => {
         if (index !== sectionIndex) return section;
         const items = [...(section.items ?? [])];
+        if (section.key === "services-intro") {
+          const blankPillar = {
+            title: "New Service Pillar",
+            description: "Describe this service capability or milestone...",
+            icon: "Layers",
+          };
+          return { ...section, items: [...items, blankPillar] };
+        }
         if (section.key === "contact-hero") {
           const blankHighlight = {
             label: "New Highlight Point",
