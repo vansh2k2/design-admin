@@ -15,12 +15,15 @@ import { emptyServiceDetail } from "@/lib/servicesDetailSeed";
 import RichTextEditor from "@/components/RichTextEditor";
 import {
   ArrowLeft,
+  ArrowRight,
   ExternalLink,
   Eye,
   FolderClosed,
+  HelpCircle,
   Link2,
   Plus,
   Save,
+  Send,
   Trash2,
   Upload,
 } from "lucide-react";
@@ -493,6 +496,48 @@ function AddEditServiceContent() {
 
   const detail = formData.detail;
 
+  const CARD_NUM_MAP: Record<string, string> = {
+    "/services/corporate-interiors": "01",
+    "/services/retail-showrooms": "02",
+    "/services/restaurant-interiors": "03",
+    "/services/exhibition-stalls": "04",
+    "/services/retail-kiosks": "05",
+    "/services/display-fixtures": "06",
+    "/services/signage-branding": "07",
+    "/services/manufacturing-execution": "08",
+    "/services/residential-interiors": "09",
+    "/services/ensis": "10",
+  };
+
+  const previewNumber =
+    CARD_NUM_MAP[formData.href] ||
+    (formData.title.toLowerCase().includes("kiosk")
+      ? "05"
+      : formData.title.toLowerCase().includes("corporate")
+      ? "01"
+      : formData.title.toLowerCase().includes("showroom")
+      ? "02"
+      : formData.title.toLowerCase().includes("restaurant")
+      ? "03"
+      : formData.title.toLowerCase().includes("exhibition")
+      ? "04"
+      : formData.title.toLowerCase().includes("fixture") || formData.title.toLowerCase().includes("display")
+      ? "06"
+      : formData.title.toLowerCase().includes("signage") || formData.title.toLowerCase().includes("brand")
+      ? "07"
+      : formData.title.toLowerCase().includes("manufacturing")
+      ? "08"
+      : formData.title.toLowerCase().includes("residential")
+      ? "09"
+      : formData.title.toLowerCase().includes("spa") || formData.title.toLowerCase().includes("ensis")
+      ? "10"
+      : "01");
+
+  const cleanPreviewDesc = (formData.desc || "")
+    .replace(/<[^>]*>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .trim();
+
   return (
     <main
       className={`${typography.pages} h-full min-h-0 w-full overflow-y-auto overflow-x-hidden bg-[#fffefb] px-[18px] py-[14px] text-[#142347] [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300`}
@@ -654,30 +699,6 @@ function AddEditServiceContent() {
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-[8px] font-bold text-slate-600 uppercase mb-1.5">
-                    Or select from Design House Services Library:
-                  </label>
-                  <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
-                    {AVAILABLE_IMAGES.map((img) => (
-                      <button
-                        type="button"
-                        key={img.src}
-                        onClick={() => setFormData({ ...formData, image: img.src })}
-                        className={`group relative h-[48px] rounded-[5px] overflow-hidden border transition ${
-                          formData.image === img.src
-                            ? "border-[#134698] ring-2 ring-[#134698]/30 shadow-xs"
-                            : "border-slate-200 hover:border-slate-400 opacity-80 hover:opacity-100"
-                        }`}
-                      >
-                        <img src={img.src} alt={img.label} className="h-full w-full object-cover" />
-                        <span className="absolute bottom-0 inset-x-0 bg-black/70 py-0.5 text-[6.5px] font-bold text-white text-center truncate">
-                          {img.label.split(":")[0]}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
 
                 <div>
                   <label className={labelInput}>Image Alt Text</label>
@@ -763,8 +784,80 @@ function AddEditServiceContent() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: PUBLISHING & SEO */}
+          {/* RIGHT COLUMN: LIVE PREVIEW & PUBLISHING */}
           <div className="space-y-[14px]">
+            {/* LIVE CARD PREVIEW (WEBSITE CARD APPEARANCE) */}
+            <div className={`${cardCls} border-[#134698]/30 shadow-sm`}>
+              <div className="flex items-center justify-between border-b border-[#e8e5df] pb-2 mb-3">
+                <div className="flex items-center gap-1.5">
+                  <span className="grid h-[20px] w-[20px] place-items-center rounded-[4px] bg-[#134698] text-white">
+                    <Eye className="h-3 w-3" />
+                  </span>
+                  <div>
+                    <h2 className="text-[10px] font-bold uppercase tracking-wide text-[#233D4D] leading-none">
+                      Website Card Preview
+                    </h2>
+                    <span className="text-[7.5px] font-medium text-slate-400">
+                      Live preview matching frontend /services
+                    </span>
+                  </div>
+                </div>
+                <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[7.5px] font-bold text-emerald-700 border border-emerald-200">
+                  Live Preview
+                </span>
+              </div>
+
+              {/* Exact card styling from frontend ServicesGrid.tsx */}
+              <div className="mx-auto w-full max-w-[280px]">
+                <div className="group flex flex-col rounded-md bg-white overflow-hidden shadow-[rgba(0,0,0,0.02)_0px_1px_3px_0px,rgba(27,31,35,0.15)_0px_0px_0px_1px] hover:shadow-[0_10px_24px_-12px_rgba(10,43,94,0.35)] transition-shadow border border-slate-200/80">
+                  {/* Photo + Brand Logo Overlay */}
+                  <div className="relative h-[150px] w-full overflow-hidden bg-slate-100">
+                    <img
+                      src={formData.image || "/services/os1.webp"}
+                      alt={formData.title.replace(/\n/g, " ") || "Service Image"}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = "/services/os1.webp";
+                      }}
+                    />
+                    {formData.logo ? (
+                      <div className="absolute inset-x-0 bottom-0 h-[44px] bg-white/95 flex items-center justify-center border-t border-slate-100/50">
+                        <div className="relative h-[34px] w-[60%] flex items-center justify-center">
+                          <img
+                            src={formData.logo}
+                            alt="Logo Overlay"
+                            className="max-h-[34px] max-w-full object-contain"
+                          />
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+
+                  {/* Card Content */}
+                  <div className="flex flex-col flex-1 px-4 pt-3 pb-4 bg-white text-left">
+                    <p className="text-[13px] font-bold text-[#E8A64C] mb-1">
+                      {previewNumber}
+                    </p>
+                    <h3 className="text-[16px] font-bold text-[#0A2B5E] leading-snug mb-1.5 whitespace-pre-line group-hover:text-[#fd6e15] transition-colors">
+                      {formData.title || "Service Title"}
+                    </h3>
+                    <p className="text-[13.5px] sm:text-[14px] text-black leading-snug mb-4 whitespace-pre-line">
+                      {cleanPreviewDesc || "Compact, stylish and functional kiosks designed to maximise visibility and sales."}
+                    </p>
+                    <div className="mt-auto flex items-center justify-between pt-1">
+                      <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#0A2B5E]">
+                        View Projects
+                        <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                      </span>
+                      <span className="w-9 h-9 rounded-full bg-[#E8A64C] text-white flex items-center justify-center group-hover:bg-[#fd6e15] transition-colors shadow-xs">
+                        <ArrowRight className="w-4 h-4" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* PUBLISHING CONTROLS */}
             <div className={cardCls}>
               <h2 className={cardTitleCls}>Publishing Status</h2>
@@ -1597,119 +1690,30 @@ function AddEditServiceContent() {
             </div>
           </div>
 
-          {/* FAQS */}
-          <div className={cardCls}>
-            <h2 className={cardTitleCls}>6. Frequently Asked Questions</h2>
-            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+          {/* FAQS REFERENCE (MANAGED VIA /faqs) */}
+          <div className="rounded-[7px] border border-[#dbeafe] bg-[#eff6ff]/70 p-3.5 shadow-2xs">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
-                <label className={labelInput}>FAQ Heading Title</label>
-                <input
-                  type="text"
-                  value={detail.faqHeading?.title || ""}
-                  onChange={(e) =>
-                    setDetail({
-                      faqHeading: { title: e.target.value, text: detail.faqHeading?.text || "" },
-                    })
-                  }
-                  placeholder="Frequently Asked Questions"
-                  className={inputCls}
-                />
+                <p className="text-[10px] font-bold text-[#1e40af] flex items-center gap-1.5">
+                  <HelpCircle className="h-3.5 w-3.5" />
+                  Frequently Asked Questions (FAQs)
+                </p>
+                <p className="mt-0.5 text-[8.5px] font-medium text-[#3b82f6]">
+                  FAQs are now managed centrally from the FAQs section at <strong className="font-semibold text-[#1d4ed8]">/faqs</strong>.
+                </p>
               </div>
-              <div>
-                <label className={labelInput}>FAQ Heading Text</label>
-                <input
-                  type="text"
-                  value={detail.faqHeading?.text || ""}
-                  onChange={(e) =>
-                    setDetail({
-                      faqHeading: { title: detail.faqHeading?.title || "Frequently Asked Questions", text: e.target.value },
-                    })
-                  }
-                  className={inputCls}
-                />
-              </div>
-              <div>
-                <label className={labelInput}>FAQ Style</label>
-                <div className="flex items-center gap-4 pt-1">
-                  <label className="flex items-center gap-1.5 text-[10px] font-semibold text-slate-700">
-                    <input
-                      type="checkbox"
-                      checked={Boolean(detail.faqStyle?.numbered)}
-                      onChange={(e) => setDetail({ faqStyle: { ...detail.faqStyle, numbered: e.target.checked } })}
-                      className="h-3.5 w-3.5"
-                    />
-                    Numbered
-                  </label>
-                  <select
-                    value={detail.faqStyle?.tone || "white"}
-                    onChange={(e) => setDetail({ faqStyle: { ...detail.faqStyle, tone: e.target.value as "white" | "blue" } })}
-                    className="h-[28px] w-[110px] rounded-[6px] border border-slate-300 bg-white px-2 text-[10px] font-semibold outline-none cursor-pointer"
-                  >
-                    <option value="white">White tone</option>
-                    <option value="blue">Blue tone</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <div className="mb-2 flex items-center justify-between">
-                <label className="block text-[8.5px] font-bold text-slate-700 uppercase tracking-wider">
-                  FAQ Items ({detail.faqs.length})
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setDetail({ faqs: [...detail.faqs, { q: "", a: "" }] })}
-                  className={addBtnCls}
-                >
-                  <Plus className="h-3 w-3" /> Add FAQ
-                </button>
-              </div>
-              <div className="space-y-3">
-                {detail.faqs.map((f, i) => (
-                  <div key={i} className="rounded-[6px] border border-[#edf0f2] bg-[#fbfcfc] p-2">
-                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_24px]">
-                      <input
-                        type="text"
-                        value={f.q}
-                        onChange={(e) => {
-                          const next = [...detail.faqs];
-                          next[i] = { ...f, q: e.target.value };
-                          setDetail({ faqs: next });
-                        }}
-                        placeholder="Question"
-                        className={inputCls}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setDetail({ faqs: detail.faqs.filter((_, idx) => idx !== i) })}
-                        className={delBtnCls}
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </button>
-                    </div>
-                    <div className="mt-2">
-                      <RichTextEditor
-                        value={f.a}
-                        onChange={(val) => {
-                          const next = [...detail.faqs];
-                          next[i] = { ...f, a: val };
-                          setDetail({ faqs: next });
-                        }}
-                        placeholder="Answer"
-                        minHeight="80px"
-                      />
-                    </div>
-                  </div>
-                ))}
-                {detail.faqs.length === 0 && <p className="text-[9px] text-slate-400">No FAQs yet.</p>}
-              </div>
+              <Link
+                href="/faqs"
+                className="inline-flex h-[28px] items-center gap-1.5 rounded-[5px] bg-[#1e40af] px-3 text-[8.5px] font-bold text-white transition hover:bg-[#1e3a8a] shadow-xs shrink-0"
+              >
+                Go to FAQs Section <ExternalLink className="h-3 w-3" />
+              </Link>
             </div>
           </div>
 
           {/* CTA */}
           <div className={cardCls}>
-            <h2 className={cardTitleCls}>7. Bottom CTA Banner</h2>
+            <h2 className={cardTitleCls}>6. Bottom CTA Banner</h2>
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
               <div>
                 <label className={labelInput}>Eyebrow (default: Let&apos;s Build Together)</label>
@@ -1760,24 +1764,24 @@ function AddEditServiceContent() {
               </div>
             </div>
           </div>
+        </div>
 
-          {/* BOTTOM SAVE */}
-          <div className="flex items-center justify-end gap-[10px] pb-2">
-            <Link
-              href="/services"
-              className="flex h-[32px] items-center justify-center rounded-[6px] border border-slate-300 bg-white px-[16px] text-[9px] font-semibold text-slate-700 transition hover:bg-slate-50"
-            >
-              Cancel
-            </Link>
-            <button
-              type="submit"
-              disabled={isSaving}
-              className="flex h-[32px] items-center justify-center gap-1.5 rounded-[6px] bg-[#4B1426] px-[18px] text-[9px] font-semibold text-white shadow-[0_5px_12px_rgba(75,20,38,0.25)] transition hover:bg-[#3a0f1d] disabled:opacity-50"
-            >
-              <Save className="h-3.5 w-3.5" strokeWidth={1.8} />
-              {isSaving ? "Saving..." : editId ? "Update Service & Detail Page" : "Publish Service"}
-            </button>
-          </div>
+        {/* BOTTOM SAVE BAR */}
+        <div className="mt-4 flex items-center justify-end gap-[10px] pb-4">
+          <Link
+            href="/services"
+            className="flex h-[32px] items-center justify-center rounded-[6px] border border-slate-300 bg-white px-[16px] text-[9px] font-semibold text-slate-700 transition hover:bg-slate-50"
+          >
+            Cancel
+          </Link>
+          <button
+            type="submit"
+            disabled={isSaving}
+            className="flex h-[32px] items-center justify-center gap-1.5 rounded-[6px] bg-[#4B1426] px-[18px] text-[9px] font-semibold text-white shadow-[0_5px_12px_rgba(75,20,38,0.25)] transition hover:bg-[#3a0f1d] disabled:opacity-50 cursor-pointer"
+          >
+            <Save className="h-3.5 w-3.5" strokeWidth={1.8} />
+            {isSaving ? "Saving..." : editId ? "Update Service & Detail Page" : "Publish Service"}
+          </button>
         </div>
       </form>
     </main>
