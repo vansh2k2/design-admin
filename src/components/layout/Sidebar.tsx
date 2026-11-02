@@ -80,6 +80,7 @@ function SidebarContent({
         <div key={item.label}>
           <button
             type="button"
+            suppressHydrationWarning
             onClick={() => setOpenGroups((g) => ({ ...g, [item.label]: !open }))}
             aria-expanded={open}
             className={`flex h-[31px] w-full items-center gap-[6px] rounded-[7px] px-[9px] text-left text-[12px] font-medium transition-all duration-150 ${childActive ? "text-white" : "text-[#F2F5F7] hover:bg-white/[0.07] hover:text-white"
