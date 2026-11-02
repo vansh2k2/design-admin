@@ -13,7 +13,9 @@ import {
   Eye,
   FolderClosed,
   Layers,
+  LayoutGrid,
   Link2,
+  List,
   Pencil,
   Plus,
   RotateCcw,
@@ -55,7 +57,8 @@ export default function ServicesManagementPage() {
   const [servicesList, setServicesList] = useState<ServiceItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Filters
+  // Filters & View Mode
+  const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLink, setSelectedLink] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
@@ -403,26 +406,179 @@ export default function ServicesManagementPage() {
             }}
           >
             {/* Card Header */}
-            <div className="flex h-[38px] items-center justify-between border-b border-[#e8e5df] px-[14px] bg-[#fafafa]">
+            <div className="flex flex-wrap min-h-[42px] items-center justify-between gap-2 border-b border-[#e8e5df] px-[14px] py-2 bg-[#fafafa]">
               <div className="flex items-center gap-2">
                 <span className="grid h-[22px] w-[22px] place-items-center rounded-[4px] bg-[#075b33] text-white">
                   <Briefcase className="h-[12px] w-[12px]" />
                 </span>
-                <h2 className="text-[10px] font-bold text-[#233D4D] uppercase tracking-wide">
-                  Website Services Grid
-                </h2>
+                <div>
+                  <h2 className="text-[10px] font-bold text-[#233D4D] uppercase tracking-wide">
+                    Website Services ({filteredServices.length})
+                  </h2>
+                  <p className="text-[7.5px] text-slate-500">
+                    Live services matching frontend website /services
+                  </p>
+                </div>
               </div>
-              <button
-                onClick={loadServices}
-                className="inline-flex items-center gap-1 text-[8.5px] font-bold text-[#075b33] hover:underline"
-              >
-                Refresh List
-                <ArrowRight className="h-[11px] w-[11px]" />
-              </button>
+
+              <div className="flex items-center gap-2.5">
+                {/* View Switcher: Cards vs Table */}
+                <div className="flex items-center rounded-[6px] border border-slate-300 bg-[#f1f5f9] p-0.5 shadow-2xs">
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("cards")}
+                    className={`flex h-[24px] items-center gap-1.5 rounded-[4px] px-2.5 text-[8px] font-bold transition ${
+                      viewMode === "cards"
+                        ? "bg-white text-[#134698] shadow-xs"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    <LayoutGrid className="h-3 w-3" /> Website Cards View
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("table")}
+                    className={`flex h-[24px] items-center gap-1.5 rounded-[4px] px-2.5 text-[8px] font-bold transition ${
+                      viewMode === "table"
+                        ? "bg-white text-[#134698] shadow-xs"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    <List className="h-3 w-3" /> Table View
+                  </button>
+                </div>
+
+                <button
+                  onClick={loadServices}
+                  className="inline-flex items-center gap-1 text-[8.5px] font-bold text-[#075b33] hover:underline"
+                >
+                  Refresh List
+                  <ArrowRight className="h-[11px] w-[11px]" />
+                </button>
+              </div>
             </div>
 
-            {/* Table */}
-            <div className="overflow-x-auto">
+            {/* Cards View vs Table View */}
+            {viewMode === "cards" ? (
+              <div className="p-3 bg-[#fdfdfc]">
+                {loading ? (
+                  <div className="py-12 text-center text-[12px] font-medium text-slate-500">
+                    Loading services...
+                  </div>
+                ) : filteredServices.length === 0 ? (
+                  <div className="py-12 text-center text-[12px] font-medium text-slate-500">
+                    No services match your search criteria.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-3.5">
+                    {filteredServices.map((service, index) => {
+                      const cleanDesc = (service.desc || "")
+                        .replace(/<[^>]*>/g, "")
+                        .replace(/&nbsp;/g, " ")
+                        .trim();
+                      const numStr = String(index + 1).padStart(2, "0");
+
+                      return (
+                        <div
+                          key={service.id}
+                          className="group relative flex flex-col h-full rounded-md bg-white overflow-hidden shadow-[rgba(0,0,0,0.02)_0px_1px_3px_0px,rgba(27,31,35,0.15)_0px_0px_0px_1px] hover:shadow-[0_10px_24px_-12px_rgba(10,43,94,0.35)] transition-all border border-slate-200/80"
+                        >
+                          {/* Image + optional logo overlay */}
+                          <div className="relative h-[145px] w-full overflow-hidden bg-slate-100">
+                            <img
+                              src={service.image}
+                              alt={service.title.replace(/\n/g, " ")}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "/services/os1.webp";
+                              }}
+                            />
+                            {service.logo ? (
+                              <div className="absolute inset-x-0 bottom-0 h-[40px] bg-white/95 flex items-center justify-center border-t border-slate-100/60">
+                                <div className="relative h-[30px] w-[60%] flex items-center justify-center">
+                                  <img
+                                    src={service.logo}
+                                    alt="Logo Overlay"
+                                    className="max-h-[30px] max-w-full object-contain"
+                                  />
+                                </div>
+                              </div>
+                            ) : null}
+
+                            {/* Top Badge Overlay: Status & Action buttons */}
+                            <div className="absolute top-2 right-2 flex items-center gap-1 z-10">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  router.push(`/services/new?id=${service._id || service.id}`);
+                                }}
+                                title="Edit Service"
+                                className="flex h-[24px] w-[24px] items-center justify-center rounded-full bg-white/90 text-blue-700 shadow-md backdrop-blur-xs hover:bg-blue-600 hover:text-white transition"
+                              >
+                                <Pencil className="h-3 w-3" />
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Card Content (Same to same as frontend website ServicesGrid) */}
+                          <div className="flex flex-col flex-1 px-3.5 pt-3 pb-3.5 bg-white text-left">
+                            <p className="text-[12px] font-bold text-[#E8A64C] mb-1">
+                              {numStr}
+                            </p>
+                            <h3
+                              onClick={() => router.push(`/services/new?id=${service._id || service.id}`)}
+                              className="text-[15px] font-bold text-[#0A2B5E] leading-snug mb-1.5 whitespace-pre-line group-hover:text-[#fd6e15] transition-colors cursor-pointer"
+                            >
+                              {service.title}
+                            </h3>
+                            <p className="text-[12.5px] text-black leading-snug mb-3.5 whitespace-pre-line line-clamp-3">
+                              {cleanDesc}
+                            </p>
+
+                            <div className="mt-auto flex items-center justify-between pt-1 border-t border-slate-100">
+                              <span
+                                onClick={() => router.push(`/services/new?id=${service._id || service.id}`)}
+                                className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0A2B5E] hover:text-[#fd6e15] cursor-pointer"
+                              >
+                                Edit Service
+                                <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+                              </span>
+                              <div className="flex items-center gap-1.5">
+                                <button
+                                  type="button"
+                                  title="View on Website"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    const targetUrl = service.href.startsWith("http")
+                                      ? service.href
+                                      : `http://localhost:3010${service.href}`;
+                                    window.open(targetUrl, "_blank");
+                                  }}
+                                  className="w-7 h-7 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center hover:bg-blue-100 hover:text-blue-700 transition"
+                                >
+                                  <Eye className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  type="button"
+                                  title="Open Detail Page"
+                                  onClick={() => router.push(`/services/new?id=${service._id || service.id}`)}
+                                  className="w-7 h-7 rounded-full bg-[#E8A64C] text-white flex items-center justify-center group-hover:bg-[#fd6e15] transition-colors shadow-xs"
+                                >
+                                  <ArrowRight className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Table */
+              <div className="overflow-x-auto">
               <table className="w-full min-w-[720px] border-collapse text-left">
                 <thead>
                   <tr className="h-[32px] border-b border-[#e8e5df] bg-[#233D4D]">
@@ -585,6 +741,7 @@ export default function ServicesManagementPage() {
                 </tbody>
               </table>
             </div>
+            )}
 
             {/* Table Footer */}
             <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#e8e5df] bg-[#fafafa] px-[12px] py-[6px] text-[8px]">

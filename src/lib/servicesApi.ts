@@ -10,12 +10,29 @@ export type { ServiceDetailData };
 export type ServiceStatus = "Published" | "Draft" | "Scheduled";
 
 const MONGO_ID_SEED_MAP: Record<string, string> = {
-  "698d6f89fba49173937e25ec": "svc-6", // Retail Display Merchandising -> Display Fixtures
-  "698d6f38fba49173937e25e1": "svc-5", // Retail Kiosk -> Retail Kiosks
-  "698d7010fba49173937e2603": "svc-3", // Modular Restaurant Furniture -> Restaurant Interiors
-  "698d7055fba49173937e261e": "svc-7", // Branding & Signages -> Signage & Branding
-  "698d7035fba49173937e260f": "svc-1", // Retail & Corporate Interior -> Corporate Interiors
-  "698d7080fba49173937e262e": "svc-4", // Exhibition & Events -> Exhibition Stalls
+  "698d7035fba49173937e260f": "svc-1", // Corporate Interiors
+  "6ae5e2aa00895d32530da733": "svc-2", // Retail Showroom Interiors
+  "698d7010fba49173937e2603": "svc-3", // Restaurant Interiors
+  "698d7080fba49173937e262e": "svc-4", // Exhibition Stall Design & Build
+  "698d6f38fba49173937e25e1": "svc-5", // Retail Kiosks
+  "698d6f89fba49173937e25ec": "svc-6", // Retail Display Fixtures
+  "698d7055fba49173937e261e": "svc-7", // Signage & Branding
+  "6ae5e2aa00895d32530da734": "svc-8", // Manufacturing & Execution
+  "6ae5e2aa00895d32530da735": "svc-9", // Residential Interiors
+  "6ae5e2aa00895d32530da736": "svc-10", // Spa & Panchkarma Furniture
+};
+
+export const CANONICAL_ORDER: Record<string, number> = {
+  "/services/corporate-interiors": 0,
+  "/services/retail-showrooms": 1,
+  "/services/restaurant-interiors": 2,
+  "/services/exhibition-stalls": 3,
+  "/services/retail-kiosks": 4,
+  "/services/display-fixtures": 5,
+  "/services/signage-branding": 6,
+  "/services/manufacturing-execution": 7,
+  "/services/residential-interiors": 8,
+  "/services/ensis": 9,
 };
 
 export const resolveDetailSeed = (
@@ -319,7 +336,7 @@ const mapBackendCardToItem = (card: any, index: number): ServiceItem => {
     imageAlt: card.altText || `${title.replace(/\n/g, " ")} image`,
     logo: card.logo || (title.toLowerCase().includes("ensis") || title.toLowerCase().includes("spa") ? "/services/ensis.jpeg" : ""),
     href,
-    status: card.isPublished !== false ? "Published" : "Draft",
+    status: (card.status as ServiceStatus) || (card.isPublished !== false ? "Published" : "Draft"),
     views: card.views || 1000 + index * 120,
     date: card.updatedAt
       ? new Date(card.updatedAt).toLocaleDateString("en-GB", {
@@ -347,7 +364,13 @@ export const servicesApi = {
       const data = res?.data || res;
       const cards = Array.isArray(data?.services) ? data.services : [];
       if (cards.length > 0) {
-        return cards.map((c: unknown, i: number) => withDetail(mapBackendCardToItem(c, i)));
+        const mapped = cards.map((c: unknown, i: number) => withDetail(mapBackendCardToItem(c, i)));
+        mapped.sort((a: ServiceItem, b: ServiceItem) => {
+          const ordA = CANONICAL_ORDER[a.href] ?? 99;
+          const ordB = CANONICAL_ORDER[b.href] ?? 99;
+          return ordA - ordB;
+        });
+        return mapped;
       }
     } catch (e) {
       console.warn("Error fetching services from backend, using fallback:", e);
@@ -356,28 +379,40 @@ export const servicesApi = {
   },
 
   get: async (idOrSlug: string | number): Promise<ServiceItem | null> => {
+    const str = String(idOrSlug).trim();
+
+    // 1. First try direct backend card endpoint
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const cardRes: any = await api.get(`/featured-services/cards/${encodeURIComponent(str)}`);
+      const cardData = cardRes?.data || cardRes;
+      if (cardData && cardData.title) {
+        return withDetail(mapBackendCardToItem(cardData, 0));
+      }
+    } catch {}
+
     const list = await servicesApi.list();
-    const str = String(idOrSlug).toLowerCase();
+    const strLower = str.toLowerCase();
     const found = list.find(
       (s) =>
-        String(s.id).toLowerCase() === str ||
-        String(s._id).toLowerCase() === str ||
-        s.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") === str ||
-        s.href.toLowerCase().endsWith(str) ||
-        s.href.toLowerCase().replace(/^\/services\//, "") === str
+        String(s.id).toLowerCase() === strLower ||
+        String(s._id).toLowerCase() === strLower ||
+        s.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") === strLower ||
+        s.href.toLowerCase().endsWith(strLower) ||
+        s.href.toLowerCase().replace(/^\/services\//, "") === strLower
     );
     if (found) return withDetail(found);
 
     const initFound = INITIAL_SERVICES.find(
       (s) =>
-        String(s.id).toLowerCase() === str ||
-        String(s._id).toLowerCase() === str ||
-        s.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") === str ||
-        s.href.toLowerCase().endsWith(str)
+        String(s.id).toLowerCase() === strLower ||
+        String(s._id).toLowerCase() === strLower ||
+        s.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") === strLower ||
+        s.href.toLowerCase().endsWith(strLower)
     );
     if (initFound) return withDetail(initFound);
 
-    const directSeed = resolveDetailSeed(str, "", str);
+    const directSeed = resolveDetailSeed(strLower, "", strLower);
     if (directSeed) {
       return {
         id: str,
@@ -428,6 +463,13 @@ export const servicesApi = {
         icon: "ShoppingBag",
         buttonText: "Learn More",
         buttonUrl: data.href || "#",
+        logo: data.logo || "",
+        status: data.status || "Published",
+        author: data.author || "Design House Team",
+        views: data.views || 500,
+        metaTitle: data.metaTitle || "",
+        metaDescription: data.metaDescription || "",
+        metaKeywords: data.metaKeywords || "",
         detail: data.detail,
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -481,6 +523,13 @@ export const servicesApi = {
         image: data.image,
         altText: data.imageAlt,
         buttonUrl: data.href,
+        logo: data.logo,
+        status: data.status,
+        author: data.author,
+        views: data.views,
+        metaTitle: data.metaTitle,
+        metaDescription: data.metaDescription,
+        metaKeywords: data.metaKeywords,
         detail: data.detail,
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
