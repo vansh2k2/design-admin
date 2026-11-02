@@ -230,8 +230,7 @@ function RatingStars({ value, size = 11 }: { value: number; size?: number }) {
   );
 }
 
-// Everything that differs between the screens sharing this UI (homepage Testimonials and
-// the Why Exhibit page's Exhibitor Testimonials). Both endpoints store the whole list as one
+// Settings for the Testimonials screen. The endpoint stores the whole list as one
 // document: GET returns `{ testimonials: [...] }`, PUT replaces it.
 export interface TestimonialsManagerConfig {
   heading: string;
@@ -253,16 +252,6 @@ export const HOME_TESTIMONIALS_CONFIG: TestimonialsManagerConfig = {
   websiteUrl: "https://www.designhouse.co.in/testimonials",
   publishedOptionLabel: "Published (Visible on Home Carousel)",
   requiredFields: true,
-};
-
-export const EXHIBITOR_TESTIMONIALS_CONFIG: TestimonialsManagerConfig = {
-  heading: "Exhibitor Testimonials",
-  description: "Manage exhibition client reviews shown on the Exhibitions service page.",
-  apiPath: "/website/participate/why-exhibit/testimonials",
-  uploadFolder: "design-house/exhibitor-testimonials",
-  websiteUrl: "https://www.designhouse.co.in/services/exhibitions",
-  publishedOptionLabel: "Published (Visible on Exhibitions page)",
-  requiredFields: false,
 };
 
 /** A testimonial as the website API stores it (company1 = name, company2 = role, quote = message) */

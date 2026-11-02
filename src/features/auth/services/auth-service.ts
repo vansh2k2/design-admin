@@ -1,12 +1,14 @@
-import { api } from "@/lib/api";
+import { api, isLivePath } from "@/lib/api";
 import { MOCK_API } from "@/lib/mock/router";
 
 import type { AdminUser } from "../types";
 
 /*
- * Sign-in goes to the backend's /api/auth/login (username or email). With NEXT_PUBLIC_USE_MOCK_API on,
- * the demo versions below are used instead.
+ * Sign-in goes to the backend's /api/auth/login (username or email). Auth is a live module, so this
+ * holds even with NEXT_PUBLIC_USE_MOCK_API on (the session check calls the real /api/auth/me, which
+ * rejects demo tokens). The demo versions below are used only if auth is taken off the live list.
  */
+const AUTH_IS_LIVE = !MOCK_API || isLivePath("/auth/login");
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -19,7 +21,7 @@ type BackendLogin = {
 };
 
 export async function login(email: string, password: string): Promise<AdminUser> {
-  if (!MOCK_API) {
+  if (AUTH_IS_LIVE) {
     if (!email) throw new AuthError("Enter your username or email.");
     if (!password) throw new AuthError("Enter your password.");
     try {

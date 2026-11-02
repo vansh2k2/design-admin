@@ -1,9 +1,6 @@
 import type { MockRoute } from "../http";
 import { defineCollection } from "../store";
 import {
-  ADVISORY_GRID_HEADER,
-  ADVISORY_MEMBERS,
-  EXHIBITION_TESTIMONIALS,
   EXHIBITOR_LIST_HEADER,
   EXHIBITOR_LIST_ITEMS,
   GALLERY_CATEGORIES,
@@ -19,7 +16,6 @@ type Rows = Record<string, unknown>[];
 const gallery = defineCollection("/website/gallery/items", GALLERY_ITEMS as unknown as Rows);
 const videos = defineCollection("/website/gallery/video-highlights/items", VIDEO_ITEMS as unknown as Rows);
 const exhibitors = defineCollection("/website/participate/exhibitor-list/items", EXHIBITOR_LIST_ITEMS as unknown as Rows);
-defineCollection("/website/advisoryboardgridmember", ADVISORY_MEMBERS as unknown as Rows);
 
 /** Single-document endpoints: GET returns the document, PUT/POST/PATCH merge into it */
 function documentRoute(path: RegExp, doc: Record<string, unknown>): MockRoute {
@@ -39,7 +35,6 @@ function removeByIds(rows: Rows, ids: unknown) {
 }
 
 const homeTestimonials = { testimonials: HOME_TESTIMONIALS as unknown as Rows };
-const exhibitionTestimonials = { testimonials: EXHIBITION_TESTIMONIALS as unknown as Rows };
 
 /** Media library, videos, logo strips, leadership grid and testimonials (website content) */
 export const contentRoutes: MockRoute[] = [
@@ -84,7 +79,5 @@ export const contentRoutes: MockRoute[] = [
       return PARTNERS_AND_BRANDS;
     },
   },
-  documentRoute(/^\/website\/advisoryboardgrid$/, ADVISORY_GRID_HEADER),
   documentRoute(/^\/website\/home\/testimonials-carousel$/, homeTestimonials),
-  documentRoute(/^\/website\/participate\/why-exhibit\/testimonials$/, exhibitionTestimonials),
 ];

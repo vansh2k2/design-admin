@@ -151,28 +151,6 @@ export const PARTNERS_AND_BRANDS: PartnersAndBrandsData = {
   emergingBrandsLogos: byName(["Chaayos", "Nicobar", "The Coffee Vault", "MiArcus", "Givo", "Voi Jeans"]).map((b, i) => partner(b, i, "EMERGING D2C BRANDS")),
 };
 
-// ---- Leadership (Advisory Board Members screen) ----
-export const ADVISORY_GRID_HEADER = { tagline: "OUR LEADERSHIP", title: "Guiding Visionary Spaces" };
-
-export const ADVISORY_MEMBERS = [
-  { name: "Mr. Vijay Sharma", designation: "Managing Director", image: "/images/dh/team/member-1770966833568-905181984.jpg" },
-  { name: "Mr. Dinesh Rathore", designation: "Director", image: "/images/dh/team/member-1770966868628-771484728.jpg" },
-  { name: "Mr. Vipin Sharma", designation: "Senior Manager", image: "/images/dh/team/member-1770966897670-298975281.jpg" },
-  { name: "Ms. Pooja Malhotra", designation: "Lead Interior Designer", image: project("team-designer.webp") },
-  { name: "Mr. Rahul Verma", designation: "Business Development", image: project("team-planning.webp") },
-].map((member, index) => ({
-  _id: `ldr-${index + 1}`,
-  ...member,
-  organization: "Design House India Pvt. Ltd.",
-  location: index === 2 ? "Ghaziabad" : "New Delhi",
-  order: index + 1,
-  status: "Published",
-  updatedAt: daysAgo(index * 6, 12),
-  updatedBy: "Vijay Sharma",
-  fileSize: `${42 + index * 3}.6 KB`,
-  websiteUrl: "",
-}));
-
 // ---- Testimonials (home carousel) — client reviews published on the website ----
 export const HOME_TESTIMONIALS = [
   { company1: "Vansh Chaudhary", company2: "CEO, Vana Tech Labs", location: "New Delhi", quote: "Design House transformed our flagship store into a stunning retail experience. Their attention to detail and creative vision exceeded all our expectations." },
@@ -190,18 +168,3 @@ export const HOME_TESTIMONIALS = [
   color: ["#134698", "#de802b", "#0f766e", "#7c3aed", "#0284c7"][index],
 }));
 
-// ---- Exhibition client testimonials (Exhibitions service page) ----
-export const EXHIBITION_TESTIMONIALS = [
-  { company1: "Aroma Organic Foods", company2: "Event Manager", location: "Mumbai", quote: "Our stall at Aahar was the busiest in the hall. Design House handled design, fabrication and dismantling end to end." },
-  { company1: "Velocity Motors", company2: "Marketing Head", location: "New Delhi", quote: "A double-decker stall delivered in four days — flawless finish and lighting." },
-  { company1: "Jain Electronics Mart", company2: "Owner", location: "Ahmedabad", quote: "Great value for money and a very cooperative on-site team." },
-  { company1: "Mobiplus Telecom", company2: "Brand Manager", location: "Hyderabad", quote: "They understood our brand guidelines perfectly. The stall drew huge footfall at India Mobile Congress." },
-].map((t, index) => ({
-  _id: `ext-${index + 1}`,
-  ...t,
-  rating: 5,
-  status: "Published",
-  createdAt: daysAgo(index * 12 + 5, 15),
-  author: "Rahul Verma",
-  color: ["#de802b", "#134698", "#0f766e", "#7c3aed"][index],
-}));

@@ -2000,17 +2000,6 @@ export default function FeedbackReviewsPage() {
                 </Link>
 
                 <Link
-                  href="/testimonial-videos"
-                  className="flex w-full items-center justify-between py-2 text-[8.5px] font-semibold text-black transition hover:text-[#075b33]"
-                >
-                  <span className="flex items-center gap-2">
-                    <Video className="h-[12px] w-[12px] text-[#dc2626]" />
-                    Manage Video Stories
-                  </span>
-                  <ArrowRight className="h-[11px] w-[11px] text-slate-400" />
-                </Link>
-
-                <Link
                   href="/google-reviews"
                   className="flex w-full items-center justify-between py-2 text-[8.5px] font-semibold text-black transition hover:text-[#075b33]"
                 >
