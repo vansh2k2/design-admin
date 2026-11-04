@@ -888,7 +888,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="text-[19.5px] font-bold leading-tight">DH Assist</p>
-                    <p className="mt-[2px] text-[13.1px] text-white/80">{lang === "hi" ? "Design House असिस्टेंट" : "Design House Assistant"}</p>
+                    <p className="mt-[2px] text-[13.1px] text-white/80">Design House Assistant</p>
                   </div>
                   <Minus className="h-[22px] w-[22px]" />
                   <button type="button" onClick={() => setPreview(null)} aria-label="Restart preview" title="Restart preview" className="ml-[16px] rounded-full transition hover:bg-white/10">

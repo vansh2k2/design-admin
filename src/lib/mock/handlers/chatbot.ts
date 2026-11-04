@@ -2,8 +2,136 @@ import { MockHttpError, type MockRoute } from "../http";
 import { currentAdmin } from "../fixtures/admin";
 import { CHATS, KNOWLEDGE_SOURCES, MANAGER_DATA, REVIEW_QUEUE, chatStats, chatSummaries } from "../fixtures/chatbot";
 
+/* Chat Visitors in demo mode: built from the sample chats; blocks and closes are kept in memory */
+const demoBlocks = new Map<string, { reason?: string; by: string }>([["103.43.13.81", { reason: "Abusive messages", by: "system" }]]);
+const demoClosed = new Set<string>(["103.45.15.83"]);
+
+function demoVisitors() {
+  const byIp = new Map<string, Record<string, unknown> & { ip: string; chats: number; messages: number; lastAt: string; firstAt: string }>();
+  for (const chat of [...CHATS].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))) {
+    const ip = chat.visitor?.ip;
+    if (!ip) continue;
+    const row = byIp.get(ip);
+    const last = [...chat.messages].reverse().find((m) => m.content);
+    if (!row) {
+      byIp.set(ip, {
+        ip,
+        name: chat.lead?.name ?? "",
+        phone: chat.lead?.phone ?? "",
+        email: chat.lead?.email ?? "",
+        userAgent: chat.visitor?.userAgent ?? "",
+        pageUrl: chat.pageUrl ?? "",
+        chats: 1,
+        messages: chat.messages.length,
+        firstAt: chat.createdAt,
+        lastAt: chat.updatedAt,
+        lastChatId: chat._id,
+        lastMessage: last,
+        chatOpen: !demoClosed.has(ip),
+        status: demoBlocks.has(ip) ? "blocked" : "active",
+        blockedForever: demoBlocks.has(ip),
+        blockReason: demoBlocks.get(ip)?.reason,
+        blockedBy: demoBlocks.get(ip)?.by,
+        strikes: demoBlocks.has(ip) ? 4 : 0,
+      });
+    } else {
+      row.chats += 1;
+      row.messages += chat.messages.length;
+      if (chat.createdAt < row.firstAt) row.firstAt = chat.createdAt;
+    }
+  }
+  return [...byIp.values()];
+}
+
+const visitorRoutes: MockRoute[] = [
+  {
+    method: "GET",
+    match: /^\/admin\/chats\/visitors$/,
+    handle: ({ query }) => {
+      let rows = demoVisitors();
+      const today = new Date().toDateString();
+      const counts = {
+        all: rows.length,
+        active: rows.filter((r) => r.status === "active").length,
+        blocked: rows.filter((r) => r.status === "blocked").length,
+        open: rows.filter((r) => r.chatOpen).length,
+        closed: rows.filter((r) => !r.chatOpen).length,
+        today: rows.filter((r) => new Date(r.lastAt).toDateString() === today).length,
+      };
+      const status = query.get("status") ?? "all";
+      if (status === "active" || status === "blocked") rows = rows.filter((r) => r.status === status);
+      if (status === "open") rows = rows.filter((r) => r.chatOpen);
+      if (status === "closed") rows = rows.filter((r) => !r.chatOpen);
+      const search = (query.get("search") ?? "").toLowerCase();
+      if (search) rows = rows.filter((r) => [r.name, r.phone, r.email, r.ip].some((v) => String(v ?? "").toLowerCase().includes(search)));
+      return { visitors: rows, counts };
+    },
+  },
+  {
+    method: "GET",
+    match: /^\/admin\/chats\/visitors\/([^/]+)$/,
+    handle: ({ params }) => {
+      const ip = decodeURIComponent(params[0]);
+      const chats = CHATS.filter((c) => c.visitor?.ip === ip);
+      if (!chats.length) throw new MockHttpError(404, "No chats from this visitor");
+      return {
+        ip,
+        status: demoBlocks.has(ip) ? "blocked" : "active",
+        chats: chats.map((c) => ({ ...c, closed: demoClosed.has(ip) })),
+      };
+    },
+  },
+  {
+    method: "POST",
+    match: /^\/admin\/chats\/visitors\/([^/]+)\/block$/,
+    handle: ({ params, body }) => {
+      demoBlocks.set(decodeURIComponent(params[0]), { reason: (body as { reason?: string })?.reason, by: currentAdmin().name });
+      return null;
+    },
+  },
+  {
+    method: "POST",
+    match: /^\/admin\/chats\/visitors\/([^/]+)\/unblock$/,
+    handle: ({ params }) => {
+      demoBlocks.delete(decodeURIComponent(params[0]));
+      return null;
+    },
+  },
+  {
+    method: "POST",
+    match: /^\/admin\/chats\/visitors\/([^/]+)\/close$/,
+    handle: ({ params }) => {
+      demoClosed.add(decodeURIComponent(params[0]));
+      return { closed: 1 };
+    },
+  },
+  {
+    method: "POST",
+    match: /^\/admin\/chats\/visitors\/([^/]+)\/clear$/,
+    handle: ({ params, query }) => {
+      const ip = decodeURIComponent(params[0]);
+      const mine = CHATS.filter((c) => c.visitor?.ip === ip).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+      const emptied = query.get("scope") === "last" ? mine.slice(0, 1) : mine;
+      for (const chat of emptied) chat.messages = [];
+      return { cleared: emptied.length };
+    },
+  },
+  {
+    method: "DELETE",
+    match: /^\/admin\/chats\/visitors\/([^/]+)\/history$/,
+    handle: ({ params, query }) => {
+      const ip = decodeURIComponent(params[0]);
+      const mine = CHATS.filter((c) => c.visitor?.ip === ip).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+      const doomed = query.get("scope") === "last" ? mine.slice(0, 1) : mine;
+      for (const chat of doomed) CHATS.splice(CHATS.indexOf(chat), 1);
+      return { deleted: doomed.length };
+    },
+  },
+];
+
 /** DH Assist chatbot: conversations, inbox workflow, manager drafts, knowledge sources */
 export const chatbotRoutes: MockRoute[] = [
+  ...visitorRoutes,
   { method: "GET", match: /^\/admin\/chats\/stats$/, handle: () => chatStats() },
   {
     method: "GET",

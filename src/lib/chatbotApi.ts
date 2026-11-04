@@ -154,3 +154,80 @@ export const chatbotApi = {
   saveWorkflow: (items: WorkflowUpdate[]) => api.put<{ matched: number; modified: number }>("/admin/chats/workflow", { items }),
   createManual: (enquiry: NewManualEnquiry) => api.post<{ id: string; createdAt: string }>("/admin/chats/manual", enquiry),
 };
+
+/* ── Chat Visitors: one row per visitor (by IP) with block / close / delete controls ── */
+
+export type VisitorStatus = "active" | "blocked";
+export type VisitorFilter = "all" | VisitorStatus | "open" | "closed";
+
+export interface ChatVisitor {
+  ip: string;
+  name: string;
+  phone: string;
+  email: string;
+  userAgent: string;
+  language?: "en" | "hi";
+  pageUrl: string;
+  chats: number;
+  messages: number;
+  firstAt: string;
+  lastAt: string;
+  lastChatId: string;
+  lastMessage?: ChatMessage;
+  chatOpen: boolean;
+  closedAt?: string;
+  /** Set when the latest chat's messages were cleared by the team */
+  clearedAt?: string;
+  status: VisitorStatus;
+  blockedUntil?: string;
+  blockedForever?: boolean;
+  blockReason?: string;
+  blockedBy?: string;
+  strikes: number;
+}
+
+export interface ChatVisitorCounts {
+  all: number;
+  active: number;
+  blocked: number;
+  open: number;
+  closed: number;
+  today: number;
+}
+
+export interface VisitorChat {
+  _id: string;
+  sessionId: string;
+  lead?: ChatLead;
+  pageUrl?: string;
+  language?: "en" | "hi";
+  closed: boolean;
+  closedAt?: string;
+  closedBy?: string;
+  createdAt: string;
+  updatedAt: string;
+  messages: ChatMessage[];
+}
+
+export interface ChatVisitorDetail {
+  ip: string;
+  status: VisitorStatus;
+  chats: VisitorChat[];
+}
+
+const ipPath = (ip: string) => `/admin/chats/visitors/${encodeURIComponent(ip)}`;
+
+export const chatVisitorsApi = {
+  list: (q: { search?: string; status?: VisitorFilter } = {}) =>
+    api.get<{ visitors: ChatVisitor[]; counts: ChatVisitorCounts }>(
+      `/admin/chats/visitors?${new URLSearchParams(Object.entries(q).filter(([, v]) => v) as [string, string][])}`,
+      { forceFresh: true },
+    ),
+  get: (ip: string) => api.get<ChatVisitorDetail>(ipPath(ip), { forceFresh: true }),
+  block: (ip: string, reason?: string) => api.post<null>(`${ipPath(ip)}/block`, { reason }),
+  unblock: (ip: string) => api.post<null>(`${ipPath(ip)}/unblock`),
+  close: (ip: string) => api.post<{ closed: number }>(`${ipPath(ip)}/close`),
+  /** Empties the chat (the visitor stays in the list); deleteHistory removes the chats altogether */
+  clear: (ip: string, scope: "last" | "all") => api.post<{ cleared: number }>(`${ipPath(ip)}/clear?scope=${scope}`),
+  deleteHistory: (ip: string, scope: "last" | "all") => api.delete<{ deleted: number }>(`${ipPath(ip)}/history?scope=${scope}`),
+};

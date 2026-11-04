@@ -535,14 +535,14 @@ export default function ChatbotOverviewPage() {
         </section>
 
         <section className={panel} style={{ boxShadow: RING_SHADOW }}>
-          <PanelHeader icon={Users} iconBg="bg-[#0A2B5E]" title="Team Follow-up" link={{ href: "/chatbot/inbox", label: "Open Inbox" }} />
+          <PanelHeader icon={Users} iconBg="bg-[#0A2B5E]" title="Team Follow-up" link={{ href: "/chatbot/visitors", label: "Chat Visitors" }} />
           <div className="flex flex-1 flex-col justify-around divide-y divide-[#f0f0ec] px-[12px]">
             {followUps(stats?.followUp).map((f) => {
               const Icon = f.icon;
               return (
                 <Link
                   key={f.label}
-                  href="/chatbot/inbox"
+                  href="/chatbot/visitors"
                   className="grid min-h-[34px] grid-cols-[24px_minmax(0,1fr)_auto_14px] items-center gap-[10px] py-[4px] transition hover:bg-slate-50/80"
                 >
                   <span className="grid h-[24px] w-[24px] place-items-center rounded-[6px] bg-[#fff4ea] ring-1 ring-[#fdc89c]/60">

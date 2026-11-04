@@ -60,6 +60,8 @@ function Conversations() {
   const [page, setPage] = useState(1);
   const [error, setError] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+  // When the list was loaded: a chat updated within 15 minutes of it shows the green "online" dot
+  const [listAt, setListAt] = useState(0);
 
   const [loadedDetail, setLoadedDetail] = useState<{ key: string; chat: ChatDetail | null } | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
@@ -84,6 +86,7 @@ function Conversations() {
         if (cancelled) return;
         setChats((prev) => (page === 1 ? res.chats : [...prev, ...res.chats]));
         setTotal(res.total);
+        setListAt(Date.now());
         setError(null);
       })
       .catch((e: Error) => !cancelled && setError(e.message || "Could not load conversations"))
@@ -149,13 +152,13 @@ function Conversations() {
         {/* HEADER */}
         <div className="mb-[12px] flex flex-wrap items-end justify-between gap-[10px] border-b-[2px] border-[#293681] pb-[10px]">
           <div className="flex items-center gap-[10px]">
-            <div className="grid h-[38px] w-[38px] place-items-center rounded-[10px] bg-gradient-to-br from-[#14532d] to-[#3b8c2a] text-white shadow-md">
+            <div className="grid h-[38px] w-[38px] place-items-center rounded-[10px] bg-gradient-to-br from-[#0A2B5E] to-[#134698] text-white shadow-[0_6px_14px_-4px_rgba(10,43,94,0.45)] ring-2 ring-[#fd6e15]/40">
               <MessagesSquare className="h-[19px] w-[19px]" />
             </div>
             <div>
-              <h1 className="text-[19px] font-bold leading-[1.15] tracking-[-0.018em] text-[#23471d]">Chat Conversations</h1>
+              <h1 className="text-[19px] font-bold leading-[1.15] tracking-[-0.018em] text-[#0A2B5E]">Chat Conversations</h1>
               <p className="mt-0.5 text-[9px] font-medium text-[#6c7587]">
-                Every DH Assist chat with the visitor&apos;s details · <span className="font-semibold text-[#166b40]">{rangeLabel(range)}</span> ·{" "}
+                Every DH Assist chat with the visitor&apos;s details · <span className="font-semibold text-[#e85a05]">{rangeLabel(range)}</span> ·{" "}
                 {total} {total === 1 ? "chat" : "chats"}
               </p>
             </div>
@@ -166,7 +169,7 @@ function Conversations() {
               type="button"
               onClick={() => resetList(() => setReloadKey((k) => k + 1))}
               aria-label="Refresh"
-              className="grid h-[28px] w-[28px] place-items-center rounded-[6px] border border-[#e5e6e2] text-[#4b5563] transition hover:border-[#166b40] hover:text-[#166b40]"
+              className="grid h-[28px] w-[28px] place-items-center rounded-[6px] border border-[#e5e6e2] text-[#4b5563] transition hover:border-[#fd6e15] hover:text-[#e85a05]"
             >
               <RefreshCw className={`h-[13px] w-[13px] ${loading ? "animate-spin" : ""}`} />
             </button>
@@ -178,10 +181,13 @@ function Conversations() {
         )}
 
         {/* TWO-PANE INBOX */}
-        <div className="flex h-[calc(100vh-190px)] min-h-[480px] overflow-hidden rounded-[10px] border border-[#e8e5df] bg-white">
+        <div
+          className="flex h-[calc(100vh-190px)] min-h-[480px] overflow-hidden rounded-[12px] border border-[#e8e5df] bg-white"
+          style={{ boxShadow: "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px" }}
+        >
           {/* LIST */}
           <aside className={`w-full shrink-0 flex-col border-r border-[#e8e5df] md:flex md:w-[320px] ${selectedId ? "hidden" : "flex"}`}>
-            <div className="border-b border-[#f0f0ec] p-[10px]">
+            <div className="border-b border-[#e8e5df] bg-gradient-to-r from-[#0A2050] to-[#134698] p-[10px]">
               <div className="relative">
                 <Search className="pointer-events-none absolute left-[9px] top-1/2 h-[12px] w-[12px] -translate-y-1/2 text-[#9aa0aa]" />
                 <input
@@ -189,7 +195,7 @@ function Conversations() {
                   value={search}
                   onChange={(e) => resetList(() => setSearch(e.target.value))}
                   placeholder="Search name, phone, email or message..."
-                  className="h-[30px] w-full rounded-[6px] border border-[#e5e6e2] bg-[#f8faf7] pl-[26px] pr-[9px] text-[10px] font-medium text-[#414b5e] outline-none placeholder:text-[#9aa0aa] focus:border-[#8fa98e] focus:bg-white"
+                  className="h-[32px] w-full rounded-full border border-white/20 bg-white pl-[28px] pr-[12px] text-[10px] font-medium text-[#414b5e] outline-none placeholder:text-[#9aa0aa] focus:ring-2 focus:ring-[#fd6e15]/60"
                 />
               </div>
             </div>
@@ -210,27 +216,40 @@ function Conversations() {
                       type="button"
                       onClick={() => select(c._id)}
                       className={`flex w-full items-start gap-[10px] border-b border-[#f4f4f0] px-[12px] py-[10px] text-left transition ${
-                        active ? "bg-[#ecf7ee] shadow-[inset_3px_0_0_#166b40]" : "hover:bg-[#f8faf7]"
+                        active ? "bg-[#fff4ea] shadow-[inset_3px_0_0_#fd6e15]" : "hover:bg-[#f4f7fb]"
                       }`}
                     >
-                      <span
-                        className="grid h-[36px] w-[36px] shrink-0 place-items-center rounded-full text-[10px] font-bold text-white"
-                        style={{ background: avatarColor(c.lead?.phone || c._id) }}
-                      >
-                        {initials(visitorLabel(c))}
+                      <span className="relative shrink-0">
+                        <span
+                          className="grid h-[38px] w-[38px] place-items-center rounded-full text-[10px] font-bold text-white ring-2 ring-white shadow-sm"
+                          style={{ background: avatarColor(c.lead?.phone || c._id) }}
+                        >
+                          {initials(visitorLabel(c))}
+                        </span>
+                        {/* Chatted in the last 15 minutes: shown as online */}
+                        {listAt - new Date(c.updatedAt).getTime() < 15 * 60 * 1000 && (
+                          <span className="absolute -bottom-px -right-px h-[11px] w-[11px] rounded-full border-2 border-white bg-[#22c55e]" />
+                        )}
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center justify-between gap-2">
-                          <span className="truncate text-[10px] font-bold text-[#18233b]">{visitorLabel(c)}</span>
-                          <span className="shrink-0 text-[8px] text-[#9aa0aa]">{timeAgo(c.updatedAt)}</span>
+                          <span className="truncate text-[10px] font-bold text-[#0A2B5E]">{visitorLabel(c)}</span>
+                          <span className={`shrink-0 text-[8px] ${active ? "font-semibold text-[#e85a05]" : "text-[#9aa0aa]"}`}>{timeAgo(c.updatedAt)}</span>
                         </span>
                         <span className="block truncate text-[8px] text-[#6c7587]">{c.lead?.phone || c.lead?.email || "—"}</span>
                         <span className="mt-[3px] flex items-center justify-between gap-2">
                           <span className="truncate text-[9px] text-[#4b5563]">
-                            {c.lastMessage ? (c.lastMessage.role === "assistant" ? "🤖 " : "") + c.lastMessage.content : "Filled details, no question yet"}
+                            {c.lastMessage ? (
+                              <>
+                                {c.lastMessage.role === "assistant" && <b className="font-semibold text-[#134698]">DH Assist: </b>}
+                                {c.lastMessage.content}
+                              </>
+                            ) : (
+                              "Filled details, no question yet"
+                            )}
                           </span>
                           {c.questionCount > 0 && (
-                            <span className="shrink-0 rounded-full bg-[#166b40] px-[6px] py-[1px] text-[8px] font-bold text-white">{c.questionCount}</span>
+                            <span className="grid h-[17px] min-w-[17px] shrink-0 place-items-center rounded-full bg-[#fd6e15] px-[5px] text-[8px] font-bold text-white shadow-[0_2px_6px_rgba(253,110,21,0.35)]">{c.questionCount}</span>
                           )}
                         </span>
                       </span>
@@ -248,7 +267,7 @@ function Conversations() {
                 <button
                   type="button"
                   onClick={() => setPage((p) => p + 1)}
-                  className="w-full py-[10px] text-[9px] font-bold text-[#166b40] hover:bg-[#f8faf7]"
+                  className="w-full py-[10px] text-[9px] font-bold text-[#e85a05] hover:bg-[#fff4ea]"
                 >
                   Load more ({total - chats.length} more)
                 </button>
@@ -259,11 +278,11 @@ function Conversations() {
           {/* DETAIL */}
           <section className={`min-w-0 flex-1 flex-col ${selectedId ? "flex" : "hidden md:flex"}`}>
             {!selectedId ? (
-              <div className="flex h-full flex-col items-center justify-center gap-[10px] bg-[#f8faf7] p-[24px] text-center">
-                <div className="grid h-[64px] w-[64px] place-items-center rounded-full bg-white shadow-sm ring-1 ring-[#e5e6e2]">
+              <div className="flex h-full flex-col items-center justify-center gap-[10px] bg-[#f4f7fb] p-[24px] text-center">
+                <div className="grid h-[72px] w-[72px] place-items-center rounded-full bg-white shadow-[0_8px_20px_-8px_rgba(10,43,94,0.35)] ring-2 ring-[#fd6e15]/50">
                   <Image src="/logobg.png" alt="" width={44} height={44} className="h-[42px] w-[42px] object-contain" />
                 </div>
-                <p className="text-[12px] font-bold text-[#18233b]">Select a conversation</p>
+                <p className="text-[12px] font-bold text-[#0A2B5E]">Select a conversation</p>
                 <p className="max-w-[280px] text-[9px] text-[#6c7587]">Choose a chat on the left to read the full conversation between the visitor and DH Assist.</p>
               </div>
             ) : detailLoading && !detail ? (
@@ -273,42 +292,42 @@ function Conversations() {
             ) : !detail ? (
               <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
                 <p className="text-[11px] font-semibold text-[#6c7587]">Conversation not found</p>
-                <button type="button" onClick={() => select(null)} className="text-[9px] font-bold text-[#166b40] hover:underline">
+                <button type="button" onClick={() => select(null)} className="text-[9px] font-bold text-[#e85a05] hover:underline">
                   Back to list
                 </button>
               </div>
             ) : (
               <>
                 {/* Visitor header */}
-                <div className="border-b border-[#e8e5df] bg-white px-[14px] py-[10px]">
+                <div className="border-b-[3px] border-[#fd6e15] bg-gradient-to-r from-[#0A2050] via-[#0F2F6B] to-[#134698] px-[14px] py-[10px] text-white">
                   <div className="flex flex-wrap items-center gap-[10px]">
                     <button
                       type="button"
                       onClick={() => select(null)}
                       aria-label="Back to list"
-                      className="grid h-[28px] w-[28px] place-items-center rounded-full text-[#4b5563] hover:bg-[#f1f5f2] md:hidden"
+                      className="grid h-[28px] w-[28px] place-items-center rounded-full text-white hover:bg-white/15 md:hidden"
                     >
                       <ArrowLeft className="h-[15px] w-[15px]" />
                     </button>
                     <span
-                      className="grid h-[42px] w-[42px] shrink-0 place-items-center rounded-full text-[12px] font-bold text-white"
+                      className="grid h-[42px] w-[42px] shrink-0 place-items-center rounded-full text-[12px] font-bold text-white ring-2 ring-[#fd6e15]/70"
                       style={{ background: avatarColor(detail.lead?.phone || detail._id) }}
                     >
                       {initials(visitorLabel(detail))}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-[12px] font-bold text-[#18233b]">{visitorLabel(detail)}</p>
-                      <div className="mt-[2px] flex flex-wrap items-center gap-x-[12px] gap-y-[2px] text-[9px] text-[#4b5563]">
+                      <p className="truncate text-[12px] font-bold text-white">{visitorLabel(detail)}</p>
+                      <div className="mt-[2px] flex flex-wrap items-center gap-x-[12px] gap-y-[2px] text-[9px] text-white/80">
                         {detail.lead?.phone && (
-                          <button type="button" onClick={() => copy("phone", detail.lead?.phone)} className="flex items-center gap-[4px] hover:text-[#166b40]">
+                          <button type="button" onClick={() => copy("phone", detail.lead?.phone)} className="flex items-center gap-[4px] hover:text-white">
                             <Phone className="h-[11px] w-[11px]" /> {detail.lead.phone}
-                            {copied === "phone" ? <Check className="h-[10px] w-[10px] text-[#166b40]" /> : <Copy className="h-[10px] w-[10px] text-[#9aa0aa]" />}
+                            {copied === "phone" ? <Check className="h-[10px] w-[10px] text-[#86efac]" /> : <Copy className="h-[10px] w-[10px] text-white/60" />}
                           </button>
                         )}
                         {detail.lead?.email && (
-                          <button type="button" onClick={() => copy("email", detail.lead?.email)} className="flex items-center gap-[4px] hover:text-[#166b40]">
+                          <button type="button" onClick={() => copy("email", detail.lead?.email)} className="flex items-center gap-[4px] hover:text-white">
                             <Mail className="h-[11px] w-[11px]" /> {detail.lead.email}
-                            {copied === "email" ? <Check className="h-[10px] w-[10px] text-[#166b40]" /> : <Copy className="h-[10px] w-[10px] text-[#9aa0aa]" />}
+                            {copied === "email" ? <Check className="h-[10px] w-[10px] text-[#86efac]" /> : <Copy className="h-[10px] w-[10px] text-white/60" />}
                           </button>
                         )}
                       </div>
@@ -318,7 +337,7 @@ function Conversations() {
                         <>
                           <a
                             href={`tel:${detail.lead.phone}`}
-                            className="flex h-[30px] items-center gap-[5px] rounded-[6px] bg-[#1d4ed8] px-[10px] text-[9px] font-bold text-white transition hover:brightness-110"
+                            className="flex h-[30px] items-center gap-[5px] rounded-full bg-[#fd6e15] px-[12px] text-[9px] font-bold text-white shadow-[0_4px_10px_rgba(253,110,21,0.35)] transition hover:bg-[#e85a05]"
                           >
                             <Phone className="h-[12px] w-[12px]" /> Call
                           </a>
@@ -326,7 +345,7 @@ function Conversations() {
                             href={whatsappLink(detail.lead.phone)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex h-[30px] items-center gap-[5px] rounded-[6px] bg-[#25D366] px-[10px] text-[9px] font-bold text-white transition hover:brightness-105"
+                            className="flex h-[30px] items-center gap-[5px] rounded-full bg-[#25D366] px-[12px] text-[9px] font-bold text-white transition hover:brightness-105"
                           >
                             <Send className="h-[12px] w-[12px]" /> WhatsApp
                           </a>
@@ -335,7 +354,7 @@ function Conversations() {
                       {detail.lead?.email && (
                         <a
                           href={`mailto:${detail.lead.email}`}
-                          className="flex h-[30px] items-center gap-[5px] rounded-[6px] border border-[#e5e6e2] px-[10px] text-[9px] font-bold text-[#18233b] transition hover:border-[#166b40] hover:text-[#166b40]"
+                          className="flex h-[30px] items-center gap-[5px] rounded-full border border-white/40 bg-white/10 px-[12px] text-[9px] font-bold text-white transition hover:bg-white/20"
                         >
                           <Mail className="h-[12px] w-[12px]" /> Email
                         </a>
@@ -370,7 +389,7 @@ function Conversations() {
                 {/* Transcript */}
                 <div
                   ref={transcriptRef}
-                  className="flex-1 overflow-y-auto bg-[#f3f6f1] bg-[radial-gradient(#dfe7dc_1px,transparent_1px)] bg-[size:18px_18px] px-[14px] py-[12px]"
+                  className="flex-1 overflow-y-auto bg-[#f4f7fb] bg-[radial-gradient(#d9e2ef_1px,transparent_1px)] bg-[size:18px_18px] px-[14px] py-[12px]"
                 >
                   {detail.messages.length === 0 ? (
                     <div className="flex h-full items-center justify-center">
@@ -382,7 +401,7 @@ function Conversations() {
                     groups.map((g) => (
                       <div key={g.day} className="flex flex-col gap-[8px]">
                         <div className="my-[6px] flex justify-center">
-                          <span className="rounded-full bg-white/90 px-[10px] py-[3px] text-[8px] font-bold uppercase tracking-wide text-[#6c7587] shadow-sm">
+                          <span className="rounded-full bg-[#0A2B5E] px-[10px] py-[3px] text-[8px] font-bold uppercase tracking-wide text-white shadow-sm">
                             {dayLabel(g.items[0].createdAt)}
                           </span>
                         </div>
@@ -405,13 +424,15 @@ function Conversations() {
                             </div>
                           ) : (
                             <div key={i} className="flex items-end justify-end gap-[6px]">
-                              <div className="max-w-[72%] rounded-[12px] rounded-br-[3px] bg-gradient-to-br from-[#1f7a3a] to-[#14532d] px-[11px] py-[7px] text-white shadow-sm">
+                              <div className="max-w-[72%] rounded-[16px] rounded-br-[4px] bg-gradient-to-br from-[#134698] to-[#0A2B5E] px-[12px] py-[7px] text-white shadow-[0_2px_6px_rgba(10,43,94,0.25)]">
                                 <div className="break-words text-[10px] leading-[1.5]">
-                                  <MessageText text={m.content} linkClass="font-semibold text-[#bbf7d0] underline underline-offset-2 break-words" />
+                                  <MessageText text={m.content} linkClass="font-semibold text-[#ffd3b0] underline underline-offset-2 break-words" />
                                 </div>
                                 <p className="mt-[3px] text-right text-[7px] text-white/60">DH Assist · {formatTime(m.createdAt)}</p>
                               </div>
-                              <span className="grid h-[24px] w-[24px] shrink-0 place-items-center rounded-full bg-white text-[12px] shadow-sm ring-1 ring-[#3b8c2a]/30">🤖</span>
+                              <span className="grid h-[26px] w-[26px] shrink-0 place-items-center overflow-hidden rounded-full bg-white p-[3px] shadow-sm ring-1 ring-[#fd6e15]/40">
+                                <Image src="/logotransparent-sm.webp" alt="DH Assist" width={22} height={22} className="h-auto w-full object-contain" />
+                              </span>
                             </div>
                           )
                         )}

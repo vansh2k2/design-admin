@@ -174,7 +174,17 @@ const LIVE_API_PREFIXES = [
   "/featured-services",
   "/service-details",
 ];
-export const isLivePath = (path: string) => LIVE_API_PREFIXES.some((prefix) => path.startsWith(prefix));
+// The chats the website's chatbot saved (Chatbot → Overview, Chat Visitors, Chat Conversations, Leads, Reports).
+// /admin/chats/routing has no backend yet, so it stays on demo data.
+const LIVE_API_PATTERNS = [
+  /^\/admin\/chats(?:\?|$)/,
+  /^\/admin\/chats\/stats(?:\?|$)/,
+  /^\/admin\/chats\/workflow$/,
+  /^\/admin\/chats\/visitors/,
+  /^\/admin\/chats\/[a-f\d]{24}(?:\?|$)/i,
+];
+export const isLivePath = (path: string) =>
+  LIVE_API_PREFIXES.some((prefix) => path.startsWith(prefix)) || LIVE_API_PATTERNS.some((pattern) => pattern.test(path));
 
 async function request<T>(path: string, options?: ApiRequestOptions, isRetry = false): Promise<T> {
   if (MOCK_API && !isLivePath(path)) {
