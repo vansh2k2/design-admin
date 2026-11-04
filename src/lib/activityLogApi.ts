@@ -40,6 +40,8 @@ export interface ActivityLogStats {
   deleted: number;
   logins: number;
   failed: number;
+  /** Different people who did something today */
+  activeUsersToday?: number;
 }
 
 export interface ActivityLogPage {

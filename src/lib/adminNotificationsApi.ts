@@ -18,7 +18,8 @@ export interface AdminNotificationsResult {
 }
 
 export const adminNotificationsApi = {
-  list: () => api.get<AdminNotificationsResult>("/notifications/admin"),
+  // The backend has no /notifications/admin route yet: the bell shows none, without a 404 on every page
+  list: () => Promise.resolve<AdminNotificationsResult>({ notifications: [], unreadCount: 0 }),
   markRead: (id: string) => api.patch(`/notifications/admin/${id}/read`),
   markAllRead: () => api.patch("/notifications/admin/read-all"),
 };

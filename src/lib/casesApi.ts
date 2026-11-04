@@ -43,7 +43,8 @@ export const casesApi = {
   withdrawAssignment: (id: string, assignmentId: string, reason?: string) =>
     api.patch(`/cases/admin/${id}/volunteers/${assignmentId}/withdraw`, { reason }),
   summaryHtml: (id: string) => api.getHtml(`/cases/admin/${id}/summary`),
-  slaBreaches: () => api.get<SlaBreach[]>("/cases/admin/sla-breaches"),
+  // The Design House backend has no cases or SLA route (this came from another project): nothing to ask for
+  slaBreaches: () => Promise.resolve<SlaBreach[]>([]),
   mapData: () => api.get<CaseMapPin[]>("/cases/admin/map-data"),
   nearestVolunteers: (id: string) => api.get<NearestVolunteer[]>(`/cases/admin/${id}/nearest-volunteers`),
 };

@@ -10,6 +10,8 @@ export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
   createdAt: string;
+  /** Abusive message: kept for the record, not shown to the visitor */
+  flagged?: boolean;
 }
 
 export interface ChatRequest {
@@ -66,6 +68,8 @@ export interface ChatSummary {
   /** "Visitor 103.x.x.x" — the chat's name until the mobile number is verified */
   visitorName?: string;
   visitor?: { ip?: string; userAgent?: string };
+  /** Blocked after three abusive messages */
+  blocked?: boolean;
   /** When the mobile number in `lead` was verified with the WhatsApp OTP */
   phoneVerifiedAt?: string;
   feedback?: "yes" | "no";

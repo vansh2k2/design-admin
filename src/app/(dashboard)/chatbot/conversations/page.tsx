@@ -6,11 +6,13 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
+  Ban,
   CalendarClock,
   Check,
   Copy,
   ExternalLink,
   FileText,
+  Globe,
   Inbox,
   Loader2,
   Mail,
@@ -345,6 +347,8 @@ function Conversations() {
                   <div className="mt-[8px] flex flex-wrap gap-[6px]">
                     <InfoChip icon={<CalendarClock className="h-[11px] w-[11px]" />} text={`Started ${formatDateTime(detail.createdAt)}`} />
                     <InfoChip icon={<MessageCircleQuestion className="h-[11px] w-[11px]" />} text={`${questionCount} ${questionCount === 1 ? "question" : "questions"}`} />
+                    {detail.visitor?.ip && <InfoChip icon={<Globe className="h-[11px] w-[11px]" />} text={`IP ${detail.visitor.ip}`} />}
+                    {detail.blocked && <InfoChip icon={<Ban className="h-[11px] w-[11px]" />} text="Blocked for abusive language" tone="red" />}
                     {detail.pageUrl && (
                       <a href={detail.pageUrl} target="_blank" rel="noopener noreferrer">
                         <InfoChip icon={<FileText className="h-[11px] w-[11px]" />} text={pagePath(detail.pageUrl)} trailing={<ExternalLink className="h-[9px] w-[9px]" />} />
@@ -391,9 +395,12 @@ function Conversations() {
                               >
                                 {initials(visitorLabel(detail))}
                               </span>
-                              <div className="max-w-[72%] rounded-[12px] rounded-bl-[3px] bg-white px-[11px] py-[7px] shadow-sm ring-1 ring-black/5">
+                              <div className={`max-w-[72%] rounded-[12px] rounded-bl-[3px] px-[11px] py-[7px] shadow-sm ring-1 ${m.flagged ? "bg-red-50 ring-red-200" : "bg-white ring-black/5"}`}>
                                 <p className="whitespace-pre-wrap break-words text-[10px] text-[#18233b]">{m.content}</p>
-                                <p className="mt-[3px] text-right text-[7px] text-[#9aa0aa]">{formatTime(m.createdAt)}</p>
+                                <p className="mt-[3px] text-right text-[7px] text-[#9aa0aa]">
+                                  {m.flagged && <span className="mr-[4px] font-bold text-red-600">Abusive ·</span>}
+                                  {formatTime(m.createdAt)}
+                                </p>
                               </div>
                             </div>
                           ) : (
@@ -421,11 +428,11 @@ function Conversations() {
   );
 }
 
-function InfoChip({ icon, text, trailing, tone = "grey" }: { icon: React.ReactNode; text: string; trailing?: React.ReactNode; tone?: "grey" | "green" }) {
+function InfoChip({ icon, text, trailing, tone = "grey" }: { icon: React.ReactNode; text: string; trailing?: React.ReactNode; tone?: "grey" | "green" | "red" }) {
   return (
     <span
       className={`inline-flex items-center gap-[4px] rounded-full px-[8px] py-[3px] text-[8px] font-semibold ${
-        tone === "green" ? "bg-[#e8f5e9] text-[#166b40]" : "bg-[#f1f5f9] text-[#475569]"
+        tone === "green" ? "bg-[#e8f5e9] text-[#166b40]" : tone === "red" ? "bg-red-50 text-red-700" : "bg-[#f1f5f9] text-[#475569]"
       }`}
     >
       {icon}

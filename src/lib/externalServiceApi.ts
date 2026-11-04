@@ -12,7 +12,8 @@ export type SystemServiceAccessRequirements = {
 
 export const externalServiceApi = {
   ...createCrudApi<ExternalService>("system-services"),
-  summary: () => api.get<ExternalService[]>("/system-services/summary"),
+  // The backend has no /system-services route yet: no renewal reminders, without a 404 on every page
+  summary: () => Promise.resolve<ExternalService[]>([]),
   accessRequirements: () => api.get<SystemServiceAccessRequirements>("/system-services/access/requirements"),
   sendOtp: (phone: string, name?: string) =>
     api.post<{ success: boolean; message: string }>("/system-services/access/send-otp", { phone, name }),
