@@ -329,7 +329,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
       type="button"
       onClick={() => setSub(t)}
       className={`h-[30px] rounded-[7px] border px-[14px] text-[13.6px] transition ${
-        sub === t ? "border-[#cfe9d6] border-b-[3px] border-b-[#15633a] bg-[#eaf6ee] font-medium text-[#14532d]" : "border-[#dfe3e8] bg-white text-[#0f172a] hover:border-[#15633a]"
+        sub === t ? "border-[#cfe9d6] border-b-[3px] border-b-[#0A2B5E] bg-[#eaf6ee] font-medium text-[#0A2B5E]" : "border-[#dfe3e8] bg-white text-[#0f172a] hover:border-[#0A2B5E]"
       }`}
     >
       {t === "Review Queue" ? `Review Queue (${reviewItems.length})` : t}
@@ -372,8 +372,8 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
       />
       {/* Sub-tabs + status strip */}
       <div className="flex items-center gap-[10px]">{SUB_TABS.map(subTabButton)}</div>
-      <div className="mt-[6px] flex h-[32px] items-center gap-[20px] rounded-[10px] border border-[#e3e8e4] bg-white px-[14px] text-[13.1px] text-[#334155]">
-        <span className="inline-flex items-center gap-[8px] rounded-full bg-[#eaf6ee] py-[3px] pl-[4px] pr-[12px] font-medium text-[#14532d]">
+      <div className="mt-[6px] flex h-[32px] items-center gap-[20px] rounded-[10px] border border-[#e8e5df] bg-white px-[14px] text-[13.1px] text-[#334155]">
+        <span className="inline-flex items-center gap-[8px] rounded-full bg-[#eaf6ee] py-[3px] pl-[4px] pr-[12px] font-medium text-[#0A2B5E]">
           <span className="grid h-[22px] w-[22px] place-items-center rounded-full bg-white">
             <Image src={LOGO} alt="" width={40} height={40} className="h-[16px] w-[16px] object-contain" />
           </span>
@@ -401,13 +401,13 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
           {sub === "Knowledge Sources" && (
             <div className={`${cardClass} px-[14px] pb-[6px] pt-[8px]`}>
               <div className="flex items-center gap-[10px]">
-                <p className="mr-auto text-[19.6px] font-bold leading-tight text-[#0f2a1c]">Knowledge Sources</p>
+                <p className="mr-auto text-[19.6px] font-bold leading-tight text-[#0A2B5E]">Knowledge Sources</p>
                 <span className="relative">
                   <button
                     type="button"
                     onClick={() => setAddOpen((v) => !v)}
                     aria-expanded={addOpen}
-                    className="inline-flex h-[32px] items-center gap-[9px] rounded-[7px] bg-[#15633a] px-[14px] text-[14.1px] font-medium text-white shadow-sm transition hover:bg-[#124f2f]"
+                    className="inline-flex h-[32px] items-center gap-[9px] rounded-[7px] bg-[#0A2B5E] px-[14px] text-[14.1px] font-medium text-white shadow-sm transition hover:bg-[#081f45]"
                   >
                     <Plus className="h-[17px] w-[17px]" /> Add Source <ChevronDown className="h-[15px] w-[15px]" />
                   </button>
@@ -422,7 +422,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
                             ["manual", "Manual answer", Plus],
                           ] as const
                         ).map(([kind, name, Icon]) => (
-                          <button key={kind} type="button" onClick={() => openAdd(kind)} className="flex w-full items-center gap-[10px] px-[12px] py-[7px] text-left hover:bg-[#f1f7ee]">
+                          <button key={kind} type="button" onClick={() => openAdd(kind)} className="flex w-full items-center gap-[10px] px-[12px] py-[7px] text-left hover:bg-[#f4f7fb]">
                             <Icon className="h-[15px] w-[15px]" /> {name}
                           </button>
                         ))}
@@ -434,7 +434,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
                   type="button"
                   onClick={checkUpdates}
                   disabled={checking}
-                  className="inline-flex h-[32px] items-center gap-[9px] rounded-[7px] border border-[#cbd5e1] bg-white px-[14px] text-[14.1px] text-[#0f172a] transition hover:border-[#15633a] disabled:opacity-70"
+                  className="inline-flex h-[32px] items-center gap-[9px] rounded-[7px] border border-[#cbd5e1] bg-white px-[14px] text-[14.1px] text-[#0f172a] transition hover:border-[#0A2B5E] disabled:opacity-70"
                 >
                   <RotateCw className={`h-[16px] w-[16px] ${checking ? "animate-spin" : ""}`} /> {checking ? "Checking..." : "Check for Updates"}
                 </button>
@@ -447,7 +447,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search sources..."
-                    className="h-[32px] w-full rounded-[7px] border border-[#dfe3e8] bg-white pl-[38px] pr-[12px] text-[13.6px] text-[#0f172a] outline-none placeholder:text-[#94a3b8] focus:border-[#15633a]"
+                    className="h-[32px] w-full rounded-[7px] border border-[#dfe3e8] bg-white pl-[38px] pr-[12px] text-[13.6px] text-[#0f172a] outline-none placeholder:text-[#94a3b8] focus:border-[#0A2B5E]"
                   />
                 </label>
                 <label className="relative w-[200px]">
@@ -456,7 +456,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
                     value={topic}
                     onChange={(e) => setTopic(e.target.value as (typeof TOPICS)[number])}
                     aria-label="Topic"
-                    className="h-[32px] w-full cursor-pointer appearance-none rounded-[7px] border border-[#dfe3e8] bg-white pl-[58px] pr-[32px] text-[13.6px] text-[#0f172a] outline-none focus:border-[#15633a]"
+                    className="h-[32px] w-full cursor-pointer appearance-none rounded-[7px] border border-[#dfe3e8] bg-white pl-[58px] pr-[32px] text-[13.6px] text-[#0f172a] outline-none focus:border-[#0A2B5E]"
                   >
                     {TOPICS.map((t) => (
                       <option key={t} value={t}>
@@ -502,7 +502,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
                             <button
                               type="button"
                               onClick={() => setReviewId(s.id)}
-                              className="h-[27px] w-[80px] rounded-[7px] border border-[#2f8a4c] bg-white text-[13.6px] font-medium text-[#14532d] transition hover:bg-[#f1f7ee]"
+                              className="h-[27px] w-[80px] rounded-[7px] border border-[#9db4d6] bg-white text-[13.6px] font-medium text-[#0A2B5E] transition hover:bg-[#f4f7fb]"
                             >
                               Review
                             </button>
@@ -511,7 +511,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
                               href={`https://${s.url}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="grid h-[27px] w-[80px] place-items-center rounded-[7px] border border-[#2f8a4c] bg-white text-[13.6px] font-medium text-[#14532d] transition hover:bg-[#f1f7ee]"
+                              className="grid h-[27px] w-[80px] place-items-center rounded-[7px] border border-[#9db4d6] bg-white text-[13.6px] font-medium text-[#0A2B5E] transition hover:bg-[#f4f7fb]"
                             >
                               View
                             </a>
@@ -519,7 +519,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
                             <button
                               type="button"
                               onClick={() => viewSource(s)}
-                              className="h-[27px] w-[80px] rounded-[7px] border border-[#2f8a4c] bg-white text-[13.6px] font-medium text-[#14532d] transition hover:bg-[#f1f7ee]"
+                              className="h-[27px] w-[80px] rounded-[7px] border border-[#9db4d6] bg-white text-[13.6px] font-medium text-[#0A2B5E] transition hover:bg-[#f4f7fb]"
                             >
                               View
                             </button>
@@ -568,8 +568,8 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
           {sub === "Approved Answers" && (
             <div className={`${cardClass} px-[14px] pb-[8px] pt-[8px]`}>
               <div className="flex items-center justify-between">
-                <p className="text-[20.5px] font-bold leading-tight text-[#0f2a1c]">Approved Answers</p>
-                <button type="button" onClick={() => onGoToTab("Questions & Answers")} className="flex items-center gap-[8px] text-[13.6px] font-medium text-[#15633a] hover:underline">
+                <p className="text-[20.5px] font-bold leading-tight text-[#0A2B5E]">Approved Answers</p>
+                <button type="button" onClick={() => onGoToTab("Questions & Answers")} className="flex items-center gap-[8px] text-[13.6px] font-medium text-[#0A2B5E] hover:underline">
                   Manage in Questions &amp; Answers <ArrowRight className="h-[15px] w-[15px]" />
                 </button>
               </div>
@@ -597,7 +597,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
             <div className={`${cardClass} flex h-[42px] shrink-0 items-center gap-[14px] px-[14px]`}>
               {/* One line at any width: the rules shrink and truncate (full text on hover), the
                   title and button never wrap */}
-              <p className="shrink-0 whitespace-nowrap text-[16.6px] font-bold text-[#0f2a1c]">Answer Controls</p>
+              <p className="shrink-0 whitespace-nowrap text-[16.6px] font-bold text-[#0A2B5E]">Answer Controls</p>
               <div className="ml-auto flex min-w-0 items-center gap-[14px]">
                 {(
                   [
@@ -618,7 +618,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
               <button
                 type="button"
                 onClick={() => onGoToTab("Settings")}
-                className="inline-flex h-[27px] shrink-0 items-center gap-[7px] whitespace-nowrap rounded-[7px] border border-[#cbd5e1] bg-white px-[10px] text-[12.1px] text-[#0f172a] transition hover:border-[#15633a]"
+                className="inline-flex h-[27px] shrink-0 items-center gap-[7px] whitespace-nowrap rounded-[7px] border border-[#cbd5e1] bg-white px-[10px] text-[12.1px] text-[#0f172a] transition hover:border-[#0A2B5E]"
               >
                 <Settings className="h-[15px] w-[15px] shrink-0" /> Edit Rules
               </button>
@@ -627,8 +627,8 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
 
           <div className={`${cardClass} flex min-h-0 flex-1 flex-col px-[14px] pb-[8px] pt-[8px]`}>
             <div className="flex items-center justify-between">
-              <p className="text-[17.6px] font-bold text-[#0f2a1c]">Needs Your Review ({reviewItems.length})</p>
-              <button type="button" onClick={() => setSub("Review Queue")} className="flex items-center gap-[8px] text-[13.6px] font-medium text-[#15633a] hover:underline">
+              <p className="text-[17.6px] font-bold text-[#0A2B5E]">Needs Your Review ({reviewItems.length})</p>
+              <button type="button" onClick={() => setSub("Review Queue")} className="flex items-center gap-[8px] text-[13.6px] font-medium text-[#0A2B5E] hover:underline">
                 View All <ArrowRight className="h-[15px] w-[15px]" />
               </button>
             </div>
@@ -650,7 +650,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
                       type="button"
                       onClick={() => setReviewQuestionId(r.id)}
                       className={`h-[26px] w-[100px] rounded-[7px] border bg-white text-[12.6px] font-medium transition ${
-                        r.awaiting ? "border-[#f5c27a] text-[#b45309] hover:bg-[#fffaf0]" : "border-[#2f8a4c] text-[#14532d] hover:bg-[#f1f7ee]"
+                        r.awaiting ? "border-[#f5c27a] text-[#b45309] hover:bg-[#fffaf0]" : "border-[#9db4d6] text-[#0A2B5E] hover:bg-[#f4f7fb]"
                       }`}
                     >
                       {r.awaiting ? "Awaiting Team" : r.action}
@@ -680,7 +680,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
         <div className={`${cardClass} flex min-h-0 flex-col px-[14px] pb-[8px] pt-[8px]`}>
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-[19.6px] font-bold leading-tight text-[#0f2a1c]">Test DH Assist</p>
+              <p className="text-[19.6px] font-bold leading-tight text-[#0A2B5E]">Test DH Assist</p>
               <p className="text-[13.1px] text-[#64748b]">Test responses before publishing.</p>
             </div>
             <div className="flex overflow-hidden rounded-[7px] border border-[#dfe3e8]">
@@ -693,7 +693,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
                     runTest(question, m);
                   }}
                   aria-pressed={mode === m}
-                  className={`h-[29px] w-[80px] text-[13.1px] transition ${mode === m ? "bg-[#15633a] font-medium text-white" : "bg-white text-[#0f172a] hover:bg-slate-50"}`}
+                  className={`h-[29px] w-[80px] text-[13.1px] transition ${mode === m ? "bg-[#0A2B5E] font-medium text-white" : "bg-white text-[#0f172a] hover:bg-slate-50"}`}
                 >
                   {m}
                 </button>
@@ -708,13 +708,13 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
               onKeyDown={(e) => e.key === "Enter" && runTest()}
               maxLength={150}
               aria-label="Test question"
-              className="h-[32px] rounded-[7px] border border-[#dfe3e8] bg-white px-[12px] text-[13.6px] text-[#0f172a] outline-none focus:border-[#15633a]"
+              className="h-[32px] rounded-[7px] border border-[#dfe3e8] bg-white px-[12px] text-[13.6px] text-[#0f172a] outline-none focus:border-[#0A2B5E]"
             />
             <Select value={language} options={["Hinglish", "English", "Hindi"]} onChange={setLanguage} label="Language" selectClassName="!h-[32px] !pl-[10px] !pr-[28px] !text-[13.1px]" />
             <button
               type="button"
               onClick={() => runTest()}
-              className="inline-flex h-[32px] items-center justify-center gap-[8px] rounded-[7px] bg-[#15633a] text-[13.1px] font-medium text-white shadow-sm transition hover:bg-[#124f2f]"
+              className="inline-flex h-[32px] items-center justify-center gap-[8px] rounded-[7px] bg-[#0A2B5E] text-[13.1px] font-medium text-white shadow-sm transition hover:bg-[#081f45]"
             >
               <Send className="h-[16px] w-[16px]" /> Test Answer
             </button>
@@ -737,7 +737,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
                         <span className="block text-[12.1px] text-[#64748b]">{result.source?.detail}</span>
                       </span>
                       {result.source?.url ? (
-                        <a href={`https://${result.source.url}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-[6px] text-[13.1px] text-[#15633a] hover:underline">
+                        <a href={`https://${result.source.url}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-[6px] text-[13.1px] text-[#0A2B5E] hover:underline">
                           View source <ArrowUpRight className="h-[14px] w-[14px]" />
                         </a>
                       ) : (
@@ -747,7 +747,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
                             const s = sources.find((x) => x.name === result.source?.name);
                             if (s) viewSource(s);
                           }}
-                          className="flex items-center gap-[6px] text-[13.1px] text-[#15633a] hover:underline"
+                          className="flex items-center gap-[6px] text-[13.1px] text-[#0A2B5E] hover:underline"
                         >
                           View source <ArrowUpRight className="h-[14px] w-[14px]" />
                         </button>
@@ -768,7 +768,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
                       notify("Marked as correct — thanks for checking");
                     }}
                     aria-pressed={rating === "correct"}
-                    className={`inline-flex h-[27px] items-center gap-[8px] rounded-[7px] border px-[11px] text-[12.6px] transition ${rating === "correct" ? "border-[#15633a] bg-[#eaf6ee] text-[#14532d]" : "border-[#dfe3e8] bg-white text-[#334155] hover:border-[#15633a]"}`}
+                    className={`inline-flex h-[27px] items-center gap-[8px] rounded-[7px] border px-[11px] text-[12.6px] transition ${rating === "correct" ? "border-[#0A2B5E] bg-[#eaf6ee] text-[#0A2B5E]" : "border-[#dfe3e8] bg-white text-[#334155] hover:border-[#0A2B5E]"}`}
                   >
                     <ThumbsUp className="h-[15px] w-[15px]" /> Correct
                   </button>
@@ -815,7 +815,7 @@ export default function AIKnowledgeTab({ onChange, onGoToTab, notify }: Props) {
           >
             <CircleHelp className="h-[22px] w-[22px] shrink-0 text-[#334155]" />
             <span className="flex-1">
-              <span className="block text-[13.6px] font-medium text-[#0f2a1c]">Test unanswered question</span>
+              <span className="block text-[13.6px] font-medium text-[#0A2B5E]">Test unanswered question</span>
               <span className="block text-[12.6px] text-[#64748b]">Check the visitor message and team handover.</span>
             </span>
             <ChevronRight className="h-[18px] w-[18px] text-[#334155]" />

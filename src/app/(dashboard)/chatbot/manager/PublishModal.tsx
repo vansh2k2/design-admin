@@ -98,7 +98,7 @@ export default function PublishModal({ tab, onTabChange, onClose, versions, hasD
                 onRestore(ver);
                 setRestored(v(ver.minor));
               }}
-              className="h-[30px] w-[112px] rounded-[7px] border border-[#2f8a4c] bg-white text-[13px] font-semibold text-[#14532d] transition hover:bg-[#f1f7ee]"
+              className="h-[30px] w-[112px] rounded-[7px] border border-[#9db4d6] bg-white text-[13px] font-semibold text-[#0A2B5E] transition hover:bg-[#f4f7fb]"
             >
               Restore to Draft
             </button>
@@ -113,7 +113,7 @@ export default function PublishModal({ tab, onTabChange, onClose, versions, hasD
 
   return createPortal(
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 font-sans">
-      <div aria-hidden="true" className="absolute inset-0 bg-[#0b1f14]/55 backdrop-blur-[2px]" />
+      <div aria-hidden="true" className="absolute inset-0 bg-[#0A1F44]/55 backdrop-blur-[2px]" />
 
       <div
         role="dialog"
@@ -124,7 +124,7 @@ export default function PublishModal({ tab, onTabChange, onClose, versions, hasD
         <div className="min-h-0 overflow-y-auto px-[18px] pb-[11px] pt-[11px]">
           {/* Header: title + chips on one line, subtitle underneath */}
           <div className="flex items-center gap-[12px]">
-            <h2 id="publish-title" className="mr-auto whitespace-nowrap text-[19px] font-bold leading-tight text-[#0f2a1c]">
+            <h2 id="publish-title" className="mr-auto whitespace-nowrap text-[19px] font-bold leading-tight text-[#0A2B5E]">
               Publish &amp; Version History
             </h2>
             <div className="flex shrink-0 items-center gap-[8px]">
@@ -156,7 +156,7 @@ export default function PublishModal({ tab, onTabChange, onClose, versions, hasD
                 type="button"
                 onClick={() => onTabChange(key)}
                 className={`-mb-px border-b-[3px] px-[16px] pb-[7px] text-[14px] transition ${
-                  tab === key ? "border-[#15633a] font-semibold text-[#15633a]" : "border-transparent text-[#334155] hover:text-[#15633a]"
+                  tab === key ? "border-[#0A2B5E] font-semibold text-[#0A2B5E]" : "border-transparent text-[#334155] hover:text-[#0A2B5E]"
                 }`}
               >
                 {name}
@@ -167,7 +167,7 @@ export default function PublishModal({ tab, onTabChange, onClose, versions, hasD
           <div className="mt-[7px] rounded-[10px] border border-[#eef0f2] px-[16px] pb-[8px] pt-[8px]">
             {tab === "publish" ? (
               <>
-                <p className="text-[16.5px] font-bold text-[#0f2a1c]">Changes ready to publish</p>
+                <p className="text-[16.5px] font-bold text-[#0A2B5E]">Changes ready to publish</p>
                 {hasDraft ? (
                   <div className="mt-[4px] flex flex-col">
                     {changeRows.length === 0 && <p className="py-[5px] text-[13.5px] text-[#334155]">Draft changes are saved and ready to publish.</p>}
@@ -190,7 +190,7 @@ export default function PublishModal({ tab, onTabChange, onClose, versions, hasD
                       <Check className="h-[14px] w-[14px]" strokeWidth={3} />
                     </span>
                     <span>
-                      <span className="block text-[13.5px] font-semibold text-[#14532d]">Validation passed</span>
+                      <span className="block text-[13.5px] font-semibold text-[#0A2B5E]">Validation passed</span>
                       <span className="block text-[12px] text-[#334155]">Required fields and flow links checked.</span>
                     </span>
                   </div>
@@ -204,18 +204,18 @@ export default function PublishModal({ tab, onTabChange, onClose, versions, hasD
                   onChange={(e) => setNote(e.target.value)}
                   maxLength={150}
                   disabled={!hasDraft}
-                  className="mt-[4px] h-[30px] w-full rounded-[7px] border border-[#cbd5e1] bg-white px-[12px] text-[13.5px] text-[#0f172a] outline-none transition focus:border-[#15633a] focus:ring-2 focus:ring-[#15633a]/15 disabled:bg-slate-50"
+                  className="mt-[4px] h-[30px] w-full rounded-[7px] border border-[#cbd5e1] bg-white px-[12px] text-[13.5px] text-[#0f172a] outline-none transition focus:border-[#0A2B5E] focus:ring-2 focus:ring-[#0A2B5E]/15 disabled:bg-slate-50"
                 />
                 <p className="mt-[4px] text-[12px] text-[#475569]">Publishing applies to new chats. Active chats continue on their current version.</p>
 
                 <div className="mt-[6px] border-t border-[#eef0f2] pt-[8px]">
-                  <p className="text-[16.5px] font-bold text-[#0f2a1c]">Recent versions</p>
+                  <p className="text-[16.5px] font-bold text-[#0A2B5E]">Recent versions</p>
                   {versionRows}
                 </div>
               </>
             ) : (
               <>
-                <p className="text-[16.5px] font-bold text-[#0f2a1c]">All versions</p>
+                <p className="text-[16.5px] font-bold text-[#0A2B5E]">All versions</p>
                 {versionRows}
               </>
             )}
@@ -238,7 +238,7 @@ export default function PublishModal({ tab, onTabChange, onClose, versions, hasD
               type="button"
               onClick={() => onPublish(note.trim())}
               disabled={!hasDraft || publishing}
-              className="h-[28px] rounded-[8px] bg-[#15633a] px-[18px] text-[13.5px] font-semibold text-white shadow-sm transition hover:bg-[#124f2f] disabled:opacity-50"
+              className="h-[28px] rounded-[8px] bg-[#0A2B5E] px-[18px] text-[13.5px] font-semibold text-white shadow-sm transition hover:bg-[#081f45] disabled:opacity-50"
             >
               Publish {v(draftMinor)}
             </button>

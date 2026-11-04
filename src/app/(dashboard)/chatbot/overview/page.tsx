@@ -83,25 +83,22 @@ type StatCard = {
   numColor: string;
 };
 
-// Icon circle colours, as on the Blog & Awareness page
+// Icon circle colours in the Design House brand: navy, orange and blue
 const toneClass = {
-  emerald: "bg-emerald-50 text-emerald-700 ring-emerald-200",
-  blue: "bg-sky-50 text-sky-700 ring-sky-200",
-  violet: "bg-violet-50 text-violet-700 ring-violet-200",
-  teal: "bg-teal-50 text-teal-700 ring-teal-200",
-  amber: "bg-amber-50 text-amber-700 ring-amber-200",
-  green: "bg-green-50 text-green-700 ring-green-200",
+  navy: "bg-[#eef3fb] text-[#0A2B5E] ring-[#c9d6ec]",
+  orange: "bg-[#fff4ea] text-[#e85a05] ring-[#fdc89c]",
+  blue: "bg-[#eaf2fd] text-[#134698] ring-[#bcd3f3]",
 } as const;
 
 const gradientTo = (tint: string) => `linear-gradient(135deg, #ffffff 0%, #ffffff 42%, ${tint} 100%)`;
 
 const STATS: StatCard[] = [
-  { title: "TOTAL CHATS", value: "128", footer: "View chats", href: "/chatbot/conversations", icon: MessagesSquare, tone: "emerald", gradient: gradientTo("#bbf7d0"), borderColor: "#bbf7d0", numColor: "#15803d" },
-  { title: "LEADS CAPTURED", value: "32", footer: "View leads", href: "/chatbot/leads", icon: UserRound, tone: "blue", gradient: gradientTo("#bae6fd"), borderColor: "#bae6fd", numColor: "#0284c7" },
-  { title: "QUESTIONS ASKED", value: "512", footer: "Review questions", href: "/chatbot/conversations", icon: MessageCircleQuestion, tone: "violet", gradient: gradientTo("#ddd6fe"), borderColor: "#ddd6fe", numColor: "#6d28d9" },
-  { title: "BOT REPLIES", value: "487", footer: "View replies", href: "/chatbot/conversations", icon: Bot, tone: "teal", gradient: gradientTo("#99f6e4"), borderColor: "#99f6e4", numColor: "#0f766e" },
-  { title: "AVG. QUESTIONS / CHAT", value: "4.0", footer: "Chat engagement", href: "/chatbot/conversations", icon: TrendingUp, tone: "amber", gradient: gradientTo("#fed7aa"), borderColor: "#fed7aa", numColor: "#c2410c" },
-  { title: "WHATSAPP DELIVERED", value: "18", footer: "View delivery", href: "/chatbot/leads", icon: WhatsAppIcon, tone: "green", gradient: gradientTo("#d9f99d"), borderColor: "#d9f99d", numColor: "#15803d" },
+  { title: "TOTAL CHATS", value: "128", footer: "View chats", href: "/chatbot/conversations", icon: MessagesSquare, tone: "navy", gradient: gradientTo("#d6e2f5"), borderColor: "#c3d3ee", numColor: "#0A2B5E" },
+  { title: "LEADS CAPTURED", value: "32", footer: "View leads", href: "/chatbot/leads", icon: UserRound, tone: "orange", gradient: gradientTo("#ffdcbf"), borderColor: "#fdc89c", numColor: "#e85a05" },
+  { title: "QUESTIONS ASKED", value: "512", footer: "Review questions", href: "/chatbot/conversations", icon: MessageCircleQuestion, tone: "blue", gradient: gradientTo("#cfe2fb"), borderColor: "#b3cdf3", numColor: "#134698" },
+  { title: "BOT REPLIES", value: "487", footer: "View replies", href: "/chatbot/conversations", icon: Bot, tone: "navy", gradient: gradientTo("#d6e2f5"), borderColor: "#c3d3ee", numColor: "#0A2B5E" },
+  { title: "AVG. QUESTIONS / CHAT", value: "4.0", footer: "Chat engagement", href: "/chatbot/conversations", icon: TrendingUp, tone: "orange", gradient: gradientTo("#ffdcbf"), borderColor: "#fdc89c", numColor: "#e85a05" },
+  { title: "WHATSAPP DELIVERED", value: "18", footer: "View delivery", href: "/chatbot/leads", icon: WhatsAppIcon, tone: "blue", gradient: gradientTo("#cfe2fb"), borderColor: "#b3cdf3", numColor: "#134698" },
 ];
 
 const percent = (part: number, whole: number) => (whole ? `${Math.round((part / whole) * 100)}%` : "—");
@@ -114,7 +111,7 @@ const performanceRows = (t?: ChatStats["totals"]) => {
     label: "Answered questions",
     value: t ? `${answered} / ${t.questions}` : "—",
     icon: Check,
-    iconClass: "bg-[#22a447] text-white",
+    iconClass: "bg-[#0A2B5E] text-white",
     extra: <span className="text-[8.5px] font-semibold text-[#68758d]">{t ? percent(answered, t.questions) : "—"}</span>,
   },
   {
@@ -140,14 +137,14 @@ const performanceRows = (t?: ChatStats["totals"]) => {
       </>
     ),
     icon: ThumbsUp,
-    iconClass: "bg-[#e3edfd] text-[#2563eb]",
+    iconClass: "bg-[#eaf2fd] text-[#134698]",
   },
-  { label: "Returning visitors", value: t ? String(t.returningVisitors) : "—", icon: Users, iconClass: "bg-[#efe8fc] text-[#7c3aed]" },
-  { label: "Team handovers", value: t ? String(t.handovers) : "—", icon: UserRound, iconClass: "bg-[#fdf0d2] text-[#ea7a0c]" },
+  { label: "Returning visitors", value: t ? String(t.returningVisitors) : "—", icon: Users, iconClass: "bg-[#fff4ea] text-[#e85a05]" },
+  { label: "Team handovers", value: t ? String(t.handovers) : "—", icon: UserRound, iconClass: "bg-[#eef3fb] text-[#0A2B5E]" },
   ];
 };
 
-const TOP_PAGE_BARS = ["bg-[#4cc35a]", "bg-[#2f9e44]", "bg-[#4cc35a]", "bg-[#8fd99a]"];
+const TOP_PAGE_BARS = ["bg-[#0A2B5E]", "bg-[#134698]", "bg-[#fd6e15]", "bg-[#ffa76b]"];
 
 /** "/registration/book-a-stand" → "Book A Stand", "/" → "Home" */
 const pageName = (url: string) => {
@@ -159,10 +156,10 @@ const pageName = (url: string) => {
 
 /** The team's current queue (Inbox & Leads), from /admin/chats/stats */
 const followUps = (f: ChatStats["followUp"] | undefined) => [
-  { label: "Unassigned chats", count: f?.unassigned, icon: Mail, iconClass: "text-[#dc2626]", countClass: "bg-[#ffebee] text-[#c62828] border-[#ef9a9a]" },
-  { label: "Overdue replies", count: f?.overdue, icon: Clock3, iconClass: "text-[#ea7a0c]", countClass: "bg-[#ffebee] text-[#c62828] border-[#ef9a9a]" },
-  { label: "Follow-ups today", count: f?.dueToday, icon: CalendarDays, iconClass: "text-[#dc2626]", countClass: "bg-[#fef3c7] text-[#b45309] border-[#fde68a]" },
-  { label: "Open complaints", count: f?.openComplaints, icon: AlertTriangle, iconClass: "text-[#dc2626]", countClass: "bg-[#ffebee] text-[#c62828] border-[#ef9a9a]" },
+  { label: "Unassigned chats", count: f?.unassigned, icon: Mail, iconClass: "text-[#e85a05]", countClass: "bg-[#ffebee] text-[#c62828] border-[#ef9a9a]" },
+  { label: "Overdue replies", count: f?.overdue, icon: Clock3, iconClass: "text-[#e85a05]", countClass: "bg-[#ffebee] text-[#c62828] border-[#ef9a9a]" },
+  { label: "Follow-ups today", count: f?.dueToday, icon: CalendarDays, iconClass: "text-[#e85a05]", countClass: "bg-[#fef3c7] text-[#b45309] border-[#fde68a]" },
+  { label: "Open complaints", count: f?.openComplaints, icon: AlertTriangle, iconClass: "text-[#e85a05]", countClass: "bg-[#ffebee] text-[#c62828] border-[#ef9a9a]" },
 ];
 
 /** "02 Oct 2026" */
@@ -181,7 +178,7 @@ type Conversation = {
   action: "View" | "Review";
 };
 
-const AVATAR_CLASSES = ["bg-[#2563eb]", "bg-[#8b5cf6]", "bg-[#c2570c]", "bg-[#0f766e]", "bg-[#db2777]"];
+const AVATAR_CLASSES = ["bg-[#0A2B5E]", "bg-[#fd6e15]", "bg-[#134698]", "bg-[#e85a05]", "bg-[#2563eb]"];
 
 /** One row of "Recent Conversations" from a saved chat */
 const toConversation = (c: ChatSummary, returning: boolean): Conversation => {
@@ -252,11 +249,11 @@ const PanelHeader = ({ icon: Icon, iconBg, title, sub, link }: {
       <span className={`grid h-[22px] w-[22px] shrink-0 place-items-center rounded-[4px] text-white ${iconBg}`}>
         <Icon className="h-[12px] w-[12px]" />
       </span>
-      <h2 className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-[#233D4D]">{title}</h2>
+      <h2 className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-[#0A2B5E]">{title}</h2>
       {sub && <span className={`min-w-0 truncate ${mutedText}`}>· {sub}</span>}
     </div>
     {link && (
-      <Link href={link.href} className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap text-[8.5px] font-bold text-[#075b33] hover:underline">
+      <Link href={link.href} className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap text-[8.5px] font-bold text-[#e85a05] hover:underline">
         {link.label} <ArrowRight className="h-[11px] w-[11px]" />
       </Link>
     )}
@@ -338,14 +335,14 @@ export default function ChatbotOverviewPage() {
       <div className="mb-[14px] flex shrink-0 flex-wrap items-center justify-between gap-3 border-b-[2px] border-[#293681] pb-[8px]">
         <div className="min-w-0">
           <div className="flex min-w-0 items-center gap-[10px]">
-            <h1 className="text-[19px] font-bold leading-[1.15] tracking-[-0.018em] text-[#23471d]" style={{ color: "#23471d" }}>
+            <h1 className="text-[19px] font-bold leading-[1.15] tracking-[-0.018em] text-[#0A2B5E]" style={{ color: "#0A2B5E" }}>
               Chatbot Overview
             </h1>
             <span
               title="Live chatbot data, including the team follow-up from Inbox & Leads."
-              className="inline-flex shrink-0 items-center gap-[5px] whitespace-nowrap rounded-[4px] border border-[#a5d6a7] bg-[#e8f5e9] px-[8px] py-[2px] text-[7.5px] font-bold text-[#23714a] shadow-xs"
+              className="inline-flex shrink-0 items-center gap-[5px] whitespace-nowrap rounded-[4px] border border-[#c9d6ec] bg-[#eef3fb] px-[8px] py-[2px] text-[7.5px] font-bold text-[#0A2B5E] shadow-xs"
             >
-              <span className="h-[6px] w-[6px] rounded-full bg-[#22a447]" /> Live data <Info className="h-[11px] w-[11px]" />
+              <span className="h-[6px] w-[6px] rounded-full bg-[#fd6e15]" /> Live data <Info className="h-[11px] w-[11px]" />
             </span>
           </div>
           <p className="mt-0.5 truncate text-[9px] font-medium text-[#6c7587]">DH Assist — chatbot performance &amp; team follow-up</p>
@@ -359,7 +356,7 @@ export default function ChatbotOverviewPage() {
                 type="button"
                 onClick={() => setRange(r)}
                 className={`whitespace-nowrap rounded-[5px] px-[9px] py-[4px] text-[8.5px] font-semibold transition ${
-                  range === r ? "bg-[#4B1426] text-white shadow-[0_3px_8px_rgba(75,20,38,0.25)]" : "text-[#334155] hover:bg-white"
+                  range === r ? "bg-[#0A2B5E] text-white shadow-[0_3px_8px_rgba(10,43,94,0.25)]" : "text-[#334155] hover:bg-white"
                 }`}
               >
                 {r}
@@ -370,13 +367,13 @@ export default function ChatbotOverviewPage() {
             type="button"
             onClick={refresh}
             aria-label="Refresh"
-            className="grid h-[30px] w-[30px] place-items-center rounded-[6px] border border-[#e8e5df] bg-white text-[#334155] shadow-sm transition hover:border-[#075b33] hover:text-[#075b33]"
+            className="grid h-[30px] w-[30px] place-items-center rounded-[6px] border border-[#e8e5df] bg-white text-[#334155] shadow-sm transition hover:border-[#fd6e15] hover:text-[#e85a05]"
           >
             <RefreshCw className={`h-[13px] w-[13px] ${spin ? "animate-spin" : ""}`} />
           </button>
           <Link
             href="/chatbot/conversations"
-            className="flex h-[30px] shrink-0 items-center justify-center gap-[5px] rounded-[6px] bg-[#4B1426] px-[14px] text-[8.5px] font-semibold text-white shadow-[0_5px_12px_rgba(75,20,38,0.25)] transition hover:bg-[#3a0f1d]"
+            className="flex h-[30px] shrink-0 items-center justify-center gap-[5px] rounded-[6px] bg-[#fd6e15] px-[14px] text-[8.5px] font-semibold text-white shadow-[0_5px_12px_rgba(253,110,21,0.3)] transition hover:bg-[#e85a05]"
           >
             <Settings className="h-[12px] w-[12px]" strokeWidth={1.7} /> Manage Chatbot
           </Link>
@@ -410,7 +407,7 @@ export default function ChatbotOverviewPage() {
                       <AnimatedCounter value={value} />
                     </span>
                     {isWhatsApp && (
-                      <span className="mb-0.5 flex items-center gap-[3px] text-[9.5px] font-bold text-emerald-700">
+                      <span className="mb-0.5 flex items-center gap-[3px] text-[9.5px] font-bold text-[#134698]">
                         <Check className="h-[11px] w-[11px]" strokeWidth={3} /> Verified
                       </span>
                     )}
@@ -431,17 +428,17 @@ export default function ChatbotOverviewPage() {
         <section className={panel} style={{ boxShadow: RING_SHADOW }}>
           <PanelHeader
             icon={TrendingUp}
-            iconBg="bg-[#075b33]"
+            iconBg="bg-[#0A2B5E]"
             title="Day-wise Activity"
             sub="New chats and questions asked per day"
           />
           <div className="flex min-h-0 flex-1 flex-col px-[14px] pb-[6px] pt-[6px]">
             <div className="flex items-center justify-end gap-[16px] text-[8.5px] font-semibold text-[#334155]">
               <span className="flex items-center gap-[6px]">
-                <span className="h-[8px] w-[8px] rounded-full bg-[#22a447]" /> Chats
+                <span className="h-[8px] w-[8px] rounded-full bg-[#134698]" /> Chats
               </span>
               <span className="flex items-center gap-[6px]">
-                <span className="h-[8px] w-[8px] rounded-full bg-[#f59e0b]" /> Questions
+                <span className="h-[8px] w-[8px] rounded-full bg-[#fd6e15]" /> Questions
               </span>
             </div>
             <div className="relative h-[200px] xl:h-auto xl:flex-1">
@@ -450,22 +447,22 @@ export default function ChatbotOverviewPage() {
                   <AreaChart data={daily} margin={{ top: 16, right: 18, left: -14, bottom: 0 }}>
                     <defs>
                       <linearGradient id="ovQuestions" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#f59e0b" stopOpacity={0.28} />
-                        <stop offset="100%" stopColor="#f59e0b" stopOpacity={0.04} />
+                        <stop offset="0%" stopColor="#fd6e15" stopOpacity={0.28} />
+                        <stop offset="100%" stopColor="#fd6e15" stopOpacity={0.04} />
                       </linearGradient>
                       <linearGradient id="ovChats" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#22a447" stopOpacity={0.3} />
-                        <stop offset="100%" stopColor="#22a447" stopOpacity={0.04} />
+                        <stop offset="0%" stopColor="#134698" stopOpacity={0.3} />
+                        <stop offset="100%" stopColor="#134698" stopOpacity={0.04} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid stroke="#eef0f2" vertical={false} />
                     <XAxis dataKey="day" tick={{ fontSize: 11, fill: "#475569" }} tickLine={false} axisLine={{ stroke: "#e2e8f0" }} dy={6} padding={{ left: 4, right: 4 }} />
                     <YAxis domain={[0, yTicks[4]]} ticks={yTicks} tick={{ fontSize: 11, fill: "#475569" }} tickLine={false} axisLine={{ stroke: "#e2e8f0" }} />
-                    <Area type="monotone" dataKey="Questions" stroke="#f59e0b" strokeWidth={2.2} fill="url(#ovQuestions)" dot={{ r: 4, fill: "#f59e0b", stroke: "#fff", strokeWidth: 1.5 }} isAnimationActive={false}>
-                      <LabelList dataKey="Questions" position="top" offset={9} style={{ fontSize: 10.5, fill: "#d97706" }} />
+                    <Area type="monotone" dataKey="Questions" stroke="#fd6e15" strokeWidth={2.2} fill="url(#ovQuestions)" dot={{ r: 4, fill: "#fd6e15", stroke: "#fff", strokeWidth: 1.5 }} isAnimationActive={false}>
+                      <LabelList dataKey="Questions" position="top" offset={9} style={{ fontSize: 10.5, fill: "#e85a05" }} />
                     </Area>
-                    <Area type="monotone" dataKey="Chats" stroke="#16843a" strokeWidth={2.2} fill="url(#ovChats)" dot={{ r: 4, fill: "#16843a", stroke: "#fff", strokeWidth: 1.5 }} isAnimationActive={false}>
-                      <LabelList dataKey="Chats" position="top" offset={9} style={{ fontSize: 10.5, fill: "#15803d" }} />
+                    <Area type="monotone" dataKey="Chats" stroke="#134698" strokeWidth={2.2} fill="url(#ovChats)" dot={{ r: 4, fill: "#134698", stroke: "#fff", strokeWidth: 1.5 }} isAnimationActive={false}>
+                      <LabelList dataKey="Chats" position="top" offset={9} style={{ fontSize: 10.5, fill: "#0A2B5E" }} />
                     </Area>
                   </AreaChart>
                 </ResponsiveContainer>
@@ -475,7 +472,7 @@ export default function ChatbotOverviewPage() {
         </section>
 
         <section className={panel} style={{ boxShadow: RING_SHADOW }}>
-          <PanelHeader icon={ThumbsUp} iconBg="bg-[#0284c7]" title="Answer & Feedback Performance" sub={range} />
+          <PanelHeader icon={ThumbsUp} iconBg="bg-[#fd6e15]" title="Answer & Feedback Performance" sub={range} />
           <div className="flex flex-1 flex-col justify-between divide-y divide-[#f0f0ec] px-[12px] py-[2px]">
             {performance.map((row) => {
               const Icon = row.icon;
@@ -497,7 +494,7 @@ export default function ChatbotOverviewPage() {
       {/* ── Top pages · popular questions · team follow-up ── */}
       <div className="mt-[14px] grid gap-[14px] lg:grid-cols-3">
         <section className={panel} style={{ boxShadow: RING_SHADOW }}>
-          <PanelHeader icon={FileText} iconBg="bg-[#7c3aed]" title="Top Pages" sub={`${t ? t.chats : "—"} chats`} />
+          <PanelHeader icon={FileText} iconBg="bg-[#134698]" title="Top Pages" sub={`${t ? t.chats : "—"} chats`} />
           <div className="flex flex-1 flex-col justify-around gap-[8px] px-[14px] py-[10px]">
             <p className={mutedText}>Where visitors started chatting</p>
             {topPages.length === 0 && <p className={mutedText}>No chats in this period yet.</p>}
@@ -516,7 +513,7 @@ export default function ChatbotOverviewPage() {
         <section className={panel} style={{ boxShadow: RING_SHADOW }}>
           <PanelHeader
             icon={MessageCircleQuestion}
-            iconBg="bg-[#ea580c]"
+            iconBg="bg-[#fd6e15]"
             title="Popular Questions"
             link={{ href: "/chatbot/conversations", label: "Review Answers" }}
           />
@@ -528,9 +525,9 @@ export default function ChatbotOverviewPage() {
                 href="/chatbot/conversations"
                 className="grid min-h-[40px] grid-cols-[24px_minmax(0,1fr)_auto_14px] items-center gap-[10px] py-[6px] transition hover:bg-slate-50/80"
               >
-                <span className="grid h-[24px] w-[24px] place-items-center rounded-[6px] bg-sky-50 text-[8.5px] font-bold text-sky-700 ring-1 ring-sky-200/60">{i + 1}</span>
+                <span className="grid h-[24px] w-[24px] place-items-center rounded-[6px] bg-[#eef3fb] text-[8.5px] font-bold text-[#0A2B5E] ring-1 ring-[#c9d6ec]/60">{i + 1}</span>
                 <span className={`truncate ${rowText}`}>{item.q}</span>
-                <span className="rounded-[4px] border border-[#a5d6a7] bg-[#e8f5e9] px-[8px] py-[2px] text-[7.5px] font-bold text-[#23714a] shadow-xs">{item.count}</span>
+                <span className="rounded-[4px] border border-[#fdc89c] bg-[#fff4ea] px-[8px] py-[2px] text-[7.5px] font-bold text-[#e85a05] shadow-xs">{item.count}</span>
                 <ChevronRight className="h-[12px] w-[12px] text-[#8c98a9]" />
               </Link>
             ))}
@@ -538,7 +535,7 @@ export default function ChatbotOverviewPage() {
         </section>
 
         <section className={panel} style={{ boxShadow: RING_SHADOW }}>
-          <PanelHeader icon={Users} iconBg="bg-[#dc2626]" title="Team Follow-up" link={{ href: "/chatbot/inbox", label: "Open Inbox" }} />
+          <PanelHeader icon={Users} iconBg="bg-[#0A2B5E]" title="Team Follow-up" link={{ href: "/chatbot/inbox", label: "Open Inbox" }} />
           <div className="flex flex-1 flex-col justify-around divide-y divide-[#f0f0ec] px-[12px]">
             {followUps(stats?.followUp).map((f) => {
               const Icon = f.icon;
@@ -548,7 +545,7 @@ export default function ChatbotOverviewPage() {
                   href="/chatbot/inbox"
                   className="grid min-h-[34px] grid-cols-[24px_minmax(0,1fr)_auto_14px] items-center gap-[10px] py-[4px] transition hover:bg-slate-50/80"
                 >
-                  <span className="grid h-[24px] w-[24px] place-items-center rounded-[6px] bg-red-50 ring-1 ring-red-200/60">
+                  <span className="grid h-[24px] w-[24px] place-items-center rounded-[6px] bg-[#fff4ea] ring-1 ring-[#fdc89c]/60">
                     <Icon className={`h-[13px] w-[13px] ${f.iconClass}`} />
                   </span>
                   <span className={rowText}>{f.label}</span>
@@ -567,7 +564,7 @@ export default function ChatbotOverviewPage() {
       <section className={`${panel} mt-[14px] shrink-0`} style={{ boxShadow: RING_SHADOW }}>
         <PanelHeader
           icon={MessagesSquare}
-          iconBg="bg-[#233D4D]"
+          iconBg="bg-[#134698]"
           title="Recent Conversations"
           sub="Latest visitor conversations and their status"
           link={{ href: "/chatbot/conversations", label: "View all" }}
@@ -575,7 +572,7 @@ export default function ChatbotOverviewPage() {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[900px] border-collapse text-left">
             <thead>
-              <tr className="h-[32px] border-b border-[#e8e5df] bg-[#233D4D]">
+              <tr className="h-[32px] border-b border-[#e8e5df] bg-[#0A2B5E]">
                 {["Visitor", "Type", "Topic", "Bot Outcome", "Team Status", "Last Activity", "Action"].map((h, i, all) => (
                   <th
                     key={h}
@@ -610,7 +607,7 @@ export default function ChatbotOverviewPage() {
                     <td className="whitespace-nowrap px-[12px] py-[8px]">
                       <span
                         className={`inline-flex rounded-[4px] border px-[8px] py-[2px] text-[7.5px] font-bold shadow-xs ${
-                          c.returning ? "border-[#a5d6a7] bg-[#e8f5e9] text-[#23714a]" : "border-[#90caf9] bg-[#e3f2fd] text-[#1565c0]"
+                          c.returning ? "border-[#fdc89c] bg-[#fff4ea] text-[#e85a05]" : "border-[#c9d6ec] bg-[#eef3fb] text-[#0A2B5E]"
                         }`}
                       >
                         {c.returning ? "Returning" : "New"}
@@ -619,7 +616,7 @@ export default function ChatbotOverviewPage() {
                     <td className={`px-[12px] py-[8px] ${rowText}`}>{c.topic}</td>
                     <td className="px-[12px] py-[8px]">
                       <span className={`flex items-center gap-[8px] ${rowText}`}>
-                        <Outcome className="h-[14px] w-[14px] text-[#075b33]" /> {c.outcome.label}
+                        <Outcome className="h-[14px] w-[14px] text-[#fd6e15]" /> {c.outcome.label}
                       </span>
                     </td>
                     <td className="px-[12px] py-[8px]">
@@ -634,7 +631,7 @@ export default function ChatbotOverviewPage() {
                         className={`inline-flex h-[25px] min-w-[52px] items-center justify-center rounded-[6px] border px-[10px] text-[8.5px] font-semibold shadow-[0_2px_6px_rgba(15,23,42,0.06)] transition ${
                           c.action === "Review"
                             ? "border-red-400/30 bg-red-500/10 text-red-600 hover:bg-red-500/15"
-                            : "border-blue-400/30 bg-blue-500/10 text-blue-600 hover:bg-blue-500/15"
+                            : "border-[#134698]/30 bg-[#134698]/10 text-[#134698] hover:bg-[#134698]/15"
                         }`}
                       >
                         {c.action}
@@ -651,7 +648,7 @@ export default function ChatbotOverviewPage() {
       {/* ── Status bar ── */}
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 pb-[8px] pt-[10px]">
         <div className="flex flex-wrap items-center gap-[12px]">
-          <span className="flex items-center gap-[7px] text-[8.5px] font-bold text-[#23714a]">
+          <span className="flex items-center gap-[7px] text-[8.5px] font-bold text-[#0A2B5E]">
             <span className="h-[8px] w-[8px] rounded-full bg-[#22a447]" /> DH Assist Active
           </span>
           <span className="h-[14px] w-px bg-[#cbd5e1]" />
@@ -659,7 +656,7 @@ export default function ChatbotOverviewPage() {
             Last content update: <span className="font-semibold text-[#19274a]">{stats?.contentUpdatedAt ? longDate(stats.contentUpdatedAt) : "Not published yet"}</span>
           </span>
           <span className="h-[14px] w-px bg-[#cbd5e1]" />
-          <a href={PUBLIC_SITE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-[4px] text-[8.5px] font-bold text-[#075b33] hover:underline">
+          <a href={PUBLIC_SITE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-[4px] text-[8.5px] font-bold text-[#e85a05] hover:underline">
             Preview Chatbot <ArrowUpRight className="h-[11px] w-[11px]" />
           </a>
         </div>

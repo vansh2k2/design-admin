@@ -38,7 +38,7 @@ export default function DeleteButtonModal({ button, onClose, onConfirm }: Props)
 
   return createPortal(
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 font-sans">
-      <div aria-hidden="true" className="absolute inset-0 bg-[#0b1f14]/55 backdrop-blur-[2px]" />
+      <div aria-hidden="true" className="absolute inset-0 bg-[#0A1F44]/55 backdrop-blur-[2px]" />
 
       <div
         role="alertdialog"
@@ -52,7 +52,7 @@ export default function DeleteButtonModal({ button, onClose, onConfirm }: Props)
             <Trash2 className="h-[19px] w-[19px]" />
           </span>
           <div className="min-w-0 flex-1">
-            <h2 id="delete-button-title" className="text-[17px] font-bold leading-tight text-[#0f2a1c]">
+            <h2 id="delete-button-title" className="text-[17px] font-bold leading-tight text-[#0A2B5E]">
               Delete “{button.label || "Untitled"}”?
             </h2>
             <p id="delete-button-body" className="mt-[4px] text-[13.5px] text-[#475569]">

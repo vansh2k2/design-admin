@@ -126,19 +126,19 @@ export default function PreviewChatModal({ open, buttons, hindi, onClose }: Prop
 
   return createPortal(
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 font-sans">
-      <div aria-hidden="true" onClick={onClose} className="absolute inset-0 bg-[#0b1f14]/55 backdrop-blur-[2px]" />
+      <div aria-hidden="true" onClick={onClose} className="absolute inset-0 bg-[#0A1F44]/55 backdrop-blur-[2px]" />
 
-      <div role="dialog" aria-modal="true" aria-label="Chatbot preview" className="relative flex h-[560px] max-h-[calc(100vh-32px)] w-[400px] max-w-full flex-col overflow-hidden rounded-[16px] bg-[#f3f8f1] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.45)]">
+      <div role="dialog" aria-modal="true" aria-label="Chatbot preview" className="relative flex h-[560px] max-h-[calc(100vh-32px)] w-[400px] max-w-full flex-col overflow-hidden rounded-[22px] bg-[#f4f7fb] shadow-[0_18px_50px_rgba(10,30,74,0.28)]">
         {/* Header */}
-        <div className="flex h-[56px] shrink-0 items-center gap-[12px] bg-gradient-to-br from-[#1f6b2a] to-[#14532d] px-[16px] text-white">
-          <span className="grid h-[38px] w-[38px] shrink-0 place-items-center rounded-full bg-white shadow-md ring-[3px] ring-white/25">
+        <div className="flex h-[60px] shrink-0 items-center gap-[12px] bg-gradient-to-r from-[#0A2050] via-[#0F2F6B] to-[#134698] border-b-[3px] border-[#fd6e15] px-[16px] text-white">
+          <span className="grid h-[40px] w-[40px] shrink-0 place-items-center rounded-full bg-white p-[5px] ring-2 ring-[#fd6e15]/70">
             <Image src={LOGO} alt="DH Assist" width={64} height={64} className="h-[30px] w-[30px] object-contain" />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-[17px] font-semibold leading-tight">DH Assist</p>
-            <p className="text-[12.5px] text-white/85">Draft preview — not live</p>
+            <p className="text-[17px] font-bold leading-tight">DH Assist</p>
+            <p className="text-[12.5px] text-white/80">Draft preview — not live</p>
           </div>
-          <div className="flex overflow-hidden rounded-[6px] border border-white/30 text-[12.5px]">
+          <div className="flex items-center rounded-full bg-white/15 p-[2px] text-[12.5px] font-bold">
             {(["en", "hi"] as const).map((l) => (
               <button
                 key={l}
@@ -146,7 +146,7 @@ export default function PreviewChatModal({ open, buttons, hindi, onClose }: Prop
                 onClick={() => {
                   setLang(l);
                   setMessages(null);
-                }} aria-pressed={lang === l} className={`px-[8px] py-[3px] ${lang === l ? "bg-white font-semibold text-[#14532d]" : "text-white hover:bg-white/10"}`}>
+                }} aria-pressed={lang === l} className={`rounded-full px-[8px] py-[3px] transition ${lang === l ? "bg-white text-[#0A2B5E] shadow" : "text-white/85 hover:text-white"}`}>
                 {l === "en" ? "EN" : "हिं"}
               </button>
             ))}
@@ -163,20 +163,20 @@ export default function PreviewChatModal({ open, buttons, hindi, onClose }: Prop
         <div ref={listRef} className="flex min-h-0 flex-1 flex-col gap-[10px] overflow-y-auto px-[12px] py-[9px]">
           {shown.map((m, i) =>
             m.from === "user" ? (
-              <span key={i} className="max-w-[80%] self-end rounded-[10px] rounded-br-[3px] bg-[#15633a] px-[14px] py-[5px] text-[14px] text-white">
+              <span key={i} className="max-w-[80%] self-end rounded-[16px] rounded-tr-[6px] bg-gradient-to-br from-[#134698] to-[#0A2B5E] text-white shadow-[0_2px_6px_rgba(10,43,94,0.25)] px-[14px] py-[6px] text-[14px]">
                 {m.text}
               </span>
             ) : (
               <div key={i} className="flex items-start gap-[10px]">
                 <BotAvatar size={32} />
                 <div className="min-w-0 max-w-[290px]">
-                  <div className="whitespace-pre-line rounded-[10px] bg-white px-[12px] py-[6px] text-[14px] leading-snug text-[#0f172a] shadow-sm">{m.text}</div>
+                  <div className="whitespace-pre-line rounded-[16px] rounded-tl-[6px] bg-white text-[#1f2d44] shadow-[0_1px_3px_rgba(10,30,74,0.10)] px-[12px] py-[7px] text-[14px] leading-snug">{m.text}</div>
                   {m.link && (
                     <a
                       href={/^https?:\/\//.test(m.link) ? m.link : `https://${m.link}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-[5px] inline-flex max-w-full items-center gap-[6px] rounded-[7px] border border-[#2f8a4c] bg-white px-[10px] py-[4px] text-[13px] text-[#14532d] hover:bg-[#f1f7ee]"
+                      className="mt-[5px] inline-flex max-w-full items-center gap-[6px] rounded-[12px] px-[10px] py-[4px] text-[13px] border border-[#fd6e15]/40 bg-[#fff6ef] font-semibold text-[#b84a08] transition hover:bg-[#ffecdf]"
                     >
                       <ExternalLink className="h-[14px] w-[14px] shrink-0" /> <span className="truncate">{m.link || "Link not set"}</span>
                     </a>
@@ -185,7 +185,7 @@ export default function PreviewChatModal({ open, buttons, hindi, onClose }: Prop
                   {m.pills && m.pills.length > 0 && (
                     <div className="mt-[5px] flex flex-wrap gap-[6px]">
                       {m.pills.map((p) => (
-                        <button key={p.label} type="button" onClick={p.run} className="inline-flex h-[28px] items-center rounded-[8px] border border-[#2f8a4c] bg-white px-[11px] text-[13px] text-[#14532d] transition hover:bg-[#ebf6ee]">
+                        <button key={p.label} type="button" onClick={p.run} className="inline-flex h-[28px] items-center rounded-[12px] px-[11px] text-[13px] border border-[#fd6e15]/40 bg-[#fff6ef] font-semibold text-[#b84a08] transition hover:bg-[#ffecdf]">
                           {p.label}
                         </button>
                       ))}
@@ -204,7 +204,7 @@ export default function PreviewChatModal({ open, buttons, hindi, onClose }: Prop
             e.preventDefault();
             ask(input);
           }}
-          className="flex shrink-0 items-center gap-[10px] border-t border-[#e3e8e4] bg-white px-[14px] py-[6px]"
+          className="flex shrink-0 items-center gap-[10px] border-t border-[#e3e9f3] bg-white px-[14px] py-[6px]"
         >
           <input
             value={input}
@@ -212,13 +212,13 @@ export default function PreviewChatModal({ open, buttons, hindi, onClose }: Prop
             maxLength={500}
             placeholder={lang === "hi" ? "सवाल लिखें…" : "Type a question…"}
             aria-label="Preview question"
-            className="h-[32px] min-w-0 flex-1 rounded-full border border-[#dfe3e8] px-[16px] text-[14px] text-[#0f172a] outline-none placeholder:text-[#94a3b8] focus:border-[#15633a]"
+            className="h-[32px] min-w-0 flex-1 rounded-full border border-[#d5deee] px-[16px] text-[14px] text-[#1f2d44] shadow-[0_2px_8px_rgba(10,30,74,0.06)] outline-none placeholder:text-[#8a97ad] focus:border-[#134698]"
           />
           <button
             type="submit"
             disabled={!input.trim() || thinking}
             aria-label="Send"
-            className="grid h-[32px] w-[32px] place-items-center rounded-full bg-[#15633a] text-white transition hover:bg-[#124f2f] disabled:bg-[#15633a]/40"
+            className="grid h-[32px] w-[32px] place-items-center rounded-full bg-gradient-to-br from-[#fd6e15] to-[#e85a05] text-white transition hover:brightness-110 disabled:opacity-50"
           >
             <Send className="h-[17px] w-[17px]" />
           </button>

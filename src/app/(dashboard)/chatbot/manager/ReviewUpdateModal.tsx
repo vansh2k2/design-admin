@@ -46,7 +46,7 @@ export default function ReviewUpdateModal({ source, onClose, onApprove, onKeep }
 
   return createPortal(
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 font-sans">
-      <div aria-hidden="true" className="absolute inset-0 bg-[#0b1f14]/55 backdrop-blur-[2px]" />
+      <div aria-hidden="true" className="absolute inset-0 bg-[#0A1F44]/55 backdrop-blur-[2px]" />
 
       <div
         role="dialog"
@@ -81,7 +81,7 @@ export default function ReviewUpdateModal({ source, onClose, onApprove, onKeep }
               href={`https://${url}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-[30px] items-center gap-[8px] rounded-[7px] border border-[#2f8a4c] bg-white px-[12px] text-[13.5px] font-medium text-[#14532d] transition hover:bg-[#f1f7ee]"
+              className="inline-flex h-[30px] items-center gap-[8px] rounded-[7px] border border-[#9db4d6] bg-white px-[12px] text-[13.5px] font-medium text-[#0A2B5E] transition hover:bg-[#f4f7fb]"
             >
               <SquareArrowOutUpRight className="h-[16px] w-[16px]" /> Open Website <ArrowUpRight className="h-[14px] w-[14px]" />
             </a>
@@ -103,12 +103,12 @@ export default function ReviewUpdateModal({ source, onClose, onApprove, onKeep }
               <p className="bg-[#eaf6ee] px-[14px] py-[5px] text-[14.5px] font-bold text-[#0f172a]">Updated Content</p>
               <div className="px-[16px] pb-[8px] pt-[8px] text-[14.5px] leading-snug text-[#0f172a]">
                 <p className="px-[2px]">{CURRENT}</p>
-                <p className="mt-[4px] rounded-[5px] bg-[#dcf3e1] px-[8px] py-[4px] text-[#14532d]">{ADDED}</p>
+                <p className="mt-[4px] rounded-[5px] bg-[#dcf3e1] px-[8px] py-[4px] text-[#0A2B5E]">{ADDED}</p>
               </div>
             </div>
           </div>
 
-          <p className="mt-[7px] flex items-center gap-[12px] rounded-[7px] bg-[#eaf6ee] px-[14px] py-[5px] text-[14.5px] font-medium text-[#14532d]">
+          <p className="mt-[7px] flex items-center gap-[12px] rounded-[7px] bg-[#eaf6ee] px-[14px] py-[5px] text-[14.5px] font-medium text-[#0A2B5E]">
             <Plus className="h-[18px] w-[18px]" strokeWidth={2.6} /> Added: Entry confirmation instruction
           </p>
           <p className="mt-[4px] text-[12px] text-[#64748b]">Demo example • Verify the instruction on the source website.</p>
@@ -120,7 +120,7 @@ export default function ReviewUpdateModal({ source, onClose, onApprove, onKeep }
             onChange={(e) => setNote(e.target.value)}
             maxLength={200}
             placeholder="Add a note for your team"
-            className="mt-[4px] h-[32px] w-full rounded-[7px] border border-[#cbd5e1] bg-white px-[14px] text-[14px] text-[#0f172a] outline-none transition placeholder:text-[#94a3b8] focus:border-[#15633a] focus:ring-2 focus:ring-[#15633a]/15"
+            className="mt-[4px] h-[32px] w-full rounded-[7px] border border-[#cbd5e1] bg-white px-[14px] text-[14px] text-[#0f172a] outline-none transition placeholder:text-[#94a3b8] focus:border-[#0A2B5E] focus:ring-2 focus:ring-[#0A2B5E]/15"
           />
 
           <p className="mt-[7px] flex items-center gap-[10px] text-[13px] text-[#475569]">
@@ -136,13 +136,13 @@ export default function ReviewUpdateModal({ source, onClose, onApprove, onKeep }
             >
               Keep Current
             </button>
-            <button type="button" onClick={onClose} className="ml-auto h-[28px] px-[16px] text-[14px] font-medium text-[#0f172a] transition hover:text-[#15633a]">
+            <button type="button" onClick={onClose} className="ml-auto h-[28px] px-[16px] text-[14px] font-medium text-[#0f172a] transition hover:text-[#0A2B5E]">
               Cancel
             </button>
             <button
               type="button"
               onClick={() => onApprove(note.trim())}
-              className="h-[28px] rounded-[7px] bg-[#15633a] px-[20px] text-[14px] font-semibold text-white shadow-sm transition hover:bg-[#124f2f]"
+              className="h-[28px] rounded-[7px] bg-[#0A2B5E] px-[20px] text-[14px] font-semibold text-white shadow-sm transition hover:bg-[#081f45]"
             >
               Approve Update
             </button>

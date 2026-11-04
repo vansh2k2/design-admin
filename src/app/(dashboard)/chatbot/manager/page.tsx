@@ -97,57 +97,57 @@ const same = (a: MenuButton | undefined, b: MenuButton) => !!a && JSON.stringify
 const INITIAL_BUTTONS: MenuButton[] = [
   {
     id: 1,
-    label: "Book a Stall",
-    hindi: "स्टॉल बुक करें",
+    label: "Our Services",
+    hindi: "हमारी सेवाएं",
     action: "Show Options",
-    nextStep: "Stall Options",
+    nextStep: "Service Options",
     active: true,
-    reply: "Happy to help! What would you like to explore?",
-    options: ["Stall Sizes", "Stall Pricing", "Get Brochure", "Talk to Sales"],
+    reply: "Happy to help! Which service are you interested in?",
+    options: ["Corporate Interiors", "Retail Showrooms", "Exhibition Stalls", "Retail Kiosks"],
     target: "",
   },
   {
     id: 2,
-    label: "Visit the Expo",
-    hindi: "एक्सपो देखने आएं",
-    action: "Show Answer",
-    nextStep: "Visitor Information",
+    label: "Get a Quote",
+    hindi: "कोटेशन पाएं",
+    action: "Open Form",
+    nextStep: "Quotation Form",
     active: true,
-    reply: "Visitor registration is free. Here is how to register.",
+    reply: "Share a few details and our team will send you a quotation.",
     options: [],
-    target: "",
+    target: "Quotation Request",
   },
   {
     id: 3,
-    label: "MSME / PMS Support",
-    hindi: "MSME / PMS सहायता",
-    action: "Show Options",
-    nextStep: "PMS Guidance",
+    label: "View Our Projects",
+    hindi: "हमारे प्रोजेक्ट देखें",
+    action: "Open Link",
+    nextStep: "Projects Page",
     active: true,
-    reply: "Here is the support available for eligible exhibitors.",
-    options: ["Eligibility", "Documents", "Talk to Team"],
-    target: "",
+    reply: "Take a look at some of our recent projects.",
+    options: [],
+    target: "designhouse.co.in/portfolio",
   },
   {
     id: 4,
-    label: "More Options",
-    hindi: "और विकल्प",
-    action: "Show Options",
-    nextStep: "Additional Topics",
+    label: "Talk to Our Team",
+    hindi: "हमारी टीम से बात करें",
+    action: "Talk to Team",
+    nextStep: "Sales Team",
     active: true,
-    reply: "Here are some more topics I can help with.",
-    options: ["Buyer–Seller Meet", "Conference", "Sponsorship"],
-    target: "",
+    reply: "Sure! Our team will get in touch with you shortly.",
+    options: [],
+    target: "Sales Team",
   },
 ];
 
 /** Hindi preview text for the reply and next options of the sample buttons */
 const HINDI: Record<string, string> = {
-  "Happy to help! What would you like to explore?": "ज़रूर! आप क्या जानना चाहेंगे?",
-  "Stall Sizes": "स्टॉल साइज़",
-  "Stall Pricing": "स्टॉल की कीमत",
-  "Get Brochure": "ब्रोशर पाएं",
-  "Talk to Sales": "सेल्स टीम से बात करें",
+  "Happy to help! Which service are you interested in?": "ज़रूर! आप किस सेवा के बारे में जानना चाहेंगे?",
+  "Corporate Interiors": "कॉर्पोरेट इंटीरियर",
+  "Retail Showrooms": "रिटेल शोरूम",
+  "Exhibition Stalls": "एग्ज़िबिशन स्टॉल",
+  "Retail Kiosks": "रिटेल कियोस्क",
 };
 
 const TABS: { label: string; icon: LucideIcon }[] = [
@@ -195,7 +195,7 @@ const Pill = ({ children, onClick, disabled }: { children: React.ReactNode; onCl
     type="button"
     onClick={onClick}
     disabled={disabled}
-    className="inline-flex h-[32px] items-center rounded-[8px] border border-[#2f8a4c] bg-white px-[12px] text-[13.6px] text-[#14532d] transition hover:bg-[#ebf6ee] disabled:opacity-60"
+    className="inline-flex h-[32px] items-center rounded-[12px] px-[12px] text-[13.6px] border border-[#fd6e15]/40 bg-[#fff6ef] font-semibold text-[#b84a08] transition hover:bg-[#ffecdf] disabled:opacity-60"
   >
     {children}
   </button>
@@ -498,12 +498,15 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
     <ManagerStoreContext.Provider value={store}>
     <div ref={ref} className="w-full overflow-x-hidden bg-white">
       <div style={{ zoom, width: DESIGN_WIDTH }} className="flex flex-col px-[16px] pb-[5px] pt-[5px] text-[#0f172a]">
-        {/* ── Header (the page name is already in the top bar) ── */}
-        <div className="flex items-center justify-between gap-x-3">
+        {/* ── Header: title and subtitle over a navy rule, as on the Blog & Awareness / Contact Us pages ── */}
+        <div className="flex items-center justify-between gap-x-3 border-b-[2px] border-[#293681] pb-[10px] pt-[6px]">
           <div className="flex min-w-0 items-center gap-[14px]">
-            <p className="min-w-0 truncate text-[17.5px] font-medium text-[#334155]">
-              {tab === "AI Knowledge & Answers" ? "Control DH Assist’s knowledge and responses" : "Control buttons, answers and the visitor journey"}
-            </p>
+            <div className="min-w-0">
+              <h1 className="text-[19px] font-bold leading-[1.15] tracking-[-0.018em] text-[#0A2B5E]">Chatbot Manager</h1>
+              <p className="mt-[2px] min-w-0 truncate text-[13.4px] font-medium text-[#6c7587]">
+                {tab === "AI Knowledge & Answers" ? "Control DH Assist’s knowledge and responses" : "Control buttons, answers and the visitor journey"}
+              </p>
+            </div>
             <span
               title={initial.ai.configured ? `Replies come from OpenAI (${initial.ai.model}); the key is set in the backend .env` : "OPENAI_API_KEY is missing in the backend .env — the chatbot cannot reply"}
               className={`inline-flex shrink-0 items-center gap-[7px] whitespace-nowrap rounded-[6px] border px-[11px] py-[4px] text-[13.4px] font-medium ${
@@ -522,21 +525,21 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
             <button
               type="button"
               onClick={() => setPreviewOpen(true)}
-              className="h-[37px] whitespace-nowrap rounded-[7px] border border-[#d6dae0] bg-white px-[20px] text-[14.6px] font-medium text-[#0f172a] transition hover:border-[#15633a]"
+              className="h-[37px] whitespace-nowrap rounded-[6px] border border-[#bfdbfe] bg-[#eff6ff] px-[20px] text-[14.6px] font-semibold text-[#1d4ed8] shadow-sm transition hover:bg-[#dbeafe]"
             >
               Preview
             </button>
             <button
               type="button"
               onClick={saveAll}
-              className="h-[37px] whitespace-nowrap rounded-[7px] border border-[#d6dae0] bg-white px-[20px] text-[14.6px] font-medium text-[#0f172a] transition hover:border-[#15633a]"
+              className="h-[37px] whitespace-nowrap rounded-[6px] border border-[#bbf7d0] bg-[#f0fdf4] px-[20px] text-[14.6px] font-semibold text-[#15803d] shadow-sm transition hover:bg-[#dcfce7]"
             >
               Save Draft
             </button>
             <button
               type="button"
               onClick={() => setPublishTab("publish")}
-              className="inline-flex h-[37px] items-center gap-[9px] whitespace-nowrap rounded-[7px] bg-[#15633a] px-[20px] text-[14.6px] font-medium text-white shadow-sm transition hover:bg-[#124f2f]"
+              className="inline-flex h-[37px] items-center gap-[9px] whitespace-nowrap rounded-[6px] bg-[#0A2B5E] px-[20px] text-[14.6px] font-semibold text-white shadow-[0_5px_12px_rgba(10,43,94,0.25)] transition hover:bg-[#081f45]"
             >
               <CloudUpload className="h-[18px] w-[18px]" /> Publish Changes
             </button>
@@ -577,7 +580,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
               type="button"
               onClick={() => setTab(name)}
               className={`-mb-px flex items-center gap-[12px] border-b-[3px] px-[18px] pb-[9px] pt-[2px] text-[15.6px] transition ${
-                tab === name ? "border-[#15633a] font-semibold text-[#15633a]" : "border-transparent text-[#475569] hover:text-[#15633a]"
+                tab === name ? "border-[#0A2B5E] font-semibold text-[#0A2B5E]" : "border-transparent text-[#475569] hover:text-[#0A2B5E]"
               }`}
             >
               <Icon className="h-[20px] w-[20px]" /> {name}
@@ -590,16 +593,16 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
         <div className="mt-[8px] grid">
           <div {...panelProps("Buttons & Flows")} className={`${panelClass("Buttons & Flows")} grid grid-cols-[822px_1fr] gap-[15px]`}>
             {/* ── Left: menu + editor ── */}
-            <div className="rounded-[12px] border border-[#e3e8e4] bg-white px-[16px] pb-[10px] pt-[8px] shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+            <div className="rounded-[12px] border border-[#e8e5df] bg-white px-[16px] pb-[10px] pt-[8px] shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-[20.5px] font-bold leading-tight text-[#0f2a1c]">Welcome Menu</p>
+                  <p className="text-[20.5px] font-bold leading-tight text-[#0A2B5E]">Welcome Menu</p>
                   <p className="mt-[2px] text-[13.6px] text-[#64748b]">{activeButtons.length} active button{activeButtons.length === 1 ? "" : "s"}</p>
                 </div>
                 <button
                   type="button"
                   onClick={addButton}
-                  className="inline-flex h-[36px] items-center gap-[9px] rounded-[7px] border border-[#2f8a4c] bg-white px-[18px] text-[14.6px] font-medium text-[#14532d] transition hover:bg-[#f1f7ee]"
+                  className="inline-flex h-[36px] items-center gap-[9px] rounded-[7px] border border-[#9db4d6] bg-white px-[18px] text-[14.6px] font-medium text-[#0A2B5E] transition hover:bg-[#f4f7fb]"
                 >
                   <Plus className="h-[18px] w-[18px]" /> Add Button
                 </button>
@@ -607,7 +610,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
 
               {/* Buttons table */}
               <div className="mt-[10px] overflow-hidden rounded-[8px] border border-[#eef0f2]">
-                <div className="grid grid-cols-[37px_50px_180px_152px_145px_120px_1fr] items-center bg-[#f7f8fa] px-[8px] py-[6px] text-[13.6px] text-[#475569]">
+                <div className="grid h-[34px] grid-cols-[37px_50px_180px_152px_145px_120px_1fr] items-center bg-[#0A2B5E] px-[8px] text-[12.4px] font-bold uppercase tracking-wide text-white">
                   <span />
                   <span>Order</span>
                   <span>Button Label</span>
@@ -622,7 +625,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                     {...drag.row(b.id)}
                     onClick={() => select(b)}
                     className={`${drag.rowClass(b.id)} grid h-[45px] cursor-pointer grid-cols-[37px_50px_180px_152px_145px_120px_1fr] items-center border-t border-[#eef0f2] px-[8px] text-[14.6px] transition ${
-                      selectedId === b.id ? "bg-[#ebf6ee]" : "hover:bg-[#f8faf9]"
+                      selectedId === b.id ? "bg-[#eef3fb]" : "hover:bg-[#f8faf9]"
                     }`}
                   >
                     <DragHandle props={drag.handle(b.id, b.label)} className="h-[28px] w-[22px]" />
@@ -654,7 +657,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                         }}
                         maxLength={30}
                         aria-label={`Next step for ${b.label}`}
-                        className="mr-[10px] h-[30px] min-w-0 rounded-[6px] border border-[#2f8a4c] px-[8px] text-[13.6px] outline-none"
+                        className="mr-[10px] h-[30px] min-w-0 rounded-[6px] border border-[#9db4d6] px-[8px] text-[13.6px] outline-none"
                       />
                     ) : (
                       <button
@@ -678,7 +681,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                         onClick={() => select(b)}
                         aria-label={`Edit ${b.label}`}
                         title="Edit"
-                        className="grid h-[32px] w-[34px] place-items-center rounded-[7px] border border-[#dfe3e8] bg-white text-[#0f172a] transition hover:border-[#15633a] hover:text-[#15633a]"
+                        className="grid h-[32px] w-[34px] place-items-center rounded-[7px] border border-[#dfe3e8] bg-white text-[#0f172a] transition hover:border-[#0A2B5E] hover:text-[#0A2B5E]"
                       >
                         <Pencil className="h-[16px] w-[16px]" />
                       </button>
@@ -702,7 +705,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
 
               {/* Editor */}
               <div className="mt-[8px] rounded-[10px] border border-[#eef0f2] px-[14px] pb-[6px] pt-[7px]">
-                <p className="text-[16.5px] font-bold leading-tight text-[#0f2a1c]">Edit Button: {draft.label || "Untitled"}</p>
+                <p className="text-[16.5px] font-bold leading-tight text-[#0A2B5E]">Edit Button: {draft.label || "Untitled"}</p>
                 <div className="mt-[5px] grid grid-cols-2 gap-x-[24px] gap-y-[5px]">
                   <label>
                     <span className={editLabel}>
@@ -730,7 +733,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                       rows={2}
                       maxLength={300}
                       aria-invalid={showErrors && !draft.reply.trim()}
-                      className={`h-[40px] w-full resize-y rounded-[7px] border ${showErrors && !draft.reply.trim() ? "border-[#dc2626]" : "border-[#dfe3e8]"} bg-white px-[12px] py-[4px] text-[14.1px] leading-snug text-[#0f172a] outline-none transition focus:border-[#15633a] focus:ring-2 focus:ring-[#15633a]/15`}
+                      className={`h-[40px] w-full resize-y rounded-[7px] border ${showErrors && !draft.reply.trim() ? "border-[#dc2626]" : "border-[#dfe3e8]"} bg-white px-[12px] py-[4px] text-[14.1px] leading-snug text-[#0f172a] outline-none transition focus:border-[#0A2B5E] focus:ring-2 focus:ring-[#0A2B5E]/15`}
                     />
                   </label>
                 </div>
@@ -786,7 +789,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                           type="button"
                           onClick={(e) => e.currentTarget.parentElement?.querySelector("input")?.select()}
                           aria-label={`Edit option ${idx + 1}`}
-                          className="grid h-full w-[30px] shrink-0 place-items-center border-l border-[#dfe3e8] text-[#0f172a] hover:text-[#15633a]"
+                          className="grid h-full w-[30px] shrink-0 place-items-center border-l border-[#dfe3e8] text-[#0f172a] hover:text-[#0A2B5E]"
                         >
                           <Pencil className="h-[14px] w-[14px]" />
                         </button>
@@ -811,7 +814,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                       onClick={() => setDraft({ ...draft, options: [...draft.options, "New Option"] })}
                       disabled={draft.action !== "Show Options" || draft.options.length >= 4}
                       title={draft.action !== "Show Options" ? "Options are used with the “Show Options” action" : draft.options.length >= 4 ? "Up to 4 options" : undefined}
-                      className="inline-flex h-[31px] items-center gap-[8px] rounded-[7px] border border-[#2f8a4c] bg-white px-[14px] text-[13.6px] font-medium text-[#14532d] transition hover:bg-[#f1f7ee] disabled:opacity-50"
+                      className="inline-flex h-[31px] items-center gap-[8px] rounded-[7px] border border-[#9db4d6] bg-white px-[14px] text-[13.6px] font-medium text-[#0A2B5E] transition hover:bg-[#f4f7fb] disabled:opacity-50"
                     >
                       <Plus className="h-[16px] w-[16px]" /> Add Option
                     </button>
@@ -832,14 +835,14 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                     <button
                       type="button"
                       onClick={cancelDraft}
-                      className="h-[32px] rounded-[7px] border border-[#d6dae0] bg-white px-[20px] text-[13.6px] font-medium text-[#0f172a] transition hover:border-[#15633a]"
+                      className="h-[32px] rounded-[7px] border border-[#d6dae0] bg-white px-[20px] text-[13.6px] font-medium text-[#0f172a] transition hover:border-[#0A2B5E]"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       onClick={saveDraft}
-                      className="h-[32px] rounded-[7px] bg-[#15633a] px-[26px] text-[13.6px] font-medium text-white shadow-sm transition hover:bg-[#124f2f] disabled:opacity-60"
+                      className="h-[32px] rounded-[7px] bg-[#0A2B5E] px-[26px] text-[13.6px] font-medium text-white shadow-sm transition hover:bg-[#081f45] disabled:opacity-60"
                     >
                       Save Button
                     </button>
@@ -851,10 +854,10 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
             {/* ── Right: visitor preview ──
                 h-0 + min-h-full: as tall as the row (set by the editor on the left), never taller —
                 a long conversation scrolls inside the chat instead of stretching the page */}
-            <div className="flex h-0 min-h-full flex-col rounded-[12px] border border-[#e3e8e4] bg-white px-[16px] pb-[10px] pt-[10px] shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+            <div className="flex h-0 min-h-full flex-col rounded-[12px] border border-[#e8e5df] bg-white px-[16px] pb-[10px] pt-[10px] shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-[20.5px] font-bold leading-tight text-[#0f2a1c]">Visitor Preview</p>
+                  <p className="text-[20.5px] font-bold leading-tight text-[#0A2B5E]">Visitor Preview</p>
                   <p className="mt-[2px] text-[13.6px] text-[#64748b]">Preview of draft changes</p>
                 </div>
                 <div className="flex overflow-hidden rounded-[7px] border border-[#dfe3e8]">
@@ -868,7 +871,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                       }}
                       aria-pressed={lang === l}
                       className={`h-[37px] px-[16px] text-[14.6px] transition ${
-                        lang === l ? "border border-[#2f8a4c] bg-[#ebf6ee] font-medium text-[#14532d]" : "text-[#334155] hover:bg-[#f8faf9]"
+                        lang === l ? "border border-[#9db4d6] bg-[#eef3fb] font-medium text-[#0A2B5E]" : "text-[#334155] hover:bg-[#f8faf9]"
                       }`}
                     >
                       {l === "en" ? "English" : "हिंदी"}
@@ -877,15 +880,15 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                 </div>
               </div>
 
-              <div className="mt-[10px] flex min-h-0 flex-1 flex-col overflow-hidden rounded-[14px] border border-[#e3e8e4] bg-[#f3f8f1]">
+              <div className="mt-[10px] flex min-h-0 flex-1 flex-col overflow-hidden rounded-[20px] border border-[#e3e9f3] bg-[#f4f7fb] shadow-[0_18px_50px_rgba(10,30,74,0.16)]">
                 {/* Chat header */}
-                <div className="flex h-[66px] shrink-0 items-center gap-[12px] bg-gradient-to-br from-[#1f6b2a] to-[#14532d] px-[16px] text-white">
-                  <span className="grid h-[46px] w-[46px] shrink-0 place-items-center rounded-full bg-white shadow-md ring-[3px] ring-white/25">
+                <div className="flex h-[66px] shrink-0 items-center gap-[12px] bg-gradient-to-r from-[#0A2050] via-[#0F2F6B] to-[#134698] border-b-[3px] border-[#fd6e15] px-[16px] text-white">
+                  <span className="grid h-[46px] w-[46px] shrink-0 place-items-center rounded-full bg-white p-[6px] ring-2 ring-[#fd6e15]/70">
                     <Image src={LOGO} alt="DH Assist" width={64} height={64} className="h-[36px] w-[36px] object-contain" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-[19.5px] font-semibold leading-tight">DH Assist</p>
-                    <p className="mt-[2px] text-[14.1px] text-white/90">Design House Assistantant</p>
+                    <p className="text-[19.5px] font-bold leading-tight">DH Assist</p>
+                    <p className="mt-[2px] text-[13.1px] text-white/80">{lang === "hi" ? "Design House असिस्टेंट" : "Design House Assistant"}</p>
                   </div>
                   <Minus className="h-[22px] w-[22px]" />
                   <button type="button" onClick={() => setPreview(null)} aria-label="Restart preview" title="Restart preview" className="ml-[16px] rounded-full transition hover:bg-white/10">
@@ -900,7 +903,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                   <div className="flex items-start gap-[12px]">
                     <BotAvatar />
                     <div>
-                      <div className="rounded-[10px] bg-white px-[13px] py-[8px] text-[14.6px] leading-snug text-[#0f172a] shadow-sm">
+                      <div className="rounded-[16px] rounded-tl-[6px] bg-white text-[#1f2d44] shadow-[0_1px_3px_rgba(10,30,74,0.10)] px-[13px] py-[8px] text-[14.6px] leading-snug">
                         {lang === "hi" ? "नमस्ते! 🙏" : "Namaste! 🙏"}
                         <br />
                         {lang === "hi" ? "मैं आपकी क्या मदद कर सकता हूँ?" : "How can I help you today?"}
@@ -917,10 +920,10 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                   </div>
 
                   <div className="mt-[8px] flex flex-col items-end">
-                    <span className="rounded-[10px] rounded-br-[3px] bg-[#15633a] px-[16px] py-[8px] text-[14.6px] text-white">{label(draft)}</span>
+                    <span className="rounded-[16px] rounded-tr-[6px] bg-gradient-to-br from-[#134698] to-[#0A2B5E] text-white shadow-[0_2px_6px_rgba(10,43,94,0.25)] px-[16px] py-[8px] text-[14.6px]">{label(draft)}</span>
                     <span className="mt-[4px] flex items-center gap-[6px] pr-[18px] text-[12.1px] text-[#64748b]">
                       11:31 AM
-                      <svg viewBox="0 0 24 24" fill="none" stroke="#15633a" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" className="h-[15px] w-[15px]" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="#134698" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" className="h-[15px] w-[15px]" aria-hidden="true">
                         <path d="M2 12.5l4.5 4.5L15 8.5M10 16l1 1 8.5-8.5" />
                       </svg>
                     </span>
@@ -929,7 +932,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                   <div className="mt-[4px] flex items-start gap-[12px]">
                     <BotAvatar />
                     <div className="max-w-[290px]">
-                      <div className="rounded-[10px] bg-white px-[13px] py-[8px] text-[14.6px] leading-snug text-[#0f172a] shadow-sm">{t(draft.reply) || "…"}</div>
+                      <div className="rounded-[16px] rounded-tl-[6px] bg-white text-[#1f2d44] shadow-[0_1px_3px_rgba(10,30,74,0.10)] px-[13px] py-[8px] text-[14.6px] leading-snug">{t(draft.reply) || "…"}</div>
                       <p className="mt-[4px] text-[12.1px] text-[#64748b]">11:31 AM</p>
                     </div>
                   </div>
@@ -959,7 +962,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                     preview.map((m, idx) =>
                       m.from === "user" ? (
                         <div key={idx} className="mt-[8px] flex flex-col items-end">
-                          <span className="max-w-[85%] rounded-[10px] rounded-br-[3px] bg-[#15633a] px-[16px] py-[8px] text-[14.6px] text-white">{m.text}</span>
+                          <span className="max-w-[85%] rounded-[16px] rounded-tr-[6px] bg-gradient-to-br from-[#134698] to-[#0A2B5E] text-white shadow-[0_2px_6px_rgba(10,43,94,0.25)] px-[16px] py-[8px] text-[14.6px]">{m.text}</span>
                           <span className="mt-[4px] pr-[18px] text-[12.1px] text-[#64748b]">{m.at}</span>
                         </div>
                       ) : (
@@ -967,7 +970,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                           <div className="flex items-start gap-[12px]">
                             <BotAvatar />
                             <div className="max-w-[290px]">
-                              <div className="whitespace-pre-line rounded-[10px] bg-white px-[13px] py-[8px] text-[14.6px] leading-snug text-[#0f172a] shadow-sm">
+                              <div className="whitespace-pre-line rounded-[16px] rounded-tl-[6px] bg-white text-[#1f2d44] shadow-[0_1px_3px_rgba(10,30,74,0.10)] px-[13px] py-[8px] text-[14.6px] leading-snug">
                                 {m.text === "…" ? <span className="animate-pulse">{lang === "hi" ? "लिख रहा है…" : "Typing…"}</span> : m.text}
                               </div>
                               {m.link && (
@@ -975,7 +978,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                                   href={/^https?:\/\//.test(m.link) ? m.link : `https://${m.link}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="mt-[6px] inline-flex max-w-full items-center rounded-[7px] border border-[#2f8a4c] bg-white px-[10px] py-[4px] text-[13px] text-[#14532d] hover:bg-[#f1f7ee]"
+                                  className="mt-[6px] inline-flex max-w-full items-center rounded-[12px] px-[10px] py-[4px] text-[13px] border border-[#fd6e15]/40 bg-[#fff6ef] font-semibold text-[#b84a08] transition hover:bg-[#ffecdf]"
                                 >
                                   <span className="truncate">{m.link}</span>
                                 </a>
@@ -1005,7 +1008,7 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                     e.preventDefault();
                     askPreview(previewInput);
                   }}
-                  className="flex shrink-0 items-center gap-[12px] border-t border-[#e3e8e4] bg-white px-[14px] py-[8px]"
+                  className="flex shrink-0 items-center gap-[12px] border-t border-[#e3e9f3] bg-white px-[14px] py-[8px]"
                 >
                   <Paperclip className="h-[19px] w-[19px] text-[#64748b]" />
                   <input
@@ -1014,13 +1017,13 @@ function ManagerEditor({ initial, onReload }: { initial: ManagerData; onReload: 
                     maxLength={500}
                     placeholder={lang === "hi" ? "अपना सवाल लिखें..." : "Type your question..."}
                     aria-label="Preview question"
-                    className="h-[36px] min-w-0 flex-1 rounded-full border border-[#dfe3e8] px-[16px] text-[14.6px] text-[#0f172a] outline-none placeholder:text-[#94a3b8] focus:border-[#15633a]"
+                    className="h-[36px] min-w-0 flex-1 rounded-full border border-[#d5deee] px-[16px] text-[14.6px] text-[#1f2d44] shadow-[0_2px_8px_rgba(10,30,74,0.06)] outline-none placeholder:text-[#8a97ad] focus:border-[#134698]"
                   />
                   <button
                     type="submit"
                     disabled={!previewInput.trim() || previewBusy}
                     aria-label="Send"
-                    className="grid h-[36px] w-[36px] place-items-center rounded-full bg-[#15633a] text-white transition hover:bg-[#124f2f] disabled:bg-[#15633a]/50"
+                    className="grid h-[36px] w-[36px] place-items-center rounded-full bg-gradient-to-br from-[#fd6e15] to-[#e85a05] text-white transition hover:brightness-110 disabled:opacity-50"
                   >
                     <Send className="h-[18px] w-[18px]" />
                   </button>
@@ -1104,14 +1107,14 @@ export default function ChatbotManagerPage() {
                 setError("");
                 setLoadKey((k) => k + 1);
               }}
-              className="h-[34px] rounded-[7px] border border-[#d6dae0] bg-white px-[18px] font-medium text-[#0f172a] transition hover:border-[#15633a]"
+              className="h-[34px] rounded-[7px] border border-[#d6dae0] bg-white px-[18px] font-medium text-[#0f172a] transition hover:border-[#0A2B5E]"
             >
               Retry
             </button>
           </>
         ) : (
           <>
-            <span className="h-[26px] w-[26px] animate-spin rounded-full border-[3px] border-[#cfe9d6] border-t-[#15633a]" aria-hidden="true" />
+            <span className="h-[26px] w-[26px] animate-spin rounded-full border-[3px] border-[#cfe9d6] border-t-[#0A2B5E]" aria-hidden="true" />
             Loading chatbot settings…
           </>
         )}

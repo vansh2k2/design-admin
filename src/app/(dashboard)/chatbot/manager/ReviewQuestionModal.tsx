@@ -69,7 +69,7 @@ export default function ReviewQuestionModal({ item, onClose, onSave, onNeedsConf
 
   return createPortal(
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 font-sans">
-      <div aria-hidden="true" className="absolute inset-0 bg-[#0b1f14]/55 backdrop-blur-[2px]" />
+      <div aria-hidden="true" className="absolute inset-0 bg-[#0A1F44]/55 backdrop-blur-[2px]" />
 
       <div
         role="dialog"
@@ -127,7 +127,7 @@ export default function ReviewQuestionModal({ item, onClose, onSave, onNeedsConf
             </div>
           </div>
           <div className="mt-[5px] flex justify-end border-b border-[#eef0f2] pb-[8px]">
-            <Link href="/chatbot/inbox" className="flex items-center gap-[6px] text-[13.5px] text-[#15633a] underline underline-offset-2 hover:text-[#124f2f]">
+            <Link href="/chatbot/inbox" className="flex items-center gap-[6px] text-[13.5px] text-[#0A2B5E] underline underline-offset-2 hover:text-[#081f45]">
               View conversation <ArrowUpRight className="h-[15px] w-[15px]" />
             </Link>
           </div>
@@ -144,7 +144,7 @@ export default function ReviewQuestionModal({ item, onClose, onSave, onNeedsConf
                   type="button"
                   onClick={() => setLang(l)}
                   aria-pressed={lang === l}
-                  className={`h-[28px] w-[94px] text-[13px] transition ${lang === l ? "bg-[#15633a] font-medium text-white" : "bg-white text-[#0f172a] hover:bg-slate-50"}`}
+                  className={`h-[28px] w-[94px] text-[13px] transition ${lang === l ? "bg-[#0A2B5E] font-medium text-white" : "bg-white text-[#0f172a] hover:bg-slate-50"}`}
                 >
                   {l === "en" ? "English" : "हिंदी"}
                 </button>
@@ -157,7 +157,7 @@ export default function ReviewQuestionModal({ item, onClose, onSave, onNeedsConf
             rows={2}
             maxLength={1000}
             placeholder={lang === "en" ? "Enter the answer confirmed by your team..." : "टीम द्वारा पुष्टि किया गया जवाब लिखें..."}
-            className="mt-[5px] h-[62px] w-full resize-y rounded-[7px] border border-[#cbd5e1] bg-white px-[14px] py-[5px] text-[14px] leading-snug text-[#0f172a] outline-none transition placeholder:text-[#94a3b8] focus:border-[#15633a] focus:ring-2 focus:ring-[#15633a]/15"
+            className="mt-[5px] h-[62px] w-full resize-y rounded-[7px] border border-[#cbd5e1] bg-white px-[14px] py-[5px] text-[14px] leading-snug text-[#0f172a] outline-none transition placeholder:text-[#94a3b8] focus:border-[#0A2B5E] focus:ring-2 focus:ring-[#0A2B5E]/15"
           />
           <p className="mt-[3px] text-[12.5px] text-[#475569]">Use an approved policy or confirm with the responsible team.</p>
 
@@ -169,7 +169,7 @@ export default function ReviewQuestionModal({ item, onClose, onSave, onNeedsConf
             onChange={(e) => setReference(e.target.value)}
             maxLength={200}
             placeholder="Add source link, policy or team confirmation..."
-            className="mt-[5px] h-[32px] w-full rounded-[7px] border border-[#cbd5e1] bg-white px-[14px] text-[14px] text-[#0f172a] outline-none transition placeholder:text-[#94a3b8] focus:border-[#15633a] focus:ring-2 focus:ring-[#15633a]/15"
+            className="mt-[5px] h-[32px] w-full rounded-[7px] border border-[#cbd5e1] bg-white px-[14px] text-[14px] text-[#0f172a] outline-none transition placeholder:text-[#94a3b8] focus:border-[#0A2B5E] focus:ring-2 focus:ring-[#0A2B5E]/15"
           />
 
           <p className="mt-[7px] flex items-center gap-[12px] rounded-[7px] bg-[#f3f5f8] px-[14px] py-[6px] text-[12.5px] text-[#334155]">
@@ -198,7 +198,7 @@ export default function ReviewQuestionModal({ item, onClose, onSave, onNeedsConf
               onClick={() => onSave({ en: answer.en.trim(), hi: answer.hi.trim(), reference: reference.trim() })}
               disabled={!canSave}
               title={canSave ? undefined : "Add a verified answer and a reference first"}
-              className="h-[28px] rounded-[7px] bg-[#15633a] px-[18px] text-[14px] font-semibold text-white shadow-sm transition hover:bg-[#124f2f] disabled:cursor-not-allowed disabled:bg-[#a7d5b6]"
+              className="h-[28px] rounded-[7px] bg-[#0A2B5E] px-[18px] text-[14px] font-semibold text-white shadow-sm transition hover:bg-[#081f45] disabled:cursor-not-allowed disabled:bg-[#a7d5b6]"
             >
               Save Answer Draft
             </button>

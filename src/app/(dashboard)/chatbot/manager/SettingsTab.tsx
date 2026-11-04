@@ -47,15 +47,15 @@ const MESSAGES: Record<"en" | "hi", MessageSet> = {
 const inputClass = `${baseInput} !h-[31px] !text-[13.4px]`;
 const labelClass = "mb-[3px] block text-[12.6px] text-[#334155]";
 const fieldSelect = "!h-[31px] !text-[13.4px]";
-const titleClass = "text-[18.1px] font-bold leading-tight text-[#0f2a1c]";
+const titleClass = "text-[18.1px] font-bold leading-tight text-[#0A2B5E]";
 const subClass = "mt-[1px] text-[12.6px] text-[#64748b]";
 const textareaClass =
-  "h-[44px] w-full resize-none rounded-[7px] border border-[#dfe3e8] bg-white px-[12px] py-[4px] text-[13.4px] leading-snug text-[#0f172a] outline-none transition focus:border-[#15633a] focus:ring-2 focus:ring-[#15633a]/15";
+  "h-[44px] w-full resize-none rounded-[7px] border border-[#dfe3e8] bg-white px-[12px] py-[4px] text-[13.4px] leading-snug text-[#0f172a] outline-none transition focus:border-[#0A2B5E] focus:ring-2 focus:ring-[#0A2B5E]/15";
 const Req = () => <span className="text-[#dc2626]"> *</span>;
 
 function Switch({ on, onChange, label }: { on: boolean; onChange: () => void; label: string }) {
   return (
-    <button type="button" role="switch" aria-checked={on} aria-label={label} onClick={onChange} className={`relative h-[22px] w-[42px] shrink-0 rounded-full transition ${on ? "bg-[#15633a]" : "bg-[#cbd5e1]"}`}>
+    <button type="button" role="switch" aria-checked={on} aria-label={label} onClick={onChange} className={`relative h-[22px] w-[42px] shrink-0 rounded-full transition ${on ? "bg-[#0A2B5E]" : "bg-[#cbd5e1]"}`}>
       <span className={`absolute top-[3px] h-[16px] w-[16px] rounded-full bg-white shadow transition-all ${on ? "left-[23px]" : "left-[3px]"}`} />
     </button>
   );
@@ -100,7 +100,7 @@ type SavedSettings = {
 export default function SettingsTab({ onChange, onOpenHistory, notify, ref }: Props) {
   const saved = useDraftSection<SavedSettings>("settings");
   const store = useContext(ManagerStoreContext);
-  const [identity, setIdentity] = useState(saved?.identity ?? { name: "DH Assist", subtitle: "Design House Assistantant", launcher: "Ask DH Assist" });
+  const [identity, setIdentity] = useState(saved?.identity ?? { name: "DH Assist", subtitle: "Design House Assistant", launcher: "Ask DH Assist" });
   const [avatar, setAvatar] = useState(saved?.identity?.avatar || LOGO);
   const [uploading, setUploading] = useState(false);
   const [languages, setLanguages] = useState<Language[]>(saved?.languages ?? [...LANGUAGES]);
@@ -263,7 +263,7 @@ export default function SettingsTab({ onChange, onOpenHistory, notify, ref }: Pr
                   </span>
                   <div className="flex h-[31px] items-center gap-[6px] rounded-[7px] border border-[#dfe3e8] px-[3px]">
                     {languages.map((l) => (
-                      <span key={l} className="inline-flex h-[24px] items-center gap-[8px] rounded-[5px] bg-[#e8f5ec] pl-[9px] pr-[7px] text-[12.6px] text-[#14532d]">
+                      <span key={l} className="inline-flex h-[24px] items-center gap-[8px] rounded-[5px] bg-[#e8f5ec] pl-[9px] pr-[7px] text-[12.6px] text-[#0A2B5E]">
                         {l}
                         <button type="button" onClick={() => removeLanguage(l)} aria-label={`Remove ${l}`} disabled={languages.length === 1} className="hover:text-[#dc2626] disabled:opacity-40">
                           <X className="h-[14px] w-[14px]" />
@@ -272,7 +272,7 @@ export default function SettingsTab({ onChange, onOpenHistory, notify, ref }: Pr
                     ))}
                     {/* Shown only when a language was removed: pick it to enable it again */}
                     {languages.length < LANGUAGES.length && (
-                      <label title="Add a language" className="relative ml-auto grid h-[24px] w-[24px] shrink-0 cursor-pointer place-items-center rounded-[5px] text-[#14532d] hover:bg-[#e8f5ec]">
+                      <label title="Add a language" className="relative ml-auto grid h-[24px] w-[24px] shrink-0 cursor-pointer place-items-center rounded-[5px] text-[#0A2B5E] hover:bg-[#e8f5ec]">
                         <Plus className="h-[15px] w-[15px]" />
                         <select
                           value=""
@@ -318,7 +318,7 @@ export default function SettingsTab({ onChange, onOpenHistory, notify, ref }: Pr
                 onClick={() => setMsgLang(l)}
                 aria-pressed={msgLang === l}
                 className={`-mb-px w-[80px] border-b-[3px] pb-[4px] text-[13.4px] transition ${
-                  msgLang === l ? "border-[#15633a] font-medium text-[#14532d]" : "border-transparent text-[#475569] hover:text-[#15633a]"
+                  msgLang === l ? "border-[#0A2B5E] font-medium text-[#0A2B5E]" : "border-transparent text-[#475569] hover:text-[#0A2B5E]"
                 }`}
               >
                 {l === "en" ? "English" : "हिंदी"}
@@ -445,7 +445,7 @@ export default function SettingsTab({ onChange, onOpenHistory, notify, ref }: Pr
             </div>
             <div>
               <span className={labelClass}>Access &amp; Permissions</span>
-              <Link href="/roles" className="flex h-[31px] items-center gap-[10px] text-[13.4px] text-[#1d4ed8] underline underline-offset-2 hover:text-[#15633a]">
+              <Link href="/roles" className="flex h-[31px] items-center gap-[10px] text-[13.4px] text-[#1d4ed8] underline underline-offset-2 hover:text-[#0A2B5E]">
                 <UsersRound className="h-[18px] w-[18px] no-underline" /> Configure Roles
               </Link>
             </div>
@@ -460,7 +460,7 @@ export default function SettingsTab({ onChange, onOpenHistory, notify, ref }: Pr
             <button
               type="button"
               onClick={save}
-              className="inline-flex h-[33px] items-center gap-[8px] rounded-[7px] bg-[#15633a] px-[18px] text-[13.4px] font-medium text-white shadow-sm transition hover:bg-[#124f2f]"
+              className="inline-flex h-[33px] items-center gap-[8px] rounded-[7px] bg-[#0A2B5E] px-[18px] text-[13.4px] font-medium text-white shadow-sm transition hover:bg-[#081f45]"
             >
               <Save className="h-[16px] w-[16px]" /> Save Settings
             </button>

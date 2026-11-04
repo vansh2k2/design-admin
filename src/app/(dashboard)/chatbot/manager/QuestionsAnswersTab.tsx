@@ -369,7 +369,7 @@ export default function QuestionsAnswersTab({ onChange, onOpenHistory, notify, r
           <button
             type="button"
             onClick={() => startNew()}
-            className="inline-flex h-[32px] items-center gap-[9px] rounded-[7px] border border-[#2f8a4c] bg-white px-[18px] text-[14.6px] font-medium text-[#14532d] transition hover:bg-[#f1f7ee]"
+            className="inline-flex h-[32px] items-center gap-[9px] rounded-[7px] border border-[#9db4d6] bg-white px-[18px] text-[14.6px] font-medium text-[#0A2B5E] transition hover:bg-[#f4f7fb]"
           >
             <Plus className="h-[18px] w-[18px]" /> Add Answer
           </button>
@@ -393,7 +393,7 @@ export default function QuestionsAnswersTab({ onChange, onOpenHistory, notify, r
               aria-pressed={statusFilter === name}
               title={statusFilter === name ? "Show all statuses" : `Show only ${name}`}
               className={`h-[28px] rounded-[6px] border px-[14px] text-[13.6px] transition ${
-                statusFilter === name ? "border-[#15633a] bg-[#15633a] font-medium text-white" : "border-[#d6dae0] bg-white text-[#0f172a] hover:border-[#15633a]"
+                statusFilter === name ? "border-[#0A2B5E] bg-[#0A2B5E] font-medium text-white" : "border-[#d6dae0] bg-white text-[#0f172a] hover:border-[#0A2B5E]"
               }`}
             >
               {name} ({counts(name)})
@@ -417,7 +417,7 @@ export default function QuestionsAnswersTab({ onChange, onOpenHistory, notify, r
               {...drag.row(a.id)}
               onClick={() => select(a)}
               className={`${drag.rowClass(a.id)} grid h-[40px] cursor-pointer grid-cols-[52px_323px_155px_160px_1fr] items-center border-t border-[#eef0f2] px-[2px] text-[14.6px] transition ${
-                selectedId === a.id ? "bg-[#ebf6ee]" : "hover:bg-[#f8faf9]"
+                selectedId === a.id ? "bg-[#eef3fb]" : "hover:bg-[#f8faf9]"
               }`}
             >
               <DragHandle props={drag.handle(a.id, a.question)} className="mx-auto h-[28px] w-[24px]" />
@@ -431,7 +431,7 @@ export default function QuestionsAnswersTab({ onChange, onOpenHistory, notify, r
                   type="button"
                   onClick={() => select(a)}
                   aria-label={`Edit ${a.question}`}
-                  className="grid h-[30px] w-[38px] place-items-center rounded-[7px] border border-[#dfe3e8] bg-white text-[#0f172a] transition hover:border-[#15633a] hover:text-[#15633a]"
+                  className="grid h-[30px] w-[38px] place-items-center rounded-[7px] border border-[#dfe3e8] bg-white text-[#0f172a] transition hover:border-[#0A2B5E] hover:text-[#0A2B5E]"
                 >
                   <Pencil className="h-[16px] w-[16px]" />
                 </button>
@@ -443,7 +443,7 @@ export default function QuestionsAnswersTab({ onChange, onOpenHistory, notify, r
         {/* Editor */}
         <div className="mt-[8px] flex flex-1 flex-col rounded-[10px] border border-[#eef0f2] px-[16px] pb-[8px] pt-[8px]">
           <div className="flex items-center justify-between">
-            <p className="text-[17.5px] font-bold text-[#0f2a1c]">{saved ? "Edit Answer" : "New Answer"}</p>
+            <p className="text-[17.5px] font-bold text-[#0A2B5E]">{saved ? "Edit Answer" : "New Answer"}</p>
             <div className="flex items-center gap-[12px]">
             <button
               type="button"
@@ -462,7 +462,7 @@ export default function QuestionsAnswersTab({ onChange, onOpenHistory, notify, r
                   onClick={() => setLang(l)}
                   aria-pressed={lang === l}
                   className={`h-[30px] px-[18px] text-[14.6px] transition ${
-                    lang === l ? "border border-[#2f8a4c] bg-[#ebf6ee] font-medium text-[#14532d]" : "text-[#334155] hover:bg-[#f8faf9]"
+                    lang === l ? "border border-[#9db4d6] bg-[#eef3fb] font-medium text-[#0A2B5E]" : "text-[#334155] hover:bg-[#f8faf9]"
                   }`}
                 >
                   {l === "en" ? "English" : "हिंदी"}
@@ -517,13 +517,13 @@ export default function QuestionsAnswersTab({ onChange, onOpenHistory, notify, r
                 }}
                 maxLength={80}
                 placeholder="Type a phrase, press Enter"
-                className="h-[30px] w-[210px] rounded-full border border-[#2f8a4c] px-[14px] text-[14.1px] outline-none"
+                className="h-[30px] w-[210px] rounded-full border border-[#9db4d6] px-[14px] text-[14.1px] outline-none"
               />
             ) : (
               <button
                 type="button"
                 onClick={() => setNewPhrase("")}
-                className="inline-flex h-[30px] items-center gap-[9px] rounded-[7px] border border-[#2f8a4c] bg-white px-[16px] text-[14.6px] font-medium text-[#14532d] transition hover:bg-[#f1f7ee]"
+                className="inline-flex h-[30px] items-center gap-[9px] rounded-[7px] border border-[#9db4d6] bg-white px-[16px] text-[14.6px] font-medium text-[#0A2B5E] transition hover:bg-[#f4f7fb]"
               >
                 <Plus className="h-[17px] w-[17px]" /> Add phrase
               </button>
@@ -541,7 +541,7 @@ export default function QuestionsAnswersTab({ onChange, onOpenHistory, notify, r
               maxLength={600}
               placeholder={lang === "en" ? "Write the answer in English" : "हिंदी / Hinglish में जवाब लिखें"}
               aria-invalid={showErrors && lang === "en" && !draft.answer.en.trim()}
-              className={`h-[50px] w-full resize-y rounded-[7px] border ${showErrors && !draft.answer.en.trim() ? "border-[#dc2626]" : "border-[#dfe3e8]"} bg-white px-[14px] py-[7px] text-[14.6px] leading-snug text-[#0f172a] outline-none transition focus:border-[#15633a] focus:ring-2 focus:ring-[#15633a]/15`}
+              className={`h-[50px] w-full resize-y rounded-[7px] border ${showErrors && !draft.answer.en.trim() ? "border-[#dc2626]" : "border-[#dfe3e8]"} bg-white px-[14px] py-[7px] text-[14.6px] leading-snug text-[#0f172a] outline-none transition focus:border-[#0A2B5E] focus:ring-2 focus:ring-[#0A2B5E]/15`}
             />
           </label>
 
@@ -584,7 +584,7 @@ export default function QuestionsAnswersTab({ onChange, onOpenHistory, notify, r
               <button
                 type="button"
                 onClick={save}
-                className="h-[34px] rounded-[7px] bg-[#15633a] px-[16px] text-[14.6px] font-medium text-white shadow-sm transition hover:bg-[#124f2f] disabled:opacity-60"
+                className="h-[34px] rounded-[7px] bg-[#0A2B5E] px-[16px] text-[14.6px] font-medium text-white shadow-sm transition hover:bg-[#081f45] disabled:opacity-60"
               >
                 Save Answer
               </button>
@@ -618,8 +618,8 @@ export default function QuestionsAnswersTab({ onChange, onOpenHistory, notify, r
                     item.awaiting
                       ? "border-[#f5c27a] text-[#b45309] hover:bg-[#fffaf0]"
                       : item.action === "Add Answer"
-                        ? "border-[#2f8a4c] text-[#14532d] hover:bg-[#f1f7ee]"
-                        : "border-[#d6dae0] text-[#0f172a] hover:border-[#15633a]"
+                        ? "border-[#9db4d6] text-[#0A2B5E] hover:bg-[#f4f7fb]"
+                        : "border-[#d6dae0] text-[#0f172a] hover:border-[#0A2B5E]"
                   }`}
                 >
                   {item.awaiting ? (
@@ -656,9 +656,9 @@ export default function QuestionsAnswersTab({ onChange, onOpenHistory, notify, r
             <button
               type="button"
               onClick={runTest}
-              className="inline-flex h-[36px] items-center justify-center gap-[10px] rounded-[7px] border border-[#2f8a4c] bg-white text-[14.6px] font-medium text-[#14532d] transition hover:bg-[#f1f7ee]"
+              className="inline-flex h-[36px] items-center justify-center gap-[10px] rounded-[7px] border border-[#9db4d6] bg-white text-[14.6px] font-medium text-[#0A2B5E] transition hover:bg-[#f4f7fb]"
             >
-              <Send className="h-[18px] w-[18px] fill-[#15633a]" /> Test Reply
+              <Send className="h-[18px] w-[18px] fill-[#0A2B5E]" /> Test Reply
             </button>
           </div>
 

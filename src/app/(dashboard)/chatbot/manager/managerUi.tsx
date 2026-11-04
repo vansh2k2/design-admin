@@ -12,12 +12,14 @@ import type { ManagerSection } from "@/lib/chatbotManagerApi";
  */
 
 export const selectClass =
-  "h-[36px] w-full cursor-pointer appearance-none rounded-[7px] border border-[#dfe3e8] bg-white pl-[14px] pr-[36px] text-[13.6px] text-[#0f172a] outline-none transition focus:border-[#15633a]";
+  "h-[36px] w-full cursor-pointer appearance-none rounded-[7px] border border-[#dfe3e8] bg-white pl-[14px] pr-[36px] text-[13.6px] text-[#0f172a] outline-none transition focus:border-[#0A2B5E]";
 export const inputClass =
-  "h-[38px] w-full rounded-[7px] border border-[#dfe3e8] bg-white px-[14px] text-[14.6px] text-[#0f172a] outline-none transition placeholder:text-[#94a3b8] focus:border-[#15633a] focus:ring-2 focus:ring-[#15633a]/15";
+  "h-[38px] w-full rounded-[7px] border border-[#dfe3e8] bg-white px-[14px] text-[14.6px] text-[#0f172a] outline-none transition placeholder:text-[#94a3b8] focus:border-[#0A2B5E] focus:ring-2 focus:ring-[#0A2B5E]/15";
 export const labelClass = "mb-[7px] block text-[13.6px] text-[#334155]";
-export const cardClass = "rounded-[12px] border border-[#e3e8e4] bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]";
-export const cardTitleClass = "text-[20.5px] font-bold leading-tight text-[#0f2a1c]";
+// Admin panels (Dashboard / Blog & Awareness): 7px corners, warm border, shared ring shadow
+export const cardClass =
+  "rounded-[7px] border border-[#e8e5df] bg-white shadow-[rgba(0,0,0,0.02)_0px_1px_3px_0px,rgba(27,31,35,0.15)_0px_0px_0px_1px]";
+export const cardTitleClass = "text-[20.5px] font-bold leading-tight text-[#0A2B5E]";
 
 /** Native select styled like the design's dropdowns */
 export function Select<T extends string>({
@@ -55,12 +57,12 @@ export function Select<T extends string>({
   );
 }
 
-/** Same DH Assist logo as the website chatbot (copied from organic_frontend/public) */
-export const LOGO = "/organic-mitra-logo.png";
+/** Same DH Assist logo as the website chatbot (next frontend/public/logotransparent-sm.webp) */
+export const LOGO = "/logotransparent-sm.webp";
 
 export const BotAvatar = ({ size = 34 }: { size?: number }) => (
   <span
-    className="grid shrink-0 place-items-center rounded-full bg-white shadow-sm ring-2 ring-[#F2B40E]/60"
+    className="grid shrink-0 place-items-center rounded-full bg-white shadow-sm ring-1 ring-[#fd6e15]/40"
     style={{ width: size, height: size }}
     aria-hidden="true"
   >
@@ -89,7 +91,7 @@ export function ToastBar({ toast, onDone }: { toast: Toast | null; onDone: () =>
   return createPortal(
     <div
       role={toast.tone === "error" ? "alert" : "status"}
-      className="fixed bottom-[24px] left-1/2 z-[300] flex max-w-[calc(100vw-32px)] -translate-x-1/2 items-center gap-[12px] rounded-[10px] bg-[#0f2a1c] py-[10px] pl-[14px] pr-[10px] font-sans text-[13.5px] text-white shadow-lg"
+      className="fixed bottom-[24px] left-1/2 z-[300] flex max-w-[calc(100vw-32px)] -translate-x-1/2 items-center gap-[12px] rounded-[10px] bg-[#0A2B5E] py-[10px] pl-[14px] pr-[10px] font-sans text-[13.5px] text-white shadow-lg"
     >
       <Icon className={`h-[18px] w-[18px] shrink-0 ${toast.tone === "error" ? "text-[#f87171]" : "text-[#4ade80]"}`} />
       <span>{toast.text}</span>
@@ -145,10 +147,10 @@ export function ConfirmDialog({ confirm, onClose }: { confirm: ConfirmOptions | 
   };
   return createPortal(
     <div className="fixed inset-0 z-[250] flex items-center justify-center p-4 font-sans">
-      <div aria-hidden="true" className="absolute inset-0 bg-[#0b1f14]/55 backdrop-blur-[2px]" />
+      <div aria-hidden="true" className="absolute inset-0 bg-[#0A1F44]/55 backdrop-blur-[2px]" />
       <div role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" className="relative w-[420px] max-w-full rounded-[14px] bg-white px-[18px] pb-[12px] pt-[12px] text-[#0f172a] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.45)]">
         <div className="flex items-start justify-between gap-[12px]">
-          <h2 id="confirm-title" className="text-[17px] font-bold leading-tight text-[#0f2a1c]">
+          <h2 id="confirm-title" className="text-[17px] font-bold leading-tight text-[#0A2B5E]">
             {confirm.title}
           </h2>
           <button type="button" onClick={onClose} aria-label="Close" className="-mr-[6px] -mt-[4px] grid h-[28px] w-[28px] shrink-0 place-items-center rounded-full transition hover:bg-slate-100">
@@ -171,7 +173,7 @@ export function ConfirmDialog({ confirm, onClose }: { confirm: ConfirmOptions | 
             ref={okRef}
             type="button"
             onClick={done(confirm.run)}
-            className={`h-[28px] rounded-[8px] px-[18px] text-[13.5px] font-semibold text-white shadow-sm transition ${confirm.danger ? "bg-[#dc2626] hover:bg-[#b91c1c]" : "bg-[#15633a] hover:bg-[#124f2f]"}`}
+            className={`h-[28px] rounded-[8px] px-[18px] text-[13.5px] font-semibold text-white shadow-sm transition ${confirm.danger ? "bg-[#dc2626] hover:bg-[#b91c1c]" : "bg-[#0A2B5E] hover:bg-[#081f45]"}`}
           >
             {confirm.confirmLabel}
           </button>
@@ -271,7 +273,7 @@ export function RowMenu({ label, items }: { label: string; items: MenuItem[] }) 
                     item.onSelect();
                   }}
                   className={`block w-full px-[12px] py-[7px] text-left outline-none transition disabled:cursor-not-allowed disabled:opacity-40 ${
-                    item.danger ? "text-[#dc2626] hover:bg-[#fdf2f2] focus-visible:bg-[#fdf2f2]" : "text-[#0f172a] hover:bg-[#f1f7ee] focus-visible:bg-[#f1f7ee]"
+                    item.danger ? "text-[#dc2626] hover:bg-[#fdf2f2] focus-visible:bg-[#fdf2f2]" : "text-[#0f172a] hover:bg-[#f4f7fb] focus-visible:bg-[#f4f7fb]"
                   }`}
                 >
                   {item.label}
@@ -344,14 +346,14 @@ export function useReorder(ids: number[], move: (fromId: number, toId: number) =
         end();
       },
     }),
-    rowClass: (id: number) => (dragId === id ? "opacity-50" : dragId !== null && overId === id ? "shadow-[inset_0_2px_0_0_#15633a]" : ""),
+    rowClass: (id: number) => (dragId === id ? "opacity-50" : dragId !== null && overId === id ? "shadow-[inset_0_2px_0_0_#0A2B5E]" : ""),
   };
 }
 
 /** The design's ⋮⋮ grip icon, made into a drag / keyboard handle */
 export function DragHandle({ props, className = "" }: { props: ReturnType<ReturnType<typeof useReorder>["handle"]>; className?: string }) {
   return (
-    <button type="button" {...props} className={`grid cursor-grab place-items-center rounded-[4px] text-[#64748b] outline-none transition hover:text-[#0f172a] focus-visible:ring-2 focus-visible:ring-[#15633a] active:cursor-grabbing ${className}`}>
+    <button type="button" {...props} className={`grid cursor-grab place-items-center rounded-[4px] text-[#64748b] outline-none transition hover:text-[#0f172a] focus-visible:ring-2 focus-visible:ring-[#0A2B5E] active:cursor-grabbing ${className}`}>
       <GripVertical className="h-[18px] w-[18px]" />
     </button>
   );

@@ -107,12 +107,12 @@ const INITIAL_RULES = [
 const inputClass = `${baseInput} !h-[34px]`;
 const labelClass = "mb-[4px] block text-[13.6px] text-[#334155]";
 const fieldSelect = "!h-[34px] !text-[14.6px]";
-const titleClass = "text-[20.5px] font-bold leading-tight text-[#0f2a1c]";
+const titleClass = "text-[20.5px] font-bold leading-tight text-[#0A2B5E]";
 const Req = () => <span className="text-[#dc2626]"> *</span>;
 
 function Switch({ on, onChange, label }: { on: boolean; onChange: () => void; label: string }) {
   return (
-    <button type="button" role="switch" aria-checked={on} aria-label={label} onClick={onChange} className={`relative h-[21px] w-[36px] shrink-0 rounded-full transition ${on ? "bg-[#15633a]" : "bg-[#cbd5e1]"}`}>
+    <button type="button" role="switch" aria-checked={on} aria-label={label} onClick={onChange} className={`relative h-[21px] w-[36px] shrink-0 rounded-full transition ${on ? "bg-[#0A2B5E]" : "bg-[#cbd5e1]"}`}>
       <span className={`absolute top-[2.5px] h-[16px] w-[16px] rounded-full bg-white shadow transition-all ${on ? "left-[17.5px]" : "left-[2.5px]"}`} />
     </button>
   );
@@ -125,14 +125,14 @@ const Check = ({ checked, onChange, label, disabled = false }: { checked: boolea
     onChange={onChange}
     disabled={disabled}
     aria-label={label}
-    className="h-[19px] w-[19px] cursor-pointer rounded-[4px] accent-[#15633a] disabled:cursor-not-allowed"
+    className="h-[19px] w-[19px] cursor-pointer rounded-[4px] accent-[#0A2B5E] disabled:cursor-not-allowed"
   />
 );
 
 const outlineButton =
-  "inline-flex h-[34px] items-center gap-[9px] rounded-[7px] border border-[#2f8a4c] bg-white px-[16px] text-[14.6px] font-medium text-[#14532d] transition hover:bg-[#f1f7ee]";
+  "inline-flex h-[34px] items-center gap-[9px] rounded-[7px] border border-[#9db4d6] bg-white px-[16px] text-[14.6px] font-medium text-[#0A2B5E] transition hover:bg-[#f4f7fb]";
 const solidButton =
-  "inline-flex h-[36px] items-center gap-[10px] rounded-[7px] bg-[#15633a] px-[20px] text-[14.6px] font-medium text-white shadow-sm transition hover:bg-[#124f2f]";
+  "inline-flex h-[36px] items-center gap-[10px] rounded-[7px] bg-[#0A2B5E] px-[20px] text-[14.6px] font-medium text-white shadow-sm transition hover:bg-[#081f45]";
 
 /** Five field rows fit the shared height; more rows scroll inside the table */
 const ROW_HEIGHT = 40;
@@ -161,10 +161,10 @@ function AddFormDialog({ open, current, taken, onClose, onCreate }: { open: bool
   };
   return createPortal(
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 font-sans">
-      <div aria-hidden="true" className="absolute inset-0 bg-[#0b1f14]/55 backdrop-blur-[2px]" />
+      <div aria-hidden="true" className="absolute inset-0 bg-[#0A1F44]/55 backdrop-blur-[2px]" />
       <div role="dialog" aria-modal="true" aria-labelledby="add-form-title" className="relative w-[420px] max-w-full rounded-[14px] bg-white px-[18px] pb-[12px] pt-[12px] text-[#0f172a] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.45)]">
         <div className="flex items-start justify-between">
-          <h2 id="add-form-title" className="text-[17px] font-bold leading-tight text-[#0f2a1c]">
+          <h2 id="add-form-title" className="text-[17px] font-bold leading-tight text-[#0A2B5E]">
             Add Form
           </h2>
           <button type="button" onClick={onClose} aria-label="Close" className="-mr-[6px] -mt-[4px] grid h-[28px] w-[28px] place-items-center rounded-full transition hover:bg-slate-100">
@@ -185,7 +185,7 @@ function AddFormDialog({ open, current, taken, onClose, onCreate }: { open: bool
             onKeyDown={(e) => e.key === "Enter" && submit()}
             maxLength={40}
             placeholder="e.g. Sponsorship Enquiry"
-            className={`h-[30px] w-full rounded-[7px] border px-[12px] text-[13.5px] outline-none focus:border-[#15633a] focus:ring-2 focus:ring-[#15633a]/15 ${error ? "border-[#dc2626]" : "border-[#cbd5e1]"}`}
+            className={`h-[30px] w-full rounded-[7px] border px-[12px] text-[13.5px] outline-none focus:border-[#0A2B5E] focus:ring-2 focus:ring-[#0A2B5E]/15 ${error ? "border-[#dc2626]" : "border-[#cbd5e1]"}`}
           />
         </label>
         {error && (
@@ -200,7 +200,7 @@ function AddFormDialog({ open, current, taken, onClose, onCreate }: { open: bool
             [true, `Copy of “${current}”`],
           ].map(([value, text]) => (
             <label key={String(value)} className="flex cursor-pointer items-center gap-[10px] py-[2px]">
-              <input type="radio" name="start-from" checked={copy === value} onChange={() => setCopy(value as boolean)} className="h-[16px] w-[16px] accent-[#15633a]" />
+              <input type="radio" name="start-from" checked={copy === value} onChange={() => setCopy(value as boolean)} className="h-[16px] w-[16px] accent-[#0A2B5E]" />
               {text}
             </label>
           ))}
@@ -210,7 +210,7 @@ function AddFormDialog({ open, current, taken, onClose, onCreate }: { open: bool
           <button type="button" onClick={onClose} className="h-[28px] rounded-[8px] border border-[#cbd5e1] bg-white px-[18px] text-[13.5px] font-semibold transition hover:bg-slate-50">
             Cancel
           </button>
-          <button type="button" onClick={submit} className="h-[28px] rounded-[8px] bg-[#15633a] px-[18px] text-[13.5px] font-semibold text-white shadow-sm transition hover:bg-[#124f2f]">
+          <button type="button" onClick={submit} className="h-[28px] rounded-[8px] bg-[#0A2B5E] px-[18px] text-[13.5px] font-semibold text-white shadow-sm transition hover:bg-[#081f45]">
             Create Form
           </button>
         </div>
@@ -341,7 +341,7 @@ export default function FormsRoutingTab({ onChange, onOpenHistory, notify, ref }
             </div>
             <div className="flex shrink-0 items-center gap-[10px] pt-[2px]">
               <Select value={form} options={formNames} onChange={switchForm} label="Form" className="w-[174px]" selectClassName="!text-[14.1px]" />
-              <span className="inline-flex h-[36px] items-center gap-[12px] rounded-[7px] bg-[#f1f7f2] px-[12px] text-[14.1px] text-[#14532d]">
+              <span className="inline-flex h-[36px] items-center gap-[12px] rounded-[7px] bg-[#f1f7f2] px-[12px] text-[14.1px] text-[#0A2B5E]">
                 {current.active ? "Active" : "Inactive"}
                 <Switch
                   on={current.active}
@@ -387,7 +387,7 @@ export default function FormsRoutingTab({ onChange, onOpenHistory, notify, ref }
                       onKeyDown={(e) => (e.key === "Enter" || e.key === "Escape") && setEditingId(null)}
                       maxLength={40}
                       aria-label="Field label"
-                      className="mr-[14px] h-[30px] rounded-[6px] border border-[#2f8a4c] px-[10px] text-[14.6px] outline-none"
+                      className="mr-[14px] h-[30px] rounded-[6px] border border-[#9db4d6] px-[10px] text-[14.6px] outline-none"
                     />
                   ) : (
                     <span className={`truncate pr-[10px] ${showErrors && !f.label.trim() ? "text-[#dc2626]" : ""}`}>{f.label || "Untitled field"}</span>
@@ -407,7 +407,7 @@ export default function FormsRoutingTab({ onChange, onOpenHistory, notify, ref }
                       onClick={() => setEditingId(f.id)}
                       aria-label={`Edit ${f.label}`}
                       title="Rename"
-                      className="grid h-[30px] w-[32px] place-items-center rounded-[7px] border border-[#dfe3e8] bg-white text-[#0f172a] transition hover:border-[#15633a] hover:text-[#15633a]"
+                      className="grid h-[30px] w-[32px] place-items-center rounded-[7px] border border-[#dfe3e8] bg-white text-[#0f172a] transition hover:border-[#0A2B5E] hover:text-[#0A2B5E]"
                     >
                       <Pencil className="h-[16px] w-[16px]" />
                     </button>
@@ -479,7 +479,7 @@ export default function FormsRoutingTab({ onChange, onOpenHistory, notify, ref }
               onChange={(e) => setSubmission({ ...submission, confirmation: e.target.value })}
               rows={2}
               maxLength={300}
-              className={`h-[50px] w-full resize-y rounded-[7px] border border-[#dfe3e8] bg-white px-[14px] py-[7px] text-[14.6px] text-[#0f172a] outline-none transition focus:border-[#15633a] focus:ring-2 focus:ring-[#15633a]/15 ${missing(submission.confirmation)}`}
+              className={`h-[50px] w-full resize-y rounded-[7px] border border-[#dfe3e8] bg-white px-[14px] py-[7px] text-[14.6px] text-[#0f172a] outline-none transition focus:border-[#0A2B5E] focus:ring-2 focus:ring-[#0A2B5E]/15 ${missing(submission.confirmation)}`}
             />
           </label>
           <div className="mt-auto flex justify-end pt-[8px]">
@@ -580,7 +580,7 @@ export default function FormsRoutingTab({ onChange, onOpenHistory, notify, ref }
                 }
                 setEditRules((v) => !v);
               }}
-              className="text-[14.6px] font-medium text-[#1d4ed8] underline underline-offset-2 hover:text-[#15633a]"
+              className="text-[14.6px] font-medium text-[#1d4ed8] underline underline-offset-2 hover:text-[#0A2B5E]"
             >
               {editRules ? "Done" : "Edit Rules"}
             </button>
