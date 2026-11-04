@@ -48,6 +48,7 @@ import EnquiryDetailModal, { type Activity, type ComposeMode } from "./EnquiryDe
 import NewEnquiryModal, { type NewEnquiry } from "./NewEnquiryModal";
 import ReassignEnquiryModal, { type OwnerInfo } from "./ReassignEnquiryModal";
 import ResolveEnquiryModal from "./ResolveEnquiryModal";
+import typography from "../../pages/PagesTypography.module.css";
 
 /*
  * Inbox & Leads — one record per website chat (/admin/chats): saved under the visitor's IP
@@ -272,25 +273,25 @@ function formatFollowUp(value: string) {
 const shortDate = (iso: string) => new Date(`${iso}T00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
 
 const TAG_CLASS: Record<Tag, string> = {
-  Returning: "bg-[#e3f5e8] text-[#15803d]",
-  New: "bg-[#e3edfd] text-[#1d4ed8]",
-  Anonymous: "bg-[#f1f3f5] text-[#475569]",
-  Verified: "bg-[#e3f5e8] text-[#15803d]",
+  Returning: "border-[#a5d6a7] bg-[#e8f5e9] text-[#23714a]",
+  New: "border-[#bae6fd] bg-[#e0f2fe] text-[#0369a1]",
+  Anonymous: "border-[#cbd5e1] bg-[#f1f5f9] text-[#475569]",
+  Verified: "border-[#a5d6a7] bg-[#e8f5e9] text-[#23714a]",
 };
 
 const STATUS_STYLE: Record<Status, { className: string; icon: React.ReactNode }> = {
-  "Follow-up": { className: "bg-[#fdf3e1] text-[#d97706]", icon: <Clock3 className="h-[17px] w-[17px]" /> },
-  "In Progress": { className: "bg-[#e8f0fd] text-[#1d4ed8]", icon: <Loader className="h-[17px] w-[17px]" /> },
-  New: { className: "bg-[#e6f6ea] text-[#15803d]", icon: <span className="h-[11px] w-[11px] rounded-full bg-[#16a34a]" /> },
-  "Waiting for Visitor": { className: "bg-[#f3ecfd] text-[#7c3aed] !text-[11.2px]", icon: <Hourglass className="h-[16px] w-[16px]" /> },
-  Assigned: { className: "bg-[#e8f0fd] text-[#1d4ed8]", icon: <Users className="h-[17px] w-[17px]" /> },
-  Resolved: { className: "bg-[#e6f6ea] text-[#15803d]", icon: <Check className="h-[17px] w-[17px]" strokeWidth={2.6} /> },
+  "Follow-up": { className: "border-[#ffe082] bg-[#fff8e1] text-[#b78103]", icon: <Clock3 className="h-[12px] w-[12px]" /> },
+  "In Progress": { className: "border-[#bae6fd] bg-[#e0f2fe] text-[#0369a1]", icon: <Loader className="h-[12px] w-[12px]" /> },
+  New: { className: "border-[#a5d6a7] bg-[#e8f5e9] text-[#23714a]", icon: <span className="h-[8px] w-[8px] rounded-full bg-[#16a34a]" /> },
+  "Waiting for Visitor": { className: "border-[#e9d5ff] bg-[#faf5ff] text-[#7e22ce]", icon: <Hourglass className="h-[12px] w-[12px]" /> },
+  Assigned: { className: "border-[#bfdbfe] bg-[#eff6ff] text-[#1d4ed8]", icon: <Users className="h-[12px] w-[12px]" /> },
+  Resolved: { className: "border-[#a5d6a7] bg-[#e8f5e9] text-[#23714a]", icon: <Check className="h-[12px] w-[12px]" strokeWidth={2.6} /> },
 };
 
 const PRIORITY_CLASS: Record<Priority, string> = {
-  High: "bg-[#fdecec] text-[#dc2626]",
-  Medium: "bg-[#fdf3e1] text-[#d97706]",
-  Low: "bg-[#f1f3f5] text-[#475569]",
+  High: "border-[#ef9a9a] bg-[#ffebee] text-[#c62828]",
+  Medium: "border-[#ffe082] bg-[#fff8e1] text-[#b78103]",
+  Low: "border-[#cbd5e1] bg-[#f1f5f9] text-[#475569]",
 };
 
 const CHANNEL_ICON: Record<Channel, LucideIcon> = {
@@ -302,14 +303,14 @@ const CHANNEL_ICON: Record<Channel, LucideIcon> = {
 };
 
 const ACTION_CLASS: Record<Action, string> = {
-  View: "border-[#93b4f0] text-[#1d4ed8] hover:bg-[#f4f8fe]",
-  Review: "border-[#f3a5a5] text-[#dc2626] hover:bg-[#fdf2f2]",
-  Assign: "border-[#f5c27a] text-[#d97706] hover:bg-[#fffaf0]",
+  View: "border-blue-400/30 bg-blue-500/10 text-blue-600 shadow-[0_2px_6px_rgba(37,99,235,0.12)] hover:bg-blue-500/20",
+  Review: "border-red-400/30 bg-red-500/10 text-red-600 shadow-[0_2px_6px_rgba(220,38,38,0.12)] hover:bg-red-500/20",
+  Assign: "border-orange-400/30 bg-orange-500/10 text-orange-600 shadow-[0_2px_6px_rgba(249,115,22,0.12)] hover:bg-orange-500/20",
 };
 
 const ExclamationDot = () => (
-  <span className="grid h-[18px] w-[18px] place-items-center rounded-full bg-[#dc2626] text-white">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3.5} strokeLinecap="round" className="h-[11px] w-[11px]" aria-hidden="true">
+  <span className="grid h-[14px] w-[14px] place-items-center rounded-full bg-[#c62828] text-white">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3.5} strokeLinecap="round" className="h-[9px] w-[9px]" aria-hidden="true">
       <path d="M12 6v8M12 18.5h.01" />
     </svg>
   </span>
@@ -319,30 +320,30 @@ function FollowUpCell({ value }: { value: FollowUp }) {
   switch (value.kind) {
     case "date":
       return (
-        <span className="flex items-center gap-[8px] font-medium text-[#0f172a]">
-          <CalendarDays className="h-[18px] w-[18px] shrink-0 text-[#dc2626]" /> <span className="truncate">{value.label}</span>
+        <span className="flex items-center gap-[6px] font-semibold text-[#334155]">
+          <CalendarDays className="h-[13px] w-[13px] shrink-0 text-[#c62828]" /> <span className="truncate">{value.label}</span>
         </span>
       );
     case "overdue":
       return (
-        <span className="inline-flex h-[28px] items-center gap-[8px] rounded-[6px] bg-[#fdecec] px-[11px] font-medium text-[#dc2626]">
+        <span className="inline-flex h-[22px] items-center gap-[6px] rounded-[4px] border border-[#ef9a9a] bg-[#ffebee] px-[8px] text-[7.5px] font-bold text-[#c62828] shadow-xs">
           <ExclamationDot /> Overdue
         </span>
       );
     case "review":
       return (
-        <span className="inline-flex h-[28px] items-center gap-[8px] rounded-[6px] bg-[#fdf3e1] px-[11px] font-medium text-[#d97706]">
-          <Hourglass className="h-[16px] w-[16px]" /> Review Pending
+        <span className="inline-flex h-[22px] items-center gap-[6px] rounded-[4px] border border-[#ffe082] bg-[#fff8e1] px-[8px] text-[7.5px] font-bold text-[#b78103] shadow-xs">
+          <Hourglass className="h-[12px] w-[12px]" /> Review Pending
         </span>
       );
     case "assign":
       return (
-        <span className="flex items-center gap-[8px] font-medium text-[#d97706]">
-          <UserPlus className="h-[18px] w-[18px]" /> Assign Team
+        <span className="flex items-center gap-[6px] font-bold text-[#ea580c]">
+          <UserPlus className="h-[13px] w-[13px]" /> Assign Team
         </span>
       );
     case "none":
-      return <span className="text-[#94a3b8]">—</span>;
+      return <span className="text-[#9aa0aa]">—</span>;
   }
 }
 
@@ -379,15 +380,27 @@ const SORTERS: Record<SortKey, (a: Row, b: Row) => number> = {
   minutesAgo: (a, b) => a.minutesAgo - b.minutesAgo,
 };
 
-const SUMMARY: { key: Exclude<Quick, "attention">; title: string; note: string; icon: LucideIcon; iconClass: string; valueClass: string; cardClass: string; ring: string }[] = [
+// Contact Us page KPI cards: soft gradient, tinted border, ring shadow, icon circle
+const SUMMARY: {
+  key: Exclude<Quick, "attention">;
+  title: string;
+  note: string;
+  icon: LucideIcon;
+  tone: string;
+  gradient: string;
+  borderColor: string;
+  numColor: string;
+  ring: string;
+}[] = [
   {
     key: "new",
     title: "NEW",
     note: "New enquiries received",
     icon: Users,
-    iconClass: "border-[#cfe9d6] text-[#15803d]",
-    valueClass: "text-[#14532d]",
-    cardClass: "border-[#cfe9d6] bg-gradient-to-br from-[#f3fbf5] via-[#f7fcf8] to-[#e3f5e8]",
+    tone: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+    gradient: "linear-gradient(135deg, #effdf4 0%, #c9f5d9 100%)",
+    borderColor: "#a7e8be",
+    numColor: "#15803d",
     ring: "ring-[#15803d]",
   },
   {
@@ -395,38 +408,43 @@ const SUMMARY: { key: Exclude<Quick, "attention">; title: string; note: string; 
     title: "UNASSIGNED",
     note: "Awaiting team assignment",
     icon: UserRound,
-    iconClass: "border-[#c9daf5] text-[#2563eb]",
-    valueClass: "text-[#1d4ed8]",
-    cardClass: "border-[#d5e2f6] bg-gradient-to-br from-[#f4f8fe] via-[#f8fbff] to-[#e4eefc]",
-    ring: "ring-[#2563eb]",
+    tone: "bg-sky-50 text-sky-700 ring-sky-200",
+    gradient: "linear-gradient(135deg, #ecf8ff 0%, #c8eafd 100%)",
+    borderColor: "#a6dcf7",
+    numColor: "#0369a1",
+    ring: "ring-[#0369a1]",
   },
   {
     key: "due",
     title: "FOLLOW-UPS DUE",
     note: "Require follow-up action",
     icon: Clock3,
-    iconClass: "border-[#f6dfb3] text-[#ea7a0c]",
-    valueClass: "text-[#ea7a0c]",
-    cardClass: "border-[#f5e3bf] bg-gradient-to-br from-[#fffaf0] via-[#fffcf5] to-[#fdf0d2]",
-    ring: "ring-[#ea7a0c]",
+    tone: "bg-amber-50 text-amber-700 ring-amber-200",
+    gradient: "linear-gradient(135deg, #fff4ea 0%, #ffdcbf 100%)",
+    borderColor: "#fdc89c",
+    numColor: "#c2410c",
+    ring: "ring-[#c2410c]",
   },
   {
     key: "overdue",
     title: "OVERDUE",
     note: "Past due for response",
     icon: AlertTriangle,
-    iconClass: "border-[#f6caca] text-[#dc2626]",
-    valueClass: "text-[#dc2626]",
-    cardClass: "border-[#f6d3d3] bg-gradient-to-br from-[#fff6f6] via-[#fffafa] to-[#fde6e6]",
-    ring: "ring-[#dc2626]",
+    tone: "bg-rose-50 text-rose-700 ring-rose-200",
+    gradient: "linear-gradient(135deg, #fff1f2 0%, #fecdd3 100%)",
+    borderColor: "#fda4af",
+    numColor: "#be123c",
+    ring: "ring-[#be123c]",
   },
 ];
+
+const RING_SHADOW = "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px";
 
 const MENU_ITEM = "block w-full px-[12px] py-[7px] text-left text-[#0f172a] outline-none hover:bg-[#f1f7ee] focus-visible:bg-[#f1f7ee]";
 
 const selectClass = (active: boolean) =>
-  `h-[36px] cursor-pointer appearance-none rounded-[8px] border bg-white pl-[16px] pr-[40px] text-[13.1px] outline-none transition focus:border-[#15633a] ${
-    active ? "border-[#15633a] font-medium text-[#15633a]" : "border-[#dfe3e8] text-[#0f172a]"
+  `h-[30px] cursor-pointer appearance-none rounded-[5px] border bg-white pl-[10px] pr-[28px] text-[9.5px] font-medium outline-none transition focus:border-[#8fa98e] ${
+    active ? "border-[#166b40] text-[#166b40]" : "border-[#e5e6e2] text-[#414b5e]"
   }`;
 
 // ─── Toast ───────────────────────────────────────────────────────────────────
@@ -918,10 +936,10 @@ export default function ChatbotInboxPage() {
         type="button"
         onClick={() => toggleSort(k)}
         aria-label={`Sort by ${label}`}
-        className={`inline-flex items-center gap-[5px] text-left transition hover:text-[#15633a] ${active ? "font-semibold text-[#15633a]" : ""}`}
+        className={`inline-flex items-center gap-[4px] text-left uppercase transition hover:text-white/80 ${active ? "underline underline-offset-2" : ""}`}
       >
         {label}
-        <Icon className={`h-[14px] w-[14px] ${active ? "" : "opacity-40"}`} />
+        <Icon className={`h-[11px] w-[11px] ${active ? "" : "opacity-50"}`} />
       </button>
     );
   };
@@ -932,26 +950,26 @@ export default function ChatbotInboxPage() {
   const allMatchingSelected = rows.length > 0 && rows.every((r) => selected.has(r.id));
 
   return (
-    <div ref={ref} className="w-full overflow-x-hidden bg-white">
-    <div style={{ zoom, width: DESIGN_WIDTH }} className="flex flex-col px-[16px] pb-[12px] pt-[12px] text-[#0f172a]">
+    <div ref={ref} className={`${typography.pages} w-full overflow-x-hidden bg-white`}>
+    <div style={{ zoom, width: DESIGN_WIDTH }} className="flex flex-col px-[18px] pb-[16px] pt-[14px] text-[#18233b]">
       {/* ── Header ── */}
-      {/* One row: the page name is already in the top bar, so only the subtitle is shown here
-          (it truncates if space runs out) */}
-      <div className="flex items-center justify-between gap-x-3 pb-[14px]">
+      {/* Title and subtitle over a navy rule, as on the Contact Us page */}
+      <div className="mb-[14px] flex flex-wrap items-start justify-between gap-[10px] border-b-[2px] border-[#293681] pb-[10px]">
         <div className="min-w-0">
-          <div className="flex min-w-0 items-center gap-[12px]">
-            <p className="min-w-0 truncate text-[17.5px] font-medium text-[#334155]">DH Assist — conversations, enquiries &amp; team follow-ups</p>
+          <div className="flex min-w-0 items-center gap-[10px]">
+            <h1 className="text-[19px] font-bold leading-[1.15] tracking-[-0.018em] text-[#0A2B5E]">Inbox &amp; Leads</h1>
             <span
               title="Records are live website chats and hand-added enquiries. Assignment, status, follow-ups and notes are saved."
-              className="inline-flex shrink-0 items-center gap-[6px] whitespace-nowrap rounded-[6px] border border-[#cfe9d6] bg-[#eefaf1] px-[11px] py-[4px] text-[13.4px] font-medium text-[#15803d]"
+              className="inline-flex shrink-0 items-center gap-[5px] whitespace-nowrap rounded-[4px] border border-[#a5d6a7] bg-[#e8f5e9] px-[8px] py-[2px] text-[7.5px] font-bold text-[#23714a] shadow-xs"
             >
-              Live data <Info className="h-[14px] w-[14px]" />
+              <span className="h-[6px] w-[6px] rounded-full bg-[#22a447]" /> Live data <Info className="h-[11px] w-[11px]" />
             </span>
           </div>
+          <p className="mt-0.5 truncate text-[9px] font-medium text-black">DH Assist — conversations, enquiries &amp; team follow-ups</p>
         </div>
 
         <div className="flex shrink-0 items-center gap-[8px]">
-          <div className="relative flex items-center gap-[2px] rounded-[8px] border border-[#e5e7eb] bg-[#f3f4f6] p-[3px]">
+          <div className="relative flex items-center gap-[2px] rounded-[6px] border border-[#e8e5df] bg-[#fafafa] p-[3px]" style={{ boxShadow: RING_SHADOW }}>
             {RANGES.map((r) => (
               <button
                 key={r}
@@ -959,11 +977,11 @@ export default function ChatbotInboxPage() {
                 onClick={() => changeRange(r)}
                 aria-pressed={range === r}
                 aria-expanded={r === "Custom" ? customOpen : undefined}
-                className={`inline-flex items-center gap-[5px] whitespace-nowrap rounded-[6px] px-[10px] py-[6px] text-[12.4px] font-medium transition ${
-                  range === r ? "bg-[#15633a] font-semibold text-white shadow-sm" : "text-[#334155] hover:bg-white"
+                className={`inline-flex items-center gap-[4px] whitespace-nowrap rounded-[5px] px-[9px] py-[4px] text-[8.5px] font-semibold transition ${
+                  range === r ? "bg-[#0A2B5E] text-white shadow-[0_3px_8px_rgba(10,43,94,0.25)]" : "text-[#334155] hover:bg-white"
                 }`}
               >
-                {r === "Custom" && <CalendarDays className="h-[14px] w-[14px]" />}
+                {r === "Custom" && <CalendarDays className="h-[12px] w-[12px]" />}
                 {r === "Custom" && range === "Custom" ? `${shortDate(custom.from)} – ${shortDate(custom.to)}` : r}
               </button>
             ))}
@@ -993,22 +1011,22 @@ export default function ChatbotInboxPage() {
             type="button"
             onClick={() => exportCsv(rows, "inbox-and-leads.csv")}
             disabled={rows.length === 0}
-            className="inline-flex h-[36px] items-center gap-[7px] rounded-[8px] border border-[#d6dae0] bg-white px-[12px] text-[13.4px] font-medium text-[#0f172a] transition hover:border-[#15633a] hover:text-[#15633a] disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex h-[30px] items-center gap-[5px] rounded-[6px] border border-[#bfdbfe] bg-[#eff6ff] px-[14px] text-[8.5px] font-semibold text-[#1d4ed8] shadow-sm transition hover:bg-[#dbeafe] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <SquareArrowOutUpRight className="h-[16px] w-[16px]" /> Export
+            <SquareArrowOutUpRight className="h-[12px] w-[12px]" /> Export
           </button>
           <button
             type="button"
             onClick={() => setNewEnquiryKey(Date.now())}
-            className="inline-flex h-[36px] items-center gap-[7px] rounded-[8px] bg-[#15633a] px-[14px] text-[13.4px] font-medium text-white shadow-sm transition hover:bg-[#124f2f]"
+            className="inline-flex h-[30px] items-center gap-[5px] rounded-[6px] bg-[#0A2B5E] px-[14px] text-[8.5px] font-semibold text-white shadow-[0_5px_12px_rgba(10,43,94,0.25)] transition hover:bg-[#081f45]"
           >
-            <Plus className="h-[17px] w-[17px]" /> New Enquiry
+            <Plus className="h-[12px] w-[12px]" /> New Enquiry
           </button>
         </div>
       </div>
 
       {/* ── Summary cards — each one filters the table ── */}
-      <div className="grid grid-cols-2 gap-[12px] xl:grid-cols-4">
+      <div className="mb-[12px] grid grid-cols-2 gap-2 xl:grid-cols-4">
         {SUMMARY.map((c) => {
           const Icon = c.icon;
           const active = quick === c.key;
@@ -1021,29 +1039,37 @@ export default function ChatbotInboxPage() {
                 setQuick(active ? null : c.key);
                 setPage(1);
               }}
-              className={`group flex h-[84px] items-center gap-[14px] rounded-[12px] border px-[14px] text-left transition hover:-translate-y-px hover:shadow-md ${c.cardClass} ${active ? `ring-2 ${c.ring}` : ""}`}
+              className={`group relative flex h-[82px] flex-col overflow-hidden rounded-[10px] border p-1.5 !pb-4.5 text-left transition-all hover:translate-y-[-1px] ${active ? `ring-2 ${c.ring}` : ""}`}
+              style={{ background: c.gradient, borderColor: c.borderColor, boxShadow: RING_SHADOW }}
             >
-              <span className={`grid h-[42px] w-[42px] shrink-0 place-items-center rounded-full border bg-white ${c.iconClass}`}>
-                <Icon className="h-[20px] w-[20px]" />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-[11.2px] font-semibold text-[#0f172a]">{c.title}</span>
-                <span className={`mt-[3px] block text-[24.5px] font-bold leading-none ${c.valueClass}`}>
-                  {loading ? <span className="inline-block h-[22px] w-[34px] animate-pulse rounded-[4px] bg-black/10 align-middle" /> : loadError ? "—" : summaryCount(c.key)}
+              <span className="flex items-start gap-1.5">
+                <span className={`grid h-[24px] w-[24px] shrink-0 place-items-center rounded-full bg-white/80 shadow-xs ring-1 ${c.tone}`}>
+                  <Icon className="h-3 w-3" />
                 </span>
-                <span className="mt-[5px] block text-[12.6px] text-[#475569]">{active ? "Showing in table — click to clear" : c.note}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[7px] !font-semibold tracking-[0.01em] text-slate-900" style={{ fontWeight: 600, color: "#0f172a" }}>
+                    {c.title}
+                  </span>
+                  <span className="mt-1 block text-[16px] !font-semibold leading-none tracking-[-0.04em]" style={{ color: c.numColor, fontWeight: 600 }}>
+                    {loading ? <span className="inline-block h-[16px] w-[28px] animate-pulse rounded-[4px] bg-black/10 align-middle" /> : loadError ? "—" : summaryCount(c.key)}
+                  </span>
+                </span>
+                {active && <X className="h-[12px] w-[12px] shrink-0 text-[#334155]" />}
               </span>
-              {active ? <X className="h-[17px] w-[17px] shrink-0 text-[#334155]" /> : <ChevronRight className="h-[17px] w-[17px] shrink-0 text-[#334155] transition group-hover:translate-x-0.5" />}
+              <span className="absolute bottom-1 left-1.5 right-1.5 flex items-center justify-center gap-1 text-[7px] font-semibold text-[#293957] transition group-hover:text-blue-600">
+                <span className="truncate">{active ? "Showing in table — click to clear" : c.note}</span>
+                {!active && <ArrowRight className="h-2.5 w-2.5 shrink-0" />}
+              </span>
             </button>
           );
         })}
       </div>
 
       {/* ── Conversations table ── */}
-      <div className="mt-[12px] rounded-[12px] border border-[#e3e8e4] bg-white shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
-        <div className="flex items-end justify-between gap-x-4 border-b border-[#eef0f2] px-[16px] pt-[8px]">
-          <p className="pb-[10px] text-[16.6px] font-bold tracking-[-0.01em] text-[#0f2a1c]">All Conversations &amp; Enquiries</p>
-          <div className="flex items-end gap-[14px]">
+      <div className="rounded-[7px] border border-[#e8e5df] bg-white">
+        <div className="flex flex-wrap items-end justify-between gap-x-4 border-b border-[#e8e5df] px-[16px] pt-[11px]">
+          <p className="pb-[9px] text-[10px] font-bold uppercase tracking-wide text-[#0A2B5E]">All Conversations &amp; Enquiries</p>
+          <div className="flex flex-wrap items-end gap-[20px]">
             {TABS.map((t) => (
               <button
                 key={t.key}
@@ -1052,21 +1078,22 @@ export default function ChatbotInboxPage() {
                   setTab(t.key);
                   setPage(1);
                 }}
-                className={`border-b-[3px] px-[14px] pb-[9px] text-[13.1px] transition ${
-                  tab === t.key ? "border-[#15633a] font-semibold text-[#15633a]" : "border-transparent text-[#334155] hover:text-[#15633a]"
+                className={`relative pb-[9px] text-[10px] font-bold transition-colors ${
+                  tab === t.key ? "text-[#166b40]" : "text-[#6c7587] hover:text-[#18233b]"
                 }`}
               >
                 {t.label} ({loading ? "…" : loadError ? "—" : tabCount(t.key)})
+                {tab === t.key && <span className="absolute bottom-0 left-0 right-0 h-[2px] rounded-full bg-[#166b40]" />}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="px-[14px] pb-[10px] pt-[10px]">
+        <div className="px-[16px] pb-[10px] pt-[10px]">
           {/* Search + filters */}
-          <div className="flex items-center gap-[12px]">
+          <div className="flex items-center gap-[8px]">
             <label className="relative min-w-0 flex-1">
-              <Search className="pointer-events-none absolute left-[14px] top-1/2 h-[16px] w-[16px] -translate-y-1/2 text-[#475569]" />
+              <Search className="pointer-events-none absolute left-[9px] top-1/2 h-[12px] w-[12px] -translate-y-1/2 text-[#9aa0aa]" />
               <input
                 value={search}
                 onChange={(e) => {
@@ -1074,7 +1101,7 @@ export default function ChatbotInboxPage() {
                   setPage(1);
                 }}
                 placeholder="Search name, mobile, email or message..."
-                className="h-[36px] w-full rounded-[8px] border border-[#dfe3e8] bg-white pl-[40px] pr-[34px] text-[13.1px] text-[#0f172a] outline-none transition placeholder:text-[#64748b] focus:border-[#15633a] focus:ring-2 focus:ring-[#15633a]/15"
+                className="h-[30px] w-full rounded-[5px] border border-[#e5e6e2] bg-white pl-[26px] pr-[30px] text-[9.5px] font-medium text-[#414b5e] outline-none transition placeholder:text-[#9aa0aa] focus:border-[#8fa98e]"
               />
               {search && (
                 <button type="button" onClick={() => setSearch("")} aria-label="Clear search" className="absolute right-[8px] top-1/2 grid h-[22px] w-[22px] -translate-y-1/2 place-items-center rounded-full text-[#64748b] hover:bg-slate-100">
@@ -1100,7 +1127,7 @@ export default function ChatbotInboxPage() {
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-[16px] top-1/2 h-[16px] w-[16px] -translate-y-1/2 text-[#334155]" />
+                <ChevronDown className="pointer-events-none absolute right-[9px] top-1/2 h-[12px] w-[12px] -translate-y-1/2 text-[#6c7587]" />
               </label>
             ))}
 
@@ -1110,11 +1137,11 @@ export default function ChatbotInboxPage() {
                 type="button"
                 onClick={() => setMoreOpen((o) => !o)}
                 aria-expanded={moreOpen}
-                className={`inline-flex h-[36px] items-center gap-[8px] rounded-[8px] border bg-white px-[16px] text-[13.1px] transition hover:border-[#15633a] ${
-                  moreCount ? "border-[#15633a] font-medium text-[#15633a]" : "border-[#dfe3e8] text-[#0f172a]"
+                className={`inline-flex h-[30px] items-center gap-[6px] rounded-[5px] border bg-white px-[12px] text-[9.5px] font-medium transition hover:border-[#8fa98e] ${
+                  moreCount ? "border-[#166b40] text-[#166b40]" : "border-[#e5e6e2] text-[#414b5e]"
                 }`}
               >
-                <Filter className="h-[17px] w-[17px]" /> More Filters
+                <Filter className="h-[12px] w-[12px]" /> More Filters
                 {moreCount > 0 && <span className="grid h-[19px] min-w-[19px] place-items-center rounded-full bg-[#15633a] px-[5px] text-[11.2px] font-semibold text-white">{moreCount}</span>}
               </button>
               {moreOpen && (
@@ -1294,10 +1321,10 @@ export default function ChatbotInboxPage() {
             </div>
           )}
 
-          {/* Table */}
-          <div className="mt-[10px]">
-            <div className="text-[13.1px]">
-              <div className={`${GRID} rounded-[6px] bg-[#f5f7f6] px-[12px] py-[7px] text-[13.1px] font-medium text-[#334155]`}>
+          {/* Table — runs edge to edge in the card, as on the Contact Us page */}
+          <div className="-mx-[16px] mt-[10px] border-t border-[#f0f0ec]">
+            <div className="text-[8px] font-medium text-[#334155]">
+              <div className={`${GRID} h-[32px] border-b border-[#e8e5df] bg-[#0A2B5E] px-[16px] text-[7.5px] font-bold uppercase tracking-wide text-white`}>
                 <input
                   type="checkbox"
                   checked={pageAllSelected}
@@ -1307,21 +1334,21 @@ export default function ChatbotInboxPage() {
                   onChange={togglePage}
                   disabled={loading || loadError || pageRows.length === 0}
                   aria-label="Select all on this page"
-                  className="h-[19px] w-[19px] cursor-pointer rounded-[4px] accent-[#15633a]"
+                  className="h-[15px] w-[15px] cursor-pointer rounded-[4px] accent-[#166b40]"
                 />
                 {sortHeader("name", "Visitor")}
-                <span>Type / Topic</span>
+                <span className="uppercase">Type / Topic</span>
                 {sortHeader("assignedTo", "Assigned To")}
                 {sortHeader("status", "Status")}
                 {sortHeader("priority", "Priority")}
-                <span>Next Follow-up</span>
+                <span className="uppercase">Next Follow-up</span>
                 {sortHeader("minutesAgo", "Last Activity")}
-                <span>Actions</span>
+                <span className="uppercase">Actions</span>
               </div>
 
               {loading ? (
                 Array.from({ length: 6 }, (_, i) => (
-                  <div key={i} className={`${GRID} h-[50px] border-b border-[#eef0f2] px-[12px]`} aria-hidden="true">
+                  <div key={i} className={`${GRID} h-[50px] border-b border-[#f0f0ec] px-[16px]`} aria-hidden="true">
                     <span className="h-[17px] w-[17px] rounded-[4px] bg-[#eef0f2]" />
                     <span className="flex items-center gap-[12px]">
                       <span className="h-[34px] w-[34px] animate-pulse rounded-full bg-[#eef0f2]" />
@@ -1395,7 +1422,7 @@ export default function ChatbotInboxPage() {
                         }
                       }}
                       aria-label={`Open ${r.name}`}
-                      className={`${GRID} h-[50px] cursor-pointer border-b border-[#eef0f2] px-[12px] outline-none transition last:border-b-0 hover:bg-[#f8faf9] focus-visible:bg-[#f1f7ee] ${
+                      className={`${GRID} h-[50px] cursor-pointer border-b border-[#f0f0ec] px-[16px] outline-none transition last:border-b-0 hover:bg-slate-50/80 focus-visible:bg-[#f1f7ee] ${
                         selected.has(r.id) ? "bg-[#f6fbf7]" : ""
                       }`}
                     >
@@ -1405,53 +1432,53 @@ export default function ChatbotInboxPage() {
                         onClick={(e) => e.stopPropagation()}
                         onChange={() => toggle(r.id)}
                         aria-label={`Select ${r.name}`}
-                        className="h-[19px] w-[19px] cursor-pointer rounded-[4px] accent-[#15633a]"
+                        className="h-[15px] w-[15px] cursor-pointer rounded-[4px] accent-[#166b40]"
                       />
-                      <span className="flex min-w-0 items-center gap-[12px]">
+                      <span className="flex min-w-0 items-center gap-[10px]">
                         <span className="relative shrink-0">
-                          <span className={`grid h-[34px] w-[34px] place-items-center rounded-full text-[12.4px] font-medium text-white ${r.avatar}`}>{r.initials}</span>
+                          <span className={`grid h-[32px] w-[32px] place-items-center rounded-full text-[7.5px] font-bold text-white ${r.avatar}`}>{r.initials}</span>
                           {r.unread && <span title="Unread message" className="absolute -right-[1px] -top-[1px] h-[11px] w-[11px] rounded-full border-2 border-white bg-[#16a34a]" />}
                         </span>
                         <span className="min-w-0">
-                          <span className={`block truncate text-[#0f172a] ${r.unread ? "font-semibold" : ""}`}>{r.name}</span>
-                          <span className={`mt-[2px] inline-block rounded-[5px] px-[8px] py-0 text-[10.8px] font-medium ${TAG_CLASS[r.tag]}`}>{r.tag}</span>
+                          <span className="block truncate font-bold text-[#4B1426]">{r.name}</span>
+                          <span className={`mt-[2px] inline-block rounded-[4px] border px-[6px] py-0 text-[7px] font-bold ${TAG_CLASS[r.tag]}`}>{r.tag}</span>
                         </span>
                       </span>
                       <span className="min-w-0 pr-[12px]">
-                        <span className="flex min-w-0 items-center gap-[6px] text-[#0f172a]">
-                          <span title={r.channel} className="shrink-0 text-[#64748b]">
+                        <span className="flex min-w-0 items-center gap-[6px] font-semibold text-[#334155]">
+                          <span title={r.channel} className="shrink-0 text-[#6c7587]">
                             <ChannelIcon className="h-[14px] w-[14px]" />
                           </span>
                           <span className="truncate">
                             {r.type} / {r.topic}
                           </span>
                         </span>
-                        <span className="mt-[1px] block truncate text-[12.4px] text-[#64748b]">{r.detail}</span>
+                        <span className="mt-[1px] block truncate text-[7px] text-[#6c7587]">{r.detail}</span>
                       </span>
-                      <span className="flex min-w-0 items-center gap-[10px] pr-[8px] text-[#0f172a]">
-                        <UserRound className={`h-[18px] w-[18px] shrink-0 ${unassigned ? "text-[#ea7a0c]" : "text-[#334155]"}`} />
-                        <span className={`truncate ${unassigned ? "text-[#d97706]" : ""}`}>{r.assignedTo}</span>
+                      <span className="flex min-w-0 items-center gap-[8px] pr-[8px] text-[#334155]">
+                        <UserRound className={`h-[14px] w-[14px] shrink-0 ${unassigned ? "text-[#ea580c]" : "text-[#6c7587]"}`} />
+                        <span className={`truncate ${unassigned ? "font-bold text-[#ea580c]" : ""}`}>{r.assignedTo}</span>
                       </span>
                       <span>
-                        <span className={`inline-flex h-[28px] w-[134px] items-center gap-[8px] rounded-[6px] px-[12px] font-medium leading-tight ${status.className}`}>
+                        <span className={`inline-flex h-[20px] w-[124px] items-center gap-[5px] rounded-[4px] border px-[7px] text-[7px] font-bold leading-tight shadow-xs ${status.className}`}>
                           {status.icon}
                           {r.status}
                         </span>
                       </span>
                       <span>
-                        <span className={`inline-flex h-[24px] items-center gap-[5px] rounded-[6px] px-[8px] text-[12.4px] font-medium ${PRIORITY_CLASS[r.priority]}`}>
-                          <Flag className="h-[12px] w-[12px]" /> {r.priority}
+                        <span className={`inline-flex h-[20px] items-center gap-[4px] rounded-[4px] border px-[7px] text-[7px] font-bold shadow-xs ${PRIORITY_CLASS[r.priority]}`}>
+                          <Flag className="h-[11px] w-[11px]" /> {r.priority}
                         </span>
                       </span>
                       <span className="min-w-0 pr-[8px]">
                         <FollowUpCell value={r.followUp} />
                       </span>
-                      <span className="text-[#475569]">{ago(r.minutesAgo)}</span>
+                      <span className="text-[7.5px] text-[#6c7587]">{ago(r.minutesAgo)}</span>
                       <span className="flex items-center gap-[10px]" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
                         <button
                           type="button"
                           onClick={() => (action === "Assign" ? setReassignId(r.id) : openDetail(r.id))}
-                          className={`inline-flex h-[30px] w-[68px] items-center justify-center rounded-[6px] border bg-white text-[13.1px] font-medium transition ${ACTION_CLASS[action]}`}
+                          className={`inline-flex h-[25px] w-[64px] items-center justify-center rounded-[6px] border text-[8px] font-bold backdrop-blur-md transition ${ACTION_CLASS[action]}`}
                         >
                           {action}
                         </button>
@@ -1551,7 +1578,7 @@ export default function ChatbotInboxPage() {
           </div>
 
           {/* Pagination */}
-          <div className="mt-[10px] flex items-center justify-between gap-3 text-[13.1px] text-[#475569]">
+          <div className="-mx-[16px] flex flex-wrap items-center justify-between gap-3 border-t border-[#e8e5df] bg-[#fafafa] px-[16px] py-[8px] text-[8px] font-semibold text-[#5f6a7c]">
             <span>
               {loading ? "Loading…" : rows.length ? `Showing ${firstShown} – ${lastShown} of ${rows.length} record${rows.length === 1 ? "" : "s"}` : "0 records"}
             </span>
@@ -1565,7 +1592,7 @@ export default function ChatbotInboxPage() {
                     setPage(1);
                   }}
                   aria-label="Rows per page"
-                  className="h-[28px] cursor-pointer appearance-none rounded-[6px] border border-[#dfe3e8] bg-white pl-[10px] pr-[30px] text-[12.6px] font-medium text-[#0f172a] outline-none focus:border-[#15633a]"
+                  className="h-[22px] cursor-pointer appearance-none rounded-[4px] border border-[#d8dce2] bg-white pl-[8px] pr-[24px] text-[8px] font-bold text-[#334155] outline-none focus:border-[#8fa98e]"
                 >
                   {[10, 25, 50].map((n) => (
                     <option key={n} value={n}>
@@ -1573,17 +1600,17 @@ export default function ChatbotInboxPage() {
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-[9px] top-1/2 h-[14px] w-[14px] -translate-y-1/2 text-[#334155]" />
+                <ChevronDown className="pointer-events-none absolute right-[7px] top-1/2 h-[11px] w-[11px] -translate-y-1/2 text-[#334155]" />
               </label>
-              <div className="ml-[16px] flex items-center gap-[8px]">
+              <div className="ml-[12px] flex items-center gap-[4px]">
                 <button
                   type="button"
                   onClick={() => setPage(Math.max(1, current - 1))}
                   disabled={current === 1}
                   aria-label="Previous page"
-                  className="grid h-[27px] w-[27px] place-items-center rounded-[6px] border border-[#dfe3e8] bg-white text-[#334155] hover:border-[#15633a] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#dfe3e8]"
+                  className="grid h-[22px] w-[22px] place-items-center rounded-[4px] border border-[#d8dce2] bg-white text-[#334155] transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-30"
                 >
-                  <ChevronLeft className="h-[15px] w-[15px]" />
+                  <ChevronLeft className="h-3 w-3" />
                 </button>
                 {pageList(current, pageCount).map((n, i) =>
                   n === "gap" ? (
@@ -1596,8 +1623,8 @@ export default function ChatbotInboxPage() {
                     type="button"
                     onClick={() => setPage(n)}
                     aria-current={current === n ? "page" : undefined}
-                    className={`grid h-[27px] w-[27px] place-items-center rounded-[6px] border text-[13.1px] font-medium transition ${
-                      current === n ? "border-[#15633a] bg-[#15633a] text-white" : "border-[#dfe3e8] bg-white text-[#334155] hover:border-[#15633a]"
+                    className={`grid h-[22px] min-w-[22px] place-items-center rounded-[4px] border px-1.5 text-[8px] font-bold transition ${
+                      current === n ? "border-[#0A2B5E] bg-[#0A2B5E] text-white" : "border-[#d8dce2] bg-white text-[#334155] hover:bg-slate-50"
                     }`}
                   >
                     {n}
@@ -1609,9 +1636,9 @@ export default function ChatbotInboxPage() {
                   onClick={() => setPage(Math.min(pageCount, current + 1))}
                   disabled={current === pageCount}
                   aria-label="Next page"
-                  className="grid h-[27px] w-[27px] place-items-center rounded-[6px] border border-[#dfe3e8] bg-white text-[#334155] hover:border-[#15633a] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#dfe3e8]"
+                  className="grid h-[22px] w-[22px] place-items-center rounded-[4px] border border-[#d8dce2] bg-white text-[#334155] transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-30"
                 >
-                  <ChevronRight className="h-[15px] w-[15px]" />
+                  <ChevronRight className="h-3 w-3" />
                 </button>
               </div>
             </div>
@@ -1619,14 +1646,14 @@ export default function ChatbotInboxPage() {
 
           {/* Attention bar — hidden once nothing is overdue or unassigned */}
           {!loading && overdueCount + unassignedCount > 0 && (
-            <div className="mt-[16px] flex h-[46px] items-center justify-between gap-2 rounded-[8px] bg-[#fdf2f2] px-[10px]">
-              <span className="flex items-center gap-[14px] text-[14.6px] font-medium text-[#dc2626]">
-                <span className="grid h-[24px] w-[24px] place-items-center rounded-full bg-[#dc2626] text-white">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3.5} strokeLinecap="round" className="h-[14px] w-[14px]" aria-hidden="true">
+            <div className="mt-[12px] flex h-[40px] items-center justify-between gap-2 rounded-[7px] border border-[#ef9a9a] bg-[#ffebee] px-[10px] shadow-xs">
+              <span className="flex items-center gap-[10px] text-[8.5px] font-bold text-[#c62828]">
+                <span className="grid h-[20px] w-[20px] place-items-center rounded-full bg-[#c62828] text-white">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3.5} strokeLinecap="round" className="h-[12px] w-[12px]" aria-hidden="true">
                     <path d="M12 6v8M12 18.5h.01" />
                   </svg>
                 </span>
-                {overdueCount} overdue repl{overdueCount === 1 ? "y" : "ies"} <span className="text-[#dc2626]">•</span> {unassignedCount} unassigned enquir{unassignedCount === 1 ? "y" : "ies"}
+                {overdueCount} overdue repl{overdueCount === 1 ? "y" : "ies"} <span className="text-[#c62828]">•</span> {unassignedCount} unassigned enquir{unassignedCount === 1 ? "y" : "ies"}
               </span>
               <button
                 type="button"
@@ -1636,15 +1663,15 @@ export default function ChatbotInboxPage() {
                   setQuick("attention");
                   setSort({ key: "priority", dir: "asc" });
                 }}
-                className="inline-flex items-center gap-[8px] pr-[6px] text-[13.6px] font-medium text-[#dc2626] hover:underline"
+                className="inline-flex items-center gap-[6px] pr-[6px] text-[8.5px] font-bold text-[#c62828] hover:underline"
               >
-                Review Now <ArrowRight className="h-[14px] w-[14px]" />
+                Review Now <ArrowRight className="h-[11px] w-[11px]" />
               </button>
             </div>
           )}
 
-          <p className="mt-[14px] flex items-center gap-[10px] px-[8px] text-[13.1px] text-[#475569]">
-            <Info className="h-[18px] w-[18px]" /> Click a record to view chat history, reply, assign responsibility or update status.
+          <p className="mt-[12px] flex items-center gap-[8px] px-[4px] text-[8px] font-medium text-[#6c7587]">
+            <Info className="h-[13px] w-[13px]" /> Click a record to view chat history, reply, assign responsibility or update status.
           </p>
         </div>
       </div>
