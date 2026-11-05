@@ -8,12 +8,10 @@ import {
   ChevronRight,
   Clock,
   Cpu,
-  Database,
   FileText,
   FileUp,
   Globe,
   Hand,
-  Headset,
   Link as LinkIcon,
   Loader2,
   LogOut,
@@ -23,7 +21,6 @@ import {
   MessageCircle,
   Mic,
   MicOff,
-  MessagesSquare,
   NotebookPen,
   PartyPopper,
   Pencil,
@@ -39,10 +36,14 @@ import {
   Volume2,
   VolumeX,
   X,
-  Zap,
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
+import { BsOpenai } from "react-icons/bs";
+import { PiBooksFill, PiChatCircleDotsFill, PiHandWavingFill, PiLightningFill, PiPaperPlaneTiltFill, PiPhoneCallFill, PiScrollFill, PiSignOutBold, PiUserCirclePlusFill, PiWrenchFill } from "react-icons/pi";
+import { RiRobot2Line } from "react-icons/ri";
+import { SiMongodb } from "react-icons/si";
+import { TbArrowsSplit2 } from "react-icons/tb";
 import typography from "../../pages/PagesTypography.module.css";
 import {
   chatTrainingApi,
@@ -332,47 +333,65 @@ export default function AiTrainingPage() {
 
 type NodeId = "trigger" | "greeting" | "agent" | "decide" | "lead" | "reply" | "ending" | "model" | "memory" | "instructions" | "knowledge" | "contact" | "website" | "tools";
 type Point = { x: number; y: number };
-type Tone = "orange" | "grey" | "green" | "blue" | "navy";
+
+/* n8n's dark canvas: square nodes with the name below, the AI Agent wide with its parts hanging from it as circles.
+   Every node, the AI Agent too, can be dragged on its own; the canvas itself stays put. */
+const C = {
+  canvas: "#2b2b2e",
+  dots: "#47474e",
+  node: "#3a3b40",
+  border: "#6c6d74",
+  edge: "#8b8c93",
+  text: "#f1f1f3",
+  muted: "#a3a3ab",
+  run: "#4ade80",
+  done: "#22c55e",
+  open: "#fd6e15",
+};
 
 const MAIN_SIZE: Partial<Record<NodeId, { w: number; h: number }>> = {
-  trigger: { w: 180, h: 70 },
-  greeting: { w: 190, h: 70 },
-  agent: { w: 300, h: 90 },
-  decide: { w: 160, h: 66 },
-  lead: { w: 180, h: 66 },
-  reply: { w: 180, h: 66 },
-  ending: { w: 190, h: 66 },
+  trigger: { w: 84, h: 84 },
+  greeting: { w: 84, h: 84 },
+  agent: { w: 420, h: 96 },
+  decide: { w: 84, h: 84 },
+  lead: { w: 84, h: 84 },
+  reply: { w: 84, h: 84 },
+  ending: { w: 84, h: 84 },
 };
 const SUBS: NodeId[] = ["model", "memory", "instructions", "knowledge", "contact", "website", "tools"];
-const SUB_W = 104;
-const SUB_CIRCLE = 54;
+// What the agent's connection points say (n8n: "Chat Model", "Memory", "Tool")
+const SUB_LABEL: Partial<Record<NodeId, string>> = { model: "Chat Model", memory: "Memory", instructions: "Rules", knowledge: "Knowledge", contact: "Contact", website: "Website", tools: "Tool" };
+const SUB_W = 100;
+const SUB_CIRCLE = 62;
+// The name and detail under a square node
+const LABEL_W = 150;
+const LABEL_H = 36;
 
+const AGENT_POS: Point = { x: 560, y: 120 };
+const AGENT_CENTER: Point = { x: AGENT_POS.x + 210, y: AGENT_POS.y + 48 };
 const DEFAULT_POS: Record<NodeId, Point> = {
-  trigger: { x: 30, y: 128 },
-  greeting: { x: 250, y: 128 },
-  agent: { x: 480, y: 118 },
-  decide: { x: 850, y: 130 },
-  lead: { x: 1070, y: 40 },
-  reply: { x: 1070, y: 222 },
-  ending: { x: 1310, y: 222 },
-  model: { x: 300, y: 330 },
-  memory: { x: 412, y: 330 },
-  instructions: { x: 524, y: 330 },
-  knowledge: { x: 636, y: 330 },
-  contact: { x: 748, y: 330 },
-  website: { x: 860, y: 330 },
-  tools: { x: 972, y: 330 },
+  trigger: { x: 40, y: 126 },
+  greeting: { x: 300, y: 126 },
+  agent: AGENT_POS,
+  decide: { x: 1070, y: 126 },
+  lead: { x: 1250, y: 28 },
+  reply: { x: 1250, y: 224 },
+  ending: { x: 1420, y: 224 },
+  // The agent's parts in a row under it
+  ...(Object.fromEntries(SUBS.map((id, i) => [id, { x: AGENT_CENTER.x + (i - 3) * 112 - SUB_W / 2, y: 318 }])) as Record<"model" | "memory" | "instructions" | "knowledge" | "contact" | "website" | "tools", Point>),
 };
-const EDGES: { from: NodeId; to: NodeId; label?: string }[] = [
+const EDGES: { from: NodeId; to: NodeId; port?: "yes" | "no"; label?: string }[] = [
   { from: "trigger", to: "greeting" },
   { from: "greeting", to: "agent" },
   { from: "agent", to: "decide" },
-  { from: "decide", to: "lead", label: "yes" },
-  { from: "decide", to: "reply", label: "no" },
+  { from: "decide", to: "lead", port: "yes", label: "yes" },
+  { from: "decide", to: "reply", port: "no", label: "no" },
   { from: "reply", to: "ending", label: "done" },
 ];
-const LAYOUT_KEY = "dh_ai_workflow_layout_v1";
-const CANVAS_H = 470;
+const LAYOUT_KEY = "dh_ai_workflow_layout_v2";
+const CANVAS_H = 480;
+// Where the AI Agent starts: the middle of the canvas, a little above centre (its parts hang below it)
+const AGENT_AT_Y = 0.38;
 
 const readLayout = (): Record<NodeId, Point> => {
   try {
@@ -391,7 +410,37 @@ const saveLayout = (pos: Record<NodeId, Point>) => {
   }
 };
 
-const sizeOf = (id: NodeId) => MAIN_SIZE[id] ?? { w: SUB_W, h: 96 };
+const isSub = (id: NodeId) => SUBS.includes(id);
+const sizeOf = (id: NodeId) => MAIN_SIZE[id] ?? { w: SUB_W, h: SUB_CIRCLE };
+// A node with its name below it: the space it takes on the canvas
+const boxOf = (id: NodeId, at: Point) => {
+  const { w, h } = sizeOf(id);
+  if (id === "agent") return { x1: at.x, y1: at.y, x2: at.x + w, y2: at.y + h + 22 };
+  const labelW = isSub(id) ? SUB_W : LABEL_W;
+  return { x1: at.x + Math.min(0, (w - labelW) / 2), y1: at.y, x2: at.x + Math.max(w, (w + labelW) / 2), y2: at.y + h + LABEL_H };
+};
+
+// The zoom that shows every node with the AI Agent in the middle
+const fitZoom = (layout: Record<NodeId, Point>, width: number) => {
+  const pad = 28;
+  const above = CANVAS_H * AGENT_AT_Y - pad;
+  const below = CANVAS_H * (1 - AGENT_AT_Y) - 54; // the buttons at the bottom
+  let z = 1.1;
+  (Object.keys(layout) as NodeId[]).forEach((id) => {
+    const b = boxOf(id, layout[id]);
+    if (b.x1 < AGENT_CENTER.x) z = Math.min(z, (width / 2 - pad) / (AGENT_CENTER.x - b.x1));
+    if (b.x2 > AGENT_CENTER.x) z = Math.min(z, (width / 2 - pad) / (b.x2 - AGENT_CENTER.x));
+    if (b.y1 < AGENT_CENTER.y) z = Math.min(z, above / (AGENT_CENTER.y - b.y1));
+    if (b.y2 > AGENT_CENTER.y) z = Math.min(z, below / (b.y2 - AGENT_CENTER.y));
+  });
+  return Math.max(0.35, z);
+};
+
+/* The logos and icons of what each step uses */
+function DhLogo({ size }: { size: number }) {
+  // Only the mark from the Design House logo
+  return <span aria-hidden="true" className="block" style={{ width: size * 1.45, height: size * 0.88, backgroundImage: "url(/logotransparent-sm.webp)", backgroundSize: "162% auto", backgroundPosition: "55% 9%", backgroundRepeat: "no-repeat" }} />;
+}
 
 function WorkflowCanvas({
   data,
@@ -414,49 +463,43 @@ function WorkflowCanvas({
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<Record<NodeId, Point>>(DEFAULT_POS);
-  const [view, setView] = useState({ x: 0, y: 0, z: 1 });
-  const [dragging, setDragging] = useState<NodeId | "pan" | null>(null);
-  const dragRef = useRef<{ id: NodeId | "pan"; sx: number; sy: number; ox: number; oy: number; moved: boolean } | null>(null);
+  const [zoom, setZoom] = useState(1);
+  const [width, setWidth] = useState(0);
+  const [dragging, setDragging] = useState<NodeId | null>(null);
+  const dragRef = useRef<{ id: NodeId; sx: number; sy: number; ox: number; oy: number; moved: boolean } | null>(null);
   const posRef = useRef(pos);
-  const viewRef = useRef(view);
   useEffect(() => {
     posRef.current = pos;
-    viewRef.current = view;
   });
+
+  // The view follows the zoom, centred where the AI Agent starts (dragging a node never moves the canvas)
+  const tx = width / 2 - AGENT_CENTER.x * zoom;
+  const ty = CANVAS_H * AGENT_AT_Y - AGENT_CENTER.y * zoom;
 
   const items = data?.items ?? [];
   const active = (kind: "instruction" | "taught") => items.filter((i) => (kind === "instruction" ? i.kind === "instruction" : i.kind !== "instruction") && i.enabled).length;
 
   // What each node shows, and the settings it opens
-  const nodes: Record<NodeId, { icon: ReactNode; tone: Tone; title: string; detail: string; open?: Panel }> = {
-    trigger: { icon: <MessagesSquare className="h-[17px] w-[17px]" />, tone: "orange", title: "Chat message received", detail: "website chat or call" },
-    greeting: { icon: <PartyPopper className="h-[17px] w-[17px]" />, tone: "orange", title: "Greeting", detail: settings ? `“${short(settings.greeting.en.chat, 34)}”` : "welcome message", open: "greeting" },
-    agent: { icon: <BrainCircuit className="h-[21px] w-[21px]" />, tone: "navy", title: "DH Assist · AI Agent", detail: "Understands the message, searches what it knows and replies", open: "instructions" },
-    decide: { icon: <Sparkles className="h-[15px] w-[15px]" />, tone: "grey", title: "Wants a quote?", detail: "or a call back" },
-    lead: { icon: <Headset className="h-[15px] w-[15px]" />, tone: "green", title: "Lead to the team", detail: "saved in Contact Us" },
-    reply: { icon: <Send className="h-[15px] w-[15px]" />, tone: "blue", title: "Reply to visitor", detail: "text or voice, in their language" },
-    ending: { icon: <LogOut className="h-[15px] w-[15px]" />, tone: "orange", title: "Ending message", detail: settings ? `“${short(settings.ending.en, 32)}”` : "goodbye", open: "ending" },
-    model: { icon: <Cpu className="h-[18px] w-[18px]" />, tone: "grey", title: "Chat Model", detail: data?.model || "OpenAI", open: "model" },
-    memory: { icon: <Database className="h-[18px] w-[18px]" />, tone: "grey", title: "Memory", detail: "last 16 messages" },
-    instructions: { icon: <ScrollText className="h-[18px] w-[18px]" />, tone: "grey", title: "Instructions", detail: `${active("instruction")} yours · ${know?.rules.length ?? 4} built-in`, open: "instructions" },
-    knowledge: { icon: <BookOpen className="h-[18px] w-[18px]" />, tone: "grey", title: "Knowledge", detail: `${active("taught")} yours · ${know?.basics.length ?? 0} built-in`, open: "knowledge" },
-    contact: { icon: <Phone className="h-[18px] w-[18px]" />, tone: "grey", title: "Contact details", detail: settings?.contact.phones[0] || "phone · email", open: "contact" },
-    website: { icon: <Globe className="h-[18px] w-[18px]" />, tone: "grey", title: "Website", detail: `${know?.pages.length ?? 0} pages read`, open: "website" },
-    tools: { icon: <Zap className="h-[18px] w-[18px]" />, tone: "grey", title: "Tools", detail: "search · files · quote" },
+  const nodes: Record<NodeId, { icon: ReactNode; title: string; detail: string; open?: Panel }> = {
+    trigger: { icon: <PiChatCircleDotsFill size={40} color="#ff8a3d" />, title: "Chat message received", detail: "website chat or call" },
+    greeting: { icon: <PiHandWavingFill size={38} color="#fbbf24" />, title: "Greeting", detail: settings ? `“${short(settings.greeting.en.chat, 30)}”` : "welcome message", open: "greeting" },
+    agent: { icon: <RiRobot2Line size={38} color="#f1f1f3" />, title: "DH Assist · AI Agent", detail: "Tools Agent · understands, searches what it knows and replies", open: "instructions" },
+    decide: { icon: <TbArrowsSplit2 size={38} color="#34d399" />, title: "Wants a quote?", detail: "or a call back" },
+    lead: { icon: <PiUserCirclePlusFill size={40} color="#2dd4bf" />, title: "Lead to the team", detail: "saved in Contact Us" },
+    reply: { icon: <PiPaperPlaneTiltFill size={36} color="#60a5fa" />, title: "Reply to visitor", detail: "text or voice, in their language" },
+    ending: { icon: <PiSignOutBold size={36} color="#f87171" />, title: "Ending message", detail: settings ? `“${short(settings.ending.en, 28)}”` : "goodbye", open: "ending" },
+    model: { icon: <BsOpenai size={28} color="#ffffff" />, title: "OpenAI Chat Model", detail: data?.model || "gpt-4.1-mini", open: "model" },
+    memory: { icon: <SiMongodb size={28} color="#47A248" />, title: "Memory", detail: "last 16 messages · MongoDB" },
+    instructions: { icon: <PiScrollFill size={28} color="#fbbf24" />, title: "Instructions", detail: `${active("instruction")} yours · ${know?.rules.length ?? 4} built-in`, open: "instructions" },
+    knowledge: { icon: <PiBooksFill size={28} color="#a78bfa" />, title: "Knowledge", detail: `${active("taught")} yours · ${know?.basics.length ?? 0} built-in`, open: "knowledge" },
+    contact: { icon: <PiPhoneCallFill size={27} color="#4ade80" />, title: "Contact details", detail: settings?.contact.phones[0] || "phone · email", open: "contact" },
+    website: { icon: <DhLogo size={30} />, title: "Website", detail: `${know?.pages.length ?? 0} pages read`, open: "website" },
+    tools: { icon: <PiWrenchFill size={27} color="#cbd5e1" />, title: "Tools", detail: "search · files · quote" },
   };
 
-  // Fits every node in view
   const fit = useCallback((layout: Record<NodeId, Point>) => {
-    const box = rootRef.current?.getBoundingClientRect();
-    if (!box) return;
-    const ids = Object.keys(layout) as NodeId[];
-    const minX = Math.min(...ids.map((id) => layout[id].x));
-    const minY = Math.min(...ids.map((id) => layout[id].y));
-    const maxX = Math.max(...ids.map((id) => layout[id].x + sizeOf(id).w));
-    const maxY = Math.max(...ids.map((id) => layout[id].y + sizeOf(id).h));
-    const pad = 40;
-    const z = Math.min(1.2, Math.max(0.4, Math.min((box.width - pad * 2) / (maxX - minX), (CANVAS_H - pad * 2 - 30) / (maxY - minY))));
-    setView({ z, x: (box.width - (maxX - minX) * z) / 2 - minX * z, y: (CANVAS_H - 30 - (maxY - minY) * z) / 2 - minY * z });
+    const w = rootRef.current?.clientWidth;
+    if (w) setZoom(fitZoom(layout, w));
   }, []);
 
   // The layout you left it in (this browser), then everything in view
@@ -469,7 +512,14 @@ function WorkflowCanvas({
     return () => cancelAnimationFrame(frame);
   }, [fit]);
 
-  // The test chat opens beside it: fit again in the narrower space
+  // The canvas's width (it narrows when the test chat opens beside it): fit again
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => setWidth(entry.contentRect.width));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
   useEffect(() => {
     const t = setTimeout(() => fit(posRef.current), 320);
     return () => clearTimeout(t);
@@ -479,34 +529,26 @@ function WorkflowCanvas({
   const isActive = (id: NodeId) => flow.active === id || (flow.thinking && (id === "agent" || THINKERS.includes(id)));
   const isDone = (id: NodeId) => !isActive(id) && flow.done.includes(id);
 
-  const zoomAt = useCallback((factor: number, cx?: number, cy?: number) => {
-    const box = rootRef.current?.getBoundingClientRect();
-    const v = viewRef.current;
-    const z = Math.min(1.8, Math.max(0.35, v.z * factor));
-    const px = cx ?? (box ? box.width / 2 : 0);
-    const py = cy ?? CANVAS_H / 2;
-    setView({ z, x: px - ((px - v.x) * z) / v.z, y: py - ((py - v.y) * z) / v.z });
-  }, []);
+  const zoomBy = useCallback((factor: number) => setZoom((z) => Math.min(1.8, Math.max(0.35, z * factor))), []);
 
-  // Ctrl / ⌘ + scroll zooms around the pointer (a plain scroll still scrolls the page)
+  // Ctrl / ⌘ + scroll zooms (a plain scroll still scrolls the page)
   useEffect(() => {
     const el = rootRef.current;
     if (!el) return;
     const onWheel = (e: WheelEvent) => {
       if (!e.ctrlKey && !e.metaKey) return;
       e.preventDefault();
-      const box = el.getBoundingClientRect();
-      zoomAt(e.deltaY < 0 ? 1.12 : 1 / 1.12, e.clientX - box.left, e.clientY - box.top);
+      zoomBy(e.deltaY < 0 ? 1.1 : 1 / 1.1);
     };
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
-  }, [zoomAt]);
+  }, [zoomBy]);
 
-  /* Dragging: a node moves it; the empty canvas moves the view. A press that doesn't move is a click. */
-  const startDrag = (e: ReactPointerEvent, id: NodeId | "pan") => {
+  /* Dragging moves one node, never the others and never off the canvas. A press that doesn't move is a click. */
+  const startDrag = (e: ReactPointerEvent, id: NodeId) => {
     if (e.button !== 0) return;
     e.stopPropagation();
-    const origin = id === "pan" ? viewRef.current : posRef.current[id];
+    const origin = posRef.current[id];
     dragRef.current = { id, sx: e.clientX, sy: e.clientY, ox: origin.x, oy: origin.y, moved: false };
     rootRef.current?.setPointerCapture(e.pointerId);
     setDragging(id);
@@ -519,19 +561,23 @@ function WorkflowCanvas({
     const dy = e.clientY - drag.sy;
     if (!drag.moved && Math.abs(dx) + Math.abs(dy) < 4) return;
     drag.moved = true;
-    if (drag.id === "pan") setView((v) => ({ ...v, x: drag.ox + dx, y: drag.oy + dy }));
-    else {
-      const z = viewRef.current.z;
-      const id = drag.id;
-      setPos((p) => ({ ...p, [id]: { x: Math.round(drag.ox + dx / z), y: Math.round(drag.oy + dy / z) } }));
-    }
+    const id = drag.id;
+    const { w, h } = sizeOf(id);
+    // The part of the canvas in view, in canvas units
+    const minX = -tx / zoom + 8;
+    const minY = -ty / zoom + 8;
+    const maxX = (width - tx) / zoom - w - 8;
+    const maxY = (CANVAS_H - ty) / zoom - h - (isSub(id) ? LABEL_H : LABEL_H + 6);
+    const x = Math.round(Math.min(maxX, Math.max(minX, drag.ox + dx / zoom)));
+    const y = Math.round(Math.min(maxY, Math.max(minY, drag.oy + dy / zoom)));
+    setPos((p) => ({ ...p, [id]: { x, y } }));
   };
 
   const endDrag = () => {
     const drag = dragRef.current;
     dragRef.current = null;
     setDragging(null);
-    if (!drag || drag.id === "pan") return;
+    if (!drag) return;
     if (drag.moved) saveLayout(posRef.current);
     else if (nodes[drag.id].open) onOpen(nodes[drag.id].open as Panel);
   };
@@ -549,34 +595,46 @@ function WorkflowCanvas({
     fit(DEFAULT_POS);
   };
 
-  // Connections: main ones from right side to left side; the agent's parts hang from its bottom (dashed)
-  const right = (id: NodeId) => ({ x: pos[id].x + sizeOf(id).w, y: pos[id].y + sizeOf(id).h / 2 });
-  const left = (id: NodeId) => ({ x: pos[id].x, y: pos[id].y + sizeOf(id).h / 2 });
+  // Connections: out of a node's right side into the next one's left; "yes" and "no" leave the decision separately
+  const out = (id: NodeId, port?: "yes" | "no") => {
+    const { w, h } = sizeOf(id);
+    return { x: pos[id].x + w + 6, y: pos[id].y + (port === "yes" ? h * 0.3 : port === "no" ? h * 0.7 : h / 2) };
+  };
+  const into = (id: NodeId) => ({ x: pos[id].x - 2, y: pos[id].y + sizeOf(id).h / 2 });
   const curve = (a: Point, b: Point) => {
-    const bend = Math.max(40, Math.abs(b.x - a.x) / 2);
+    const bend = Math.max(36, Math.abs(b.x - a.x) / 2);
     return `M${a.x},${a.y} C${a.x + bend},${a.y} ${b.x - bend},${b.y} ${b.x},${b.y}`;
   };
   const agentW = sizeOf("agent").w;
   const anchor = (i: number) => ({ x: pos.agent.x + 30 + (i * (agentW - 60)) / (SUBS.length - 1), y: pos.agent.y + sizeOf("agent").h });
   const subTop = (id: NodeId) => ({ x: pos[id].x + SUB_W / 2, y: pos[id].y });
+  // From the agent down to a part (the line starts under its label), and the same line back up, for what flows in
   const drop = (a: Point, b: Point) => {
-    const bend = Math.max(30, Math.abs(b.y - a.y) / 2);
-    return `M${a.x},${a.y} C${a.x},${a.y + bend} ${b.x},${b.y - bend} ${b.x},${b.y}`;
+    const start = { x: a.x, y: a.y + 20 };
+    const bend = Math.max(26, Math.abs(b.y - start.y) / 2);
+    return { down: `M${start.x},${start.y} C${start.x},${start.y + bend} ${b.x},${b.y - bend} ${b.x},${b.y}`, up: `M${b.x},${b.y} C${b.x},${b.y - bend} ${start.x},${start.y + bend} ${start.x},${start.y}` };
   };
+
+  // Glowing dots running along a connection, like data moving through it
+  const pulses = (path: string, color: string, speed = 0.9) =>
+    [0, 1, 2].map((i) => (
+      <circle key={i} r="3.4" fill={color} filter="url(#wf-glow)">
+        <animateMotion dur={`${speed}s`} begin={`-${(i * speed) / 3}s`} repeatCount="indefinite" path={path} />
+      </circle>
+    ));
 
   return (
     <div
       ref={rootRef}
-      className={`relative select-none overflow-hidden rounded-[12px] border border-[#e3e8ef] ${dragging === "pan" ? "cursor-grabbing" : "cursor-grab"}`}
+      className="relative select-none overflow-hidden rounded-[12px] border border-[#1f1f22]"
       style={{
         height: CANVAS_H,
-        backgroundColor: "#f8fafc",
-        backgroundImage: "radial-gradient(#cdd6e4 1.1px, transparent 1.1px)",
-        backgroundSize: `${20 * view.z}px ${20 * view.z}px`,
-        backgroundPosition: `${view.x}px ${view.y}px`,
+        backgroundColor: C.canvas,
+        backgroundImage: `radial-gradient(${C.dots} 1.2px, transparent 1.2px)`,
+        backgroundSize: `${20 * zoom}px ${20 * zoom}px`,
+        backgroundPosition: `${tx}px ${ty}px`,
         touchAction: "none",
       }}
-      onPointerDown={(e) => startDrag(e, "pan")}
       onPointerMove={onMove}
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
@@ -584,144 +642,248 @@ function WorkflowCanvas({
       <style>{`
         @keyframes wfDash { to { stroke-dashoffset: -24; } }
         .wf-flow { stroke-dasharray: 7 5; animation: wfDash .55s linear infinite; }
-        @keyframes wfPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(253,110,21,.55); } 60% { box-shadow: 0 0 0 12px rgba(253,110,21,0); } }
-        .wf-active { animation: wfPulse 1.1s ease-out infinite; }
+        @keyframes wfSpin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+        .wf-spin { animation: wfSpin 1.4s linear infinite; }
+        @keyframes wfGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(74,222,128,.45), 0 0 18px rgba(74,222,128,.25); } 60% { box-shadow: 0 0 0 10px rgba(74,222,128,0), 0 0 28px rgba(74,222,128,.35); } }
+        .wf-glow { animation: wfGlow 1.2s ease-out infinite; }
+        @keyframes wfIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+        .wf-in { animation: wfIn .35s ease-out both; }
       `}</style>
 
-      {/* The flow */}
-      <div className="absolute left-0 top-0 origin-top-left" style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.z})` }}>
-        <svg className="pointer-events-none absolute left-0 top-0 overflow-visible" width="1" height="1" aria-hidden="true">
-          <defs>
-            <marker id="wf-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-              <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8" />
-            </marker>
-            <marker id="wf-arrow-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-              <path d="M0,0 L10,5 L0,10 z" fill="#fd6e15" />
-            </marker>
-          </defs>
-          {EDGES.map(({ from, to, label }) => {
-            const a = right(from);
-            const b = left(to);
-            const running = flow.from === from && flow.active === to;
-            const ran = !running && flow.done.includes(from) && (flow.done.includes(to) || flow.active === to);
-            return (
-              <g key={`${from}-${to}`}>
-                <path
-                  d={curve(a, b)}
-                  fill="none"
-                  stroke={running ? "#fd6e15" : ran ? "#22c55e" : "#94a3b8"}
-                  strokeWidth={running ? 2.6 : 1.7}
-                  className={running ? "wf-flow" : ""}
-                  markerEnd={running ? "url(#wf-arrow-on)" : "url(#wf-arrow)"}
-                />
-                {label && (
-                  <text x={(a.x + b.x) / 2} y={(a.y + b.y) / 2 - 6} textAnchor="middle" fontSize="9.5" fontWeight="700" fill={label === "yes" ? "#15803d" : "#64748b"}>
-                    {label}
+      {width > 0 && (
+        <div className="absolute left-0 top-0 origin-top-left" style={{ transform: `translate(${tx}px, ${ty}px) scale(${zoom})` }}>
+          <svg className="pointer-events-none absolute left-0 top-0 overflow-visible" width="1" height="1" aria-hidden="true">
+            <defs>
+              <marker id="wf-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill={C.edge} />
+              </marker>
+              <marker id="wf-arrow-run" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill={C.run} />
+              </marker>
+              <marker id="wf-arrow-done" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill={C.done} />
+              </marker>
+              <filter id="wf-glow" x="-200%" y="-200%" width="500%" height="500%">
+                <feGaussianBlur stdDeviation="2.4" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {EDGES.map(({ from, to, port, label }) => {
+              const a = out(from, port);
+              const b = into(to);
+              const path = curve(a, b);
+              const running = flow.from === from && flow.active === to;
+              const ran = !running && flow.done.includes(from) && (flow.done.includes(to) || flow.active === to);
+              return (
+                <g key={`${from}-${to}`}>
+                  {running && <path d={path} fill="none" stroke={C.run} strokeOpacity="0.25" strokeWidth={9} />}
+                  <path
+                    d={path}
+                    fill="none"
+                    stroke={running ? C.run : ran ? C.done : C.edge}
+                    strokeWidth={running ? 2.6 : ran ? 2.2 : 1.8}
+                    className={running ? "wf-flow" : ""}
+                    markerEnd={running ? "url(#wf-arrow-run)" : ran ? "url(#wf-arrow-done)" : "url(#wf-arrow)"}
+                  />
+                  {running && pulses(path, "#dcfce7")}
+                  {label && (
+                    // Clear of the line: "yes" and "no" above it as they leave, "done" under it ("1 item" goes above)
+                    <text x={a.x + 12} y={a.y + (port ? -7 : 15)} fontSize="9.5" fontWeight="700" fill={ran || running ? C.run : C.muted}>
+                      {label}
+                    </text>
+                  )}
+                  {/* n8n shows what went through a connection after a run */}
+                  {ran && (
+                    // Above a straight line; beside one that bends up or down
+                    <text
+                      className="wf-in"
+                      x={(a.x + b.x) / 2 + (Math.abs(b.y - a.y) > 30 ? 9 : 0)}
+                      y={(a.y + b.y) / 2 + (Math.abs(b.y - a.y) > 30 ? 3 : -8)}
+                      textAnchor={Math.abs(b.y - a.y) > 30 ? "start" : "middle"}
+                      fontSize="9"
+                      fontWeight="600"
+                      fill="#86efac"
+                    >
+                      1 item
+                    </text>
+                  )}
+                </g>
+              );
+            })}
+
+            {SUBS.map((id, i) => {
+              const a = anchor(i);
+              const { down, up } = drop(a, subTop(id));
+              const on = isActive(id);
+              const ran = isDone(id);
+              return (
+                <g key={id}>
+                  {on && <path d={down} fill="none" stroke={C.run} strokeOpacity="0.22" strokeWidth={8} />}
+                  <path d={down} fill="none" stroke={on ? C.run : ran ? C.done : C.edge} strokeWidth={on ? 2.4 : 1.6} strokeDasharray="5 4" className={on ? "wf-flow" : ""} />
+                  {/* What the part gives flows up into the agent */}
+                  {on && pulses(up, "#bbf7d0", 1.1)}
+                  <rect x={a.x - 5} y={a.y - 5} width="10" height="10" fill={on ? C.run : ran ? C.done : C.edge} transform={`rotate(45 ${a.x} ${a.y})`} />
+                  <text x={a.x} y={a.y + 16} textAnchor="middle" fontSize="8.5" fontWeight="600" fill={on || ran ? "#86efac" : C.muted}>
+                    {SUB_LABEL[id]}
                   </text>
+                </g>
+              );
+            })}
+          </svg>
+
+          {(Object.keys(MAIN_SIZE) as NodeId[]).map((id) => {
+            const n = nodes[id];
+            const { w, h } = sizeOf(id);
+            const isOpen = n.open && n.open === panel;
+            const agent = id === "agent";
+            const on = isActive(id);
+            const ran = isDone(id);
+            const radius = id === "trigger" ? "42px 10px 10px 42px" : "10px";
+            return (
+              <div key={id} className="group absolute" style={{ left: pos[id].x, top: pos[id].y, width: w }}>
+                <div
+                  role={n.open ? "button" : undefined}
+                  tabIndex={n.open ? 0 : undefined}
+                  aria-label={n.title}
+                  onKeyDown={(e) => onKey(e, id)}
+                  onPointerDown={(e) => startDrag(e, id)}
+                  className={`relative flex items-center transition-[box-shadow,border-color] ${agent ? "gap-[12px] px-[16px]" : "justify-center"} ${
+                    dragging === id ? "cursor-grabbing" : "cursor-grab"
+                  } ${on ? "wf-glow" : ""}`}
+                  style={{
+                    width: w,
+                    height: h,
+                    borderRadius: radius,
+                    background: C.node,
+                    border: `2px solid ${on ? C.run : ran ? C.done : isOpen ? C.open : agent ? "#8d8e96" : C.border}`,
+                    boxShadow: dragging === id ? "0 18px 30px -12px rgba(0,0,0,.7)" : isOpen && !on ? "0 0 0 4px rgba(253,110,21,.22)" : "0 6px 14px -8px rgba(0,0,0,.6)",
+                  }}
+                >
+                  {/* Working now: a light runs round the border */}
+                  {on && (
+                    <span className="pointer-events-none absolute -inset-[3px] -z-10 overflow-hidden" style={{ borderRadius: radius }}>
+                      <span className="wf-spin absolute left-1/2 top-1/2 aspect-square w-[300%]" style={{ background: `conic-gradient(from 0deg, transparent 0 62%, ${C.run} 80%, #ffffff 86%, transparent 92%)` }} />
+                    </span>
+                  )}
+                  <span className="relative grid shrink-0 place-items-center">{n.icon}</span>
+                  {agent && (
+                    <span className="min-w-0">
+                      <span className="block text-[14px] font-bold leading-[1.2]" style={{ color: C.text }}>
+                        {n.title}
+                      </span>
+                      <span className="mt-[2px] block text-[9.5px] leading-[1.3]" style={{ color: C.muted }}>
+                        {flow.thinking ? "Thinking… asking the model, memory and rules" : n.detail}
+                      </span>
+                    </span>
+                  )}
+                  {/* The run went through it: a green tick, bottom right (like n8n) */}
+                  {(ran || on) && (
+                    <span className="absolute bottom-[4px] right-[5px]">
+                      {on ? <Loader2 className="h-[13px] w-[13px] animate-spin" style={{ color: C.run }} /> : <Check className="wf-in h-[14px] w-[14px]" strokeWidth={3} style={{ color: C.done }} />}
+                    </span>
+                  )}
+                  {id === "trigger" && <PiLightningFill className="absolute -left-[22px] top-1/2 -translate-y-1/2" size={15} color="#ff6d5a" />}
+                  {/* Connection points: in on the left (a bar), out on the right (a dot) */}
+                  {id !== "trigger" && <span className="absolute -left-[5px] top-1/2 h-[16px] w-[7px] -translate-y-1/2 rounded-[2px]" style={{ background: on || ran ? C.done : C.edge }} />}
+                  {id === "decide" ? (
+                    <>
+                      <span className="absolute -right-[7px] top-[30%] h-[12px] w-[12px] -translate-y-1/2 rounded-full" style={{ background: on || ran ? C.done : C.edge }} />
+                      <span className="absolute -right-[7px] top-[70%] h-[12px] w-[12px] -translate-y-1/2 rounded-full" style={{ background: on || ran ? C.done : C.edge }} />
+                    </>
+                  ) : (
+                    <span className="absolute -right-[7px] top-1/2 h-[12px] w-[12px] -translate-y-1/2 rounded-full" style={{ background: on || ran ? C.done : C.edge }} />
+                  )}
+                  {n.open && (
+                    <span className="pointer-events-none absolute -top-[22px] left-1/2 hidden -translate-x-1/2 items-center gap-[3px] whitespace-nowrap rounded-[6px] bg-[#1f1f22] px-[7px] py-[2px] text-[8.5px] font-semibold text-white ring-1 ring-white/10 group-hover:flex">
+                      <Pencil className="h-[9px] w-[9px]" /> Click to edit
+                    </span>
+                  )}
+                </div>
+                {!agent && (
+                  <div className="pointer-events-none absolute left-1/2 top-full mt-[6px] -translate-x-1/2 text-center" style={{ width: LABEL_W }}>
+                    <span className="block text-[11px] font-bold leading-[1.2]" style={{ color: C.text }}>
+                      {n.title}
+                    </span>
+                    <span className="mt-[1px] block text-[8.5px] leading-[1.25]" style={{ color: C.muted }}>
+                      {n.detail}
+                    </span>
+                  </div>
                 )}
-              </g>
+              </div>
             );
           })}
-          {SUBS.map((id, i) => (
-            <g key={id}>
-              <path
-                d={drop(anchor(i), subTop(id))}
-                fill="none"
-                stroke={isActive(id) ? "#fd6e15" : isDone(id) ? "#22c55e" : "#a5b4cb"}
-                strokeWidth={isActive(id) ? 2.4 : 1.5}
-                strokeDasharray="5 4"
-                className={isActive(id) ? "wf-flow" : ""}
-              />
-              <rect x={anchor(i).x - 4} y={anchor(i).y - 4} width="8" height="8" fill="#94a3b8" transform={`rotate(45 ${anchor(i).x} ${anchor(i).y})`} />
-            </g>
-          ))}
-        </svg>
 
-        {(Object.keys(MAIN_SIZE) as NodeId[]).map((id) => {
-          const n = nodes[id];
-          const { w, h } = sizeOf(id);
-          const isOpen = n.open && n.open === panel;
-          const agent = id === "agent";
-          return (
-            <div
-              key={id}
-              role={n.open ? "button" : undefined}
-              tabIndex={n.open ? 0 : undefined}
-              onKeyDown={(e) => onKey(e, id)}
-              onPointerDown={(e) => startDrag(e, id)}
-              className={`group absolute flex items-center gap-[10px] rounded-[12px] bg-white px-[12px] transition-shadow ${
-                dragging === id ? "cursor-grabbing shadow-[0_18px_34px_-14px_rgba(10,43,94,0.55)]" : "cursor-grab shadow-[0_6px_16px_-12px_rgba(10,30,74,0.5)] hover:shadow-[0_12px_24px_-14px_rgba(10,30,74,0.55)]"
-              } ${isActive(id) ? "wf-active border-2 border-[#fd6e15]" : isDone(id) ? "border-2 border-[#22c55e]" : agent ? "border-2 border-[#134698]" : "border border-[#cbd5e1]"} ${isOpen && !isActive(id) ? "ring-[3px] ring-[#fd6e15]/50" : ""}`}
-              style={{ left: pos[id].x, top: pos[id].y, width: w, height: h }}
-            >
-              <StepBadge active={isActive(id)} done={isDone(id)} />
-              <span className={`relative grid shrink-0 place-items-center rounded-[10px] ${agent ? "h-[46px] w-[46px]" : "h-[36px] w-[36px]"} ${TONE[n.tone]}`}>
-                {n.icon}
-                {id === "trigger" && (
-                  <span className="absolute -left-[6px] -top-[6px] grid h-[16px] w-[16px] place-items-center rounded-full bg-[#fd6e15] text-white">
-                    <Zap className="h-[10px] w-[10px]" />
+          {SUBS.map((id) => {
+            const n = nodes[id];
+            const isOpen = n.open && n.open === panel;
+            const on = isActive(id);
+            const ran = isDone(id);
+            return (
+              <div
+                key={id}
+                role={n.open ? "button" : undefined}
+                tabIndex={n.open ? 0 : undefined}
+                aria-label={n.title}
+                onKeyDown={(e) => onKey(e, id)}
+                onPointerDown={(e) => startDrag(e, id)}
+                className={`group absolute flex flex-col items-center text-center ${dragging === id ? "cursor-grabbing" : "cursor-grab"}`}
+                style={{ left: pos[id].x, top: pos[id].y, width: SUB_W }}
+              >
+                <span
+                  className={`relative grid place-items-center rounded-full transition-[border-color,box-shadow] ${on ? "wf-glow" : ""}`}
+                  style={{
+                    width: SUB_CIRCLE,
+                    height: SUB_CIRCLE,
+                    background: C.node,
+                    border: `2px solid ${on ? C.run : ran ? C.done : isOpen ? C.open : C.border}`,
+                    boxShadow: isOpen && !on ? "0 0 0 4px rgba(253,110,21,.22)" : "0 6px 14px -8px rgba(0,0,0,.6)",
+                  }}
+                >
+                  {on && (
+                    <span className="pointer-events-none absolute -inset-[3px] -z-10 overflow-hidden rounded-full">
+                      <span className="wf-spin absolute left-1/2 top-1/2 aspect-square w-[300%]" style={{ background: `conic-gradient(from 0deg, transparent 0 62%, ${C.run} 80%, #ffffff 86%, transparent 92%)` }} />
+                    </span>
+                  )}
+                  {n.icon}
+                  {(ran || on) && (
+                    <span className="absolute -bottom-[2px] -right-[2px] grid h-[17px] w-[17px] place-items-center rounded-full" style={{ background: on ? C.node : C.done, border: `1.5px solid ${on ? C.run : C.done}` }}>
+                      {on ? <Loader2 className="h-[10px] w-[10px] animate-spin" style={{ color: C.run }} /> : <Check className="h-[10px] w-[10px] text-white" strokeWidth={3} />}
+                    </span>
+                  )}
+                  {/* The connection point on top */}
+                  <span className="absolute -top-[5px] left-1/2 h-[9px] w-[9px] -translate-x-1/2 rotate-45" style={{ background: on || ran ? C.done : C.edge }} />
+                </span>
+                <span className="mt-[6px] text-[10.5px] font-bold leading-[1.2]" style={{ color: isOpen ? "#fdba74" : C.text }}>
+                  {n.title}
+                </span>
+                <span className="text-[8.5px] leading-[1.25]" style={{ color: C.muted }}>
+                  {n.detail}
+                </span>
+                {n.open && (
+                  <span className="pointer-events-none absolute -top-[22px] left-1/2 hidden -translate-x-1/2 items-center gap-[3px] whitespace-nowrap rounded-[6px] bg-[#1f1f22] px-[7px] py-[2px] text-[8.5px] font-semibold text-white ring-1 ring-white/10 group-hover:flex">
+                    <Pencil className="h-[9px] w-[9px]" /> Click to edit
                   </span>
                 )}
-              </span>
-              <span className="min-w-0">
-                <span className={`block font-bold leading-[1.2] text-[#0A2B5E] ${agent ? "text-[12.5px]" : "text-[10.5px]"}`}>{n.title}</span>
-                <span className="mt-[1px] block text-[8.5px] leading-[1.3] text-[#64748b]">{n.detail}</span>
-              </span>
-              {/* n8n-style connection handles */}
-              {id !== "trigger" && <span className="absolute -left-[6px] top-1/2 h-[11px] w-[11px] -translate-y-1/2 rounded-full border-2 border-[#94a3b8] bg-white" />}
-              <span className="absolute -right-[6px] top-1/2 h-[11px] w-[11px] -translate-y-1/2 rounded-full border-2 border-[#94a3b8] bg-white" />
-              {n.open && (
-                <span className="pointer-events-none absolute -top-[9px] right-[10px] hidden rounded-full bg-[#fd6e15] px-[7px] py-[1px] text-[7.5px] font-bold uppercase tracking-wide text-white group-hover:block">Click to edit</span>
-              )}
-            </div>
-          );
-        })}
-
-        {SUBS.map((id) => {
-          const n = nodes[id];
-          const isOpen = n.open && n.open === panel;
-          return (
-            <div
-              key={id}
-              role={n.open ? "button" : undefined}
-              tabIndex={n.open ? 0 : undefined}
-              onKeyDown={(e) => onKey(e, id)}
-              onPointerDown={(e) => startDrag(e, id)}
-              className={`group absolute flex flex-col items-center text-center ${dragging === id ? "cursor-grabbing" : "cursor-grab"}`}
-              style={{ left: pos[id].x, top: pos[id].y, width: SUB_W }}
-            >
-              <span
-                className={`relative grid place-items-center rounded-full border-2 bg-white transition ${
-                  isActive(id)
-                    ? "wf-active border-[#fd6e15] text-[#e85a05]"
-                    : isDone(id)
-                      ? "border-[#22c55e] text-[#15803d]"
-                      : isOpen
-                        ? "border-[#fd6e15] text-[#e85a05] shadow-[0_0_0_4px_rgba(253,110,21,0.15)]"
-                        : "border-[#cbd5e1] text-[#475569] group-hover:border-[#134698] group-hover:text-[#134698]"
-                }`}
-                style={{ width: SUB_CIRCLE, height: SUB_CIRCLE }}
-              >
-                {n.icon}
-                <StepBadge active={isActive(id)} done={isDone(id)} />
-              </span>
-              <span className={`mt-[5px] text-[10px] font-bold ${isOpen ? "text-[#e85a05]" : "text-[#0A2B5E]"}`}>{n.title}</span>
-              <span className="text-[8px] leading-[1.25] text-[#64748b]">{n.detail}</span>
-            </div>
-          );
-        })}
-      </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Top: the workflow's name, like n8n */}
-      <div className="pointer-events-none absolute left-[12px] top-[10px] flex items-center gap-[7px] rounded-[9px] bg-white/90 px-[10px] py-[5px] shadow-sm ring-1 ring-[#e2e8f0]">
-        <BrainCircuit className="h-[13px] w-[13px] text-[#134698]" />
-        <span className="text-[10px] font-bold text-[#0A2B5E]">DH Assist · Website chat</span>
-        <span className="flex items-center gap-[4px] rounded-full bg-[#e8f8ee] px-[7px] py-[1px] text-[8px] font-bold text-[#15803d]">
-          <span className="h-[5px] w-[5px] rounded-full bg-[#22c55e]" /> Active
+      <div className="pointer-events-none absolute left-[12px] top-[10px] flex items-center gap-[7px] rounded-[9px] bg-[#1f1f22]/90 px-[10px] py-[5px] ring-1 ring-white/10">
+        <BrainCircuit className="h-[13px] w-[13px] text-[#fd6e15]" />
+        <span className="text-[10px] font-bold text-white">DH Assist · Website chat</span>
+        <span className="flex items-center gap-[4px] rounded-full bg-[#22c55e]/15 px-[7px] py-[1px] text-[8px] font-bold text-[#4ade80]">
+          <span className={`h-[5px] w-[5px] rounded-full bg-[#4ade80] ${flow.active || flow.thinking ? "animate-ping" : ""}`} /> {flow.active || flow.thinking ? "Running" : "Active"}
         </span>
       </div>
-      <div className="pointer-events-none absolute right-[12px] top-[10px] hidden items-center gap-[5px] rounded-[9px] bg-white/90 px-[10px] py-[5px] text-[8.5px] text-[#64748b] shadow-sm ring-1 ring-[#e2e8f0] md:flex">
-        <Hand className="h-[11px] w-[11px]" /> Drag nodes to move · drag empty space to pan · Ctrl + scroll to zoom
+      <div className="pointer-events-none absolute right-[12px] top-[10px] hidden items-center gap-[5px] rounded-[9px] bg-[#1f1f22]/90 px-[10px] py-[5px] text-[8.5px] text-[#a3a3ab] ring-1 ring-white/10 md:flex">
+        <Hand className="h-[11px] w-[11px]" /> Drag any node to move it · click to edit · Ctrl + scroll to zoom
       </div>
 
       {/* Bottom left: zoom controls */}
@@ -729,16 +891,16 @@ function WorkflowCanvas({
         <CanvasButton label="Fit to view" onClick={() => fit(pos)}>
           <Maximize className="h-[13px] w-[13px]" />
         </CanvasButton>
-        <CanvasButton label="Zoom in" onClick={() => zoomAt(1.2)}>
+        <CanvasButton label="Zoom in" onClick={() => zoomBy(1.2)}>
           <ZoomIn className="h-[13px] w-[13px]" />
         </CanvasButton>
-        <CanvasButton label="Zoom out" onClick={() => zoomAt(1 / 1.2)}>
+        <CanvasButton label="Zoom out" onClick={() => zoomBy(1 / 1.2)}>
           <ZoomOut className="h-[13px] w-[13px]" />
         </CanvasButton>
         <CanvasButton label="Reset layout" onClick={resetLayout}>
           <RotateCcw className="h-[13px] w-[13px]" />
         </CanvasButton>
-        <span className="ml-[4px] self-center rounded-[6px] bg-white/90 px-[6px] py-[2px] text-[8.5px] font-semibold text-[#64748b] ring-1 ring-[#e2e8f0]">{Math.round(view.z * 100)}%</span>
+        <span className="ml-[4px] self-center rounded-[6px] bg-[#1f1f22]/90 px-[6px] py-[2px] text-[8.5px] font-semibold text-[#a3a3ab] ring-1 ring-white/10">{Math.round(zoom * 100)}%</span>
       </div>
 
       {/* Bottom centre: chat with it, like n8n */}
@@ -746,7 +908,7 @@ function WorkflowCanvas({
         type="button"
         onPointerDown={(e) => e.stopPropagation()}
         onClick={onTest}
-        className="absolute bottom-[12px] left-1/2 flex h-[30px] -translate-x-1/2 items-center gap-[5px] rounded-[8px] bg-[#fd6e15] px-[14px] text-[10px] font-bold text-white shadow-[0_4px_10px_rgba(253,110,21,0.35)] transition hover:bg-[#e85a05]"
+        className="absolute bottom-[12px] left-1/2 flex h-[30px] -translate-x-1/2 items-center gap-[5px] rounded-[8px] bg-[#fd6e15] px-[14px] text-[10px] font-bold text-white shadow-[0_4px_14px_rgba(253,110,21,0.45)] transition hover:bg-[#e85a05]"
       >
         <MessageCircle className="h-[13px] w-[13px]" /> Chat
       </button>
@@ -754,27 +916,9 @@ function WorkflowCanvas({
   );
 }
 
-const TONE: Record<Tone, string> = {
-  orange: "bg-[#fff1e6] text-[#e85a05]",
-  grey: "bg-[#f1f5f9] text-[#475569]",
-  green: "bg-[#e8f8ee] text-[#15803d]",
-  blue: "bg-[#eef3fb] text-[#134698]",
-  navy: "bg-gradient-to-br from-[#134698] to-[#0A2B5E] text-white",
-};
-
-// Top right of a node: spinning while it works, a green tick once done (like an n8n run)
-function StepBadge({ active, done }: { active: boolean; done: boolean }) {
-  if (!active && !done) return null;
-  return (
-    <span className={`absolute -right-[7px] -top-[7px] z-10 grid h-[18px] w-[18px] place-items-center rounded-full text-white shadow ${active ? "bg-[#fd6e15]" : "bg-[#22c55e]"}`}>
-      {active ? <Loader2 className="h-[11px] w-[11px] animate-spin" /> : <Check className="h-[11px] w-[11px]" />}
-    </span>
-  );
-}
-
 function CanvasButton({ label, onClick, children }: { label: string; onClick: () => void; children: ReactNode }) {
   return (
-    <button type="button" onClick={onClick} title={label} aria-label={label} className="grid h-[30px] w-[30px] place-items-center rounded-[8px] bg-white text-[#475569] shadow-sm ring-1 ring-[#e2e8f0] transition hover:text-[#0A2B5E] hover:ring-[#134698]/40">
+    <button type="button" onClick={onClick} title={label} aria-label={label} className="grid h-[30px] w-[30px] place-items-center rounded-[8px] bg-[#1f1f22]/90 text-[#c4c4cc] ring-1 ring-white/10 transition hover:text-white hover:ring-white/30">
       {children}
     </button>
   );
@@ -1013,8 +1157,8 @@ function KnowledgePanel({ items, know, run, onWebsite }: { items: TrainingItem[]
       <section>
         <SectionTitle icon={<BookOpen className="h-[13px] w-[13px]" />} title="What DH Assist already knows" hint="Built in, and read from the website by itself. To change it, change the website, or add your own note below (yours come on top)." />
         <div className="grid gap-[8px] xl:grid-cols-2">
-          {know.basics.map((b) => (
-            <Expandable key={b.title} icon={<Sparkles className="h-[14px] w-[14px]" />} title={b.title} meta={b.url ? `from ${b.url}` : "always known"} text={b.text} />
+          {basicsByPage(know.basics).map((b) => (
+            <Expandable key={`${b.url}|${b.title}`} icon={<Sparkles className="h-[14px] w-[14px]" />} title={b.title} meta={b.url ? `from ${b.url}` : "always known"} text={b.text} />
           ))}
         </div>
         <div className="mt-[10px] grid gap-[10px] lg:grid-cols-2">
@@ -1129,6 +1273,17 @@ function KnowledgePanel({ items, know, run, onWebsite }: { items: TrainingItem[]
     </div>
   );
 }
+
+// A long page comes in several passages with the same title: one card per page, its passages joined
+const basicsByPage = (basics: KnowledgeOverview["basics"]) => {
+  const pages = new Map<string, KnowledgeOverview["basics"][number]>();
+  for (const b of basics) {
+    const key = `${b.url}|${b.title}`;
+    const page = pages.get(key);
+    pages.set(key, page ? { ...page, text: `${page.text}\n\n${b.text}` } : { ...b });
+  }
+  return [...pages.values()];
+};
 
 function AlwaysToggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -1451,7 +1606,12 @@ function TestChat({ settings, status, flowApi, onClose }: { settings: ChatbotSet
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, busy]);
 
+  // Each reply read out gets a number; stopping (or closing the chat) moves it on, so audio still downloading never plays
+  const speechRef = useRef(0);
+  const closedRef = useRef(false);
+
   const stopAudio = () => {
+    speechRef.current += 1;
     audioRef.current?.pause();
     audioRef.current = null;
     setSpeaking(false);
@@ -1460,9 +1620,11 @@ function TestChat({ settings, status, flowApi, onClose }: { settings: ChatbotSet
   // Read out in DH Assist's voice
   const speak = async (text: string) => {
     stopAudio();
+    const id = speechRef.current;
     try {
       setSpeaking(true);
       const blob = await chatTrainingApi.speak(text);
+      if (closedRef.current || id !== speechRef.current) return;
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
       audioRef.current = audio;
@@ -1478,11 +1640,16 @@ function TestChat({ settings, status, flowApi, onClose }: { settings: ChatbotSet
 
   // Opening it: the greeting, as a visitor sees it
   useEffect(() => {
+    closedRef.current = false;
     flowApi.greeting();
     if (greetingText && speakReplies) void speak(greetingText.replace(/\n/g, ". "));
+    // Closed: no more talking or listening, also for a reply still on its way
     return () => {
+      closedRef.current = true;
+      speechRef.current += 1;
       recRef.current?.abort();
       audioRef.current?.pause();
+      audioRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -1594,7 +1761,15 @@ function TestChat({ settings, status, flowApi, onClose }: { settings: ChatbotSet
             Restart
           </button>
         )}
-        <button type="button" onClick={onClose} aria-label="Close" className="grid h-[28px] w-[28px] place-items-center rounded-full bg-white/15 hover:bg-white/25">
+        <button
+          type="button"
+          onClick={() => {
+            stopAudio();
+            onClose();
+          }}
+          aria-label="Close"
+          className="grid h-[28px] w-[28px] place-items-center rounded-full bg-white/15 hover:bg-white/25"
+        >
           <X className="h-[14px] w-[14px]" />
         </button>
       </div>

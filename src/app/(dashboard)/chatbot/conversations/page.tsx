@@ -673,7 +673,7 @@ function Conversations() {
                           type="button"
                           onClick={takeOver}
                           disabled={!!busy}
-                          className="flex h-[25px] items-center gap-[5px] rounded-[7px] border border-[#134698]/50 bg-white px-[11px] text-[9.5px] font-bold text-[#134698] transition hover:bg-[#134698] hover:text-white disabled:opacity-50"
+                          className="flex h-[25px] items-center gap-[5px] rounded-[7px] bg-[#fd6e15] px-[11px] text-[9.5px] font-bold text-white shadow-[0_4px_10px_rgba(253,110,21,0.35)] transition hover:bg-[#e85a05] disabled:opacity-50"
                         >
                           {busy === "takeover" ? <Loader2 className="h-[11px] w-[11px] animate-spin" /> : <Headset className="h-[11px] w-[11px]" />}
                           Take over chat
