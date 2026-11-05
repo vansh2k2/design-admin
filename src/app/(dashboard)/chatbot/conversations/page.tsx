@@ -456,7 +456,7 @@ function Conversations() {
                     )}
                   </div>
                   <div className="-mx-[4px] flex gap-[6px] overflow-x-auto px-[4px] pb-[4px] [scrollbar-width:none]">
-                    {recent.map((c) => (
+                    {recent.map((c, i) => (
                       <button
                         key={c._id}
                         type="button"
@@ -464,7 +464,7 @@ function Conversations() {
                         title={titleOf(c)}
                         className="flex w-[52px] shrink-0 flex-col items-center gap-[4px] rounded-[10px] py-[4px] transition hover:bg-white/70"
                       >
-                        <Avatar chat={c} size={40} online={isOnline(c)} ring={c._id === selectedId} />
+                        <Avatar chat={c} size={40} online={isOnline(c)} ring={c._id === selectedId} color={RECENT_COLORS[i % RECENT_COLORS.length]} />
                         <span className={`w-full truncate text-center text-[8.5px] ${c._id === selectedId ? "font-bold text-[#0A2B5E]" : "font-medium text-[#475569]"}`}>{shortOf(c)}</span>
                       </button>
                     ))}
@@ -824,14 +824,26 @@ function Conversations() {
 type Block = { kind: "event"; message: ChatMessage } | { kind: "messages"; role: ChatMessage["role"]; by?: string; items: ChatMessage[] };
 
 /* ── Round avatar: first and last initials of the name; a person icon when the visitor gave no name ── */
-function Avatar({ chat, size, online, ring }: { chat: Chat; size: number; online?: boolean; ring?: boolean }) {
+// Recent Chats: each avatar in the row gets its own colour, so neighbours never look alike
+const RECENT_COLORS = [
+  "linear-gradient(135deg, #1d5bc0, #0A2B5E)",
+  "linear-gradient(135deg, #fd8a3d, #e85a05)",
+  "linear-gradient(135deg, #14b8a6, #0f766e)",
+  "linear-gradient(135deg, #a855f7, #6d28d9)",
+  "linear-gradient(135deg, #f472b6, #be185d)",
+  "linear-gradient(135deg, #22c55e, #15803d)",
+  "linear-gradient(135deg, #38bdf8, #0369a1)",
+  "linear-gradient(135deg, #fbbf24, #b45309)",
+];
+
+function Avatar({ chat, size, online, ring, color }: { chat: Chat; size: number; online?: boolean; ring?: boolean; color?: string }) {
   const name = nameOf(chat);
   const dot = Math.round(size * 0.26);
   return (
     <span className="relative shrink-0" style={{ width: size, height: size }}>
       <span
         className={`grid h-full w-full place-items-center rounded-full font-bold text-white shadow-[0_2px_6px_-2px_rgba(10,30,74,0.35)] ${ring ? "ring-[3px] ring-[#fd6e15] ring-offset-2" : ""}`}
-        style={{ background: avatarColor(chat.lead?.phone || chat.visitor?.ip || chat._id), fontSize: Math.round(size * 0.34) }}
+        style={{ background: color || avatarColor(chat.lead?.phone || chat.visitor?.ip || chat._id), fontSize: Math.round(size * 0.34) }}
       >
         {name ? firstLast(name) : <UserRound style={{ width: size * 0.5, height: size * 0.5 }} />}
       </span>

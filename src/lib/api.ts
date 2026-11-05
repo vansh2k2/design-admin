@@ -183,6 +183,8 @@ const LIVE_API_PATTERNS = [
   /^\/admin\/chats\/visitors/,
   /^\/admin\/chats\/[a-f\d]{24}(?:\?|$)/i,
   /^\/admin\/chats\/[a-f\d]{24}\/(?:takeover|release|reply|attach)$/i,
+  /^\/admin\/chats\/training/,
+  /^\/admin\/chats\/reindex$/,
 ];
 export const isLivePath = (path: string) =>
   LIVE_API_PREFIXES.some((prefix) => path.startsWith(prefix)) || LIVE_API_PATTERNS.some((pattern) => pattern.test(path));

@@ -1,4 +1,4 @@
-import { api } from "./api";
+import { api, getAccessToken, getApiBaseUrl } from "./api";
 
 export interface ChatLead {
   name?: string;
@@ -183,6 +183,122 @@ export const chatbotApi = {
   },
   saveWorkflow: (items: WorkflowUpdate[]) => api.put<{ matched: number; modified: number }>("/admin/chats/workflow", { items }),
   createManual: (enquiry: NewManualEnquiry) => api.post<{ id: string; createdAt: string }>("/admin/chats/manual", enquiry),
+};
+
+/* ── AI Training: what the team teaches DH Assist (instructions, notes, files) ── */
+
+export type TrainingKind = "instruction" | "note" | "file";
+
+export interface TrainingItem {
+  _id: string;
+  kind: TrainingKind;
+  title: string;
+  content: string;
+  /** Notes and files: always in the assistant's mind, instead of found by search */
+  always: boolean;
+  enabled: boolean;
+  file?: { name?: string; mime?: string; size?: number; pages?: number };
+  chars: number;
+  /** Searchable passages made from it */
+  passages: number;
+  createdBy?: string;
+  updatedBy?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TrainingOverview {
+  items: TrainingItem[];
+  counts: { website: number; taught: number };
+  /** Size of the instructions and always-known notes in the assistant's rules, and its limit */
+  rulesChars: number;
+  maxRulesChars: number;
+  model: string;
+  voiceModel: string;
+  aiReady: boolean;
+}
+
+export interface TrainingTestReply {
+  text: string;
+  files?: { href: string; label: string }[];
+  link?: { href: string; label: string };
+  searched: { query: string; results: { title: string; url: string; text: string }[] }[];
+  /** The steps it took, in order: the workflow's node ids (trigger, agent, website, knowledge, contact, tools, decide, lead, reply, ending) */
+  trace: string[];
+  /** The tester said they were done: the reply was the ending message */
+  finished: boolean;
+}
+
+/** The greeting lines; again / callAgain use {name} where the visitor's name goes */
+export interface GreetingLines {
+  title: string;
+  chat: string;
+  call: string;
+  again: string;
+  callAgain: string;
+}
+
+export interface ContactDetails {
+  phones: string[];
+  emails: string[];
+  whatsapp: string;
+  address: string;
+  hours: string;
+  website: string;
+}
+
+export interface ChatbotSettings {
+  greeting: { en: GreetingLines; hi: GreetingLines };
+  ending: { en: string; hi: string };
+  contact: ContactDetails;
+  /** The built-in lines and the Contact page's details */
+  defaults: { greeting: { en: GreetingLines; hi: GreetingLines }; ending: { en: string; hi: string }; contact: ContactDetails };
+  /** Which parts the team has saved (the others are the defaults) */
+  saved: { greeting: boolean; ending: boolean; contact: boolean };
+  updatedBy?: string;
+  updatedAt?: string;
+}
+
+/** What DH Assist already knows without being taught */
+export interface KnowledgeOverview {
+  basics: { title: string; url: string; text: string }[];
+  services: string[];
+  documents: { title: string; category?: string; fileSize?: string }[];
+  pages: { url: string; title: string; passages: number; text: string; checkedAt: string }[];
+  rules: { title: string; text: string }[];
+}
+
+export const chatTrainingApi = {
+  get: () => api.get<TrainingOverview>("/admin/chats/training", { forceFresh: true }),
+  settings: () => api.get<ChatbotSettings>("/admin/chats/training/settings", { forceFresh: true }),
+  /** null for a part puts it back to the built-in one */
+  saveSettings: (patch: { greeting?: ChatbotSettings["greeting"] | null; ending?: ChatbotSettings["ending"] | null; contact?: ContactDetails | null }) =>
+    api.put<ChatbotSettings>("/admin/chats/training/settings", patch),
+  knowledge: () => api.get<KnowledgeOverview>("/admin/chats/training/knowledge", { forceFresh: true }),
+  add: (item: { kind: "instruction" | "note"; title: string; content: string; always?: boolean }) => api.post<TrainingItem>("/admin/chats/training", item),
+  upload: (file: File, title: string, always: boolean) => {
+    const form = new FormData();
+    form.append("file", file);
+    form.append("title", title);
+    form.append("always", String(always));
+    return api.postForm<TrainingItem>("/admin/chats/training/file", form, { timeoutMs: 180000 });
+  },
+  update: (id: string, change: Partial<Pick<TrainingItem, "title" | "content" | "enabled" | "always">>) => api.put<TrainingItem>(`/admin/chats/training/${id}`, change),
+  remove: (id: string) => api.delete<null>(`/admin/chats/training/${id}`),
+  test: (message: string, history: { role: "user" | "assistant"; content: string }[]) =>
+    api.post<TrainingTestReply>("/admin/chats/training/test", { message, history }, { timeoutMs: 90000 }),
+  /** A test reply read out in DH Assist's own voice (MP3) */
+  speak: async (text: string): Promise<Blob> => {
+    const token = getAccessToken();
+    const res = await fetch(`${getApiBaseUrl()}/admin/chats/training/speak?text=${encodeURIComponent(text.slice(0, 600))}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Couldn't read the reply out");
+    return res.blob();
+  },
+  /** Re-read the website now (it also happens daily) */
+  reindex: () => api.post<{ pages?: number; passages?: number; embedded?: number; skipped?: string }>("/admin/chats/reindex", undefined, { timeoutMs: 300000 }),
 };
 
 /* ── Chat Visitors: one row per visitor (by IP) with block / close / delete controls ── */
