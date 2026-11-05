@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="360" height="360" viewBox="0 0 360 360">
+  <!-- Interior-design doodles behind the chat transcript (Chatbot → Conversations), tiled like a WhatsApp wallpaper -->
+  <defs>
+    <g id="sofa"><path d="M5 18v-6a3 3 0 0 1 3-3h20a3 3 0 0 1 3 3v6"/><path d="M2 18a2 2 0 0 1 4 0v3h24v-3a2 2 0 0 1 4 0v8H2z"/><path d="M5 26v3M31 26v3"/></g>
+    <g id="lamp"><path d="M10 4h12l4 10H6z"/><path d="M16 14v18M10 32h12"/></g>
+    <g id="plant"><path d="M10 22h16l-2 12H12z"/><path d="M18 22V10"/><path d="M18 15c-6 0-9-4-9-9 6 0 9 4 9 9z"/><path d="M18 12c5 0 8-3 8-8-5 0-8 3-8 8z"/></g>
+    <g id="frame"><rect x="4" y="6" width="28" height="22" rx="1"/><rect x="8" y="10" width="20" height="14"/><path d="M8 22l6-6 4 4 3-3 7 7"/><circle cx="23" cy="14" r="1.6"/></g>
+    <g id="pendant"><path d="M18 2v10"/><path d="M8 22a10 10 0 0 1 20 0z"/><path d="M15 25a3 3 0 0 0 6 0"/></g>
+    <g id="armchair"><path d="M8 18V9a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v9"/><path d="M4 16h4v6h20v-6h4v10H4z"/><path d="M7 26v4M29 26v4"/></g>
+    <g id="setsquare"><path d="M4 32V4l28 28z"/><path d="M10 26v-8l8 8z"/><path d="M4 10h3M4 16h3M4 22h3"/></g>
+    <g id="roller"><rect x="4" y="4" width="22" height="8" rx="2"/><path d="M26 8h4v8H16v6"/><rect x="13" y="22" width="6" height="11" rx="1.5"/></g>
+    <g id="window"><path d="M3 3h30"/><rect x="7" y="6" width="22" height="26"/><path d="M18 6v26M7 19h22"/></g>
+    <g id="bed"><path d="M3 30V8M33 30V19"/><path d="M3 22h30M3 26h30"/><rect x="6" y="15" width="9" height="7" rx="2"/></g>
+    <g id="door"><path d="M8 33V3h20v30"/><path d="M4 33h28"/><circle cx="23" cy="18" r="1.5"/></g>
+    <g id="pencil"><path d="M6 30l2-8L26 4l6 6-18 18z"/><path d="M22 8l6 6M8 22l6 6"/></g>
+    <g id="tape"><circle cx="15" cy="17" r="11"/><circle cx="15" cy="17" r="3"/><path d="M26 22h8v5H24"/><path d="M28 22v2M31 22v2"/></g>
+    <g id="swatch"><rect x="6" y="6" width="8" height="24" rx="2"/><rect x="6" y="6" width="8" height="24" rx="2" transform="rotate(22 10 28)"/><rect x="6" y="6" width="8" height="24" rx="2" transform="rotate(44 10 28)"/><circle cx="10" cy="26" r="1.4"/></g>
+    <g id="vase"><path d="M14 4h8"/><path d="M15 4c0 5-6 8-6 15 0 7 4 11 9 11s9-4 9-11c0-7-6-10-6-15"/><path d="M11 18h14"/></g>
+    <g id="shelf"><rect x="5" y="2" width="26" height="32"/><path d="M5 13h26M5 24h26"/><path d="M9 13V6M12 13V7M15 13V5M20 24v-7M23 24v-6M26 24l3-6"/></g>
+    <g id="house"><path d="M4 17L18 5l14 12"/><path d="M8 14v18h20V14"/><rect x="15" y="22" width="6" height="10"/></g>
+    <g id="table"><path d="M2 14h24M6 14v16M22 14v16"/><path d="M30 4v26M30 20h4v10"/></g>
+    <g id="stool"><ellipse cx="18" cy="6" rx="9" ry="3"/><path d="M11 8l-3 24M25 8l3 24M10 22h16"/></g>
+    <g id="mirror"><circle cx="18" cy="14" r="11"/><path d="M13 11l4-4M14 16l7-7"/><path d="M12 32h12M18 25v7"/></g>
+    <g id="spark"><path d="M4 0v8M0 4h8"/></g>
+  </defs>
+
+  <g fill="none" stroke="#0A2B5E" stroke-opacity="0.11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <use xlink:href="#sofa" transform="translate(16 16) rotate(-8 18 18)"/>
+    <use xlink:href="#pendant" transform="translate(92 8)"/>
+    <use xlink:href="#frame" transform="translate(166 20) rotate(10 18 18)"/>
+    <use xlink:href="#plant" transform="translate(244 10) rotate(-6 18 18)"/>
+    <use xlink:href="#pencil" transform="translate(312 44) rotate(4 18 18)"/>
+
+    <use xlink:href="#lamp" transform="translate(8 92) rotate(6 18 18)"/>
+    <use xlink:href="#setsquare" transform="translate(84 84) rotate(-10 18 18)"/>
+    <use xlink:href="#armchair" transform="translate(160 96) rotate(4 18 18)"/>
+    <use xlink:href="#roller" transform="translate(240 88) rotate(12 18 18)"/>
+    <use xlink:href="#stool" transform="translate(312 120) rotate(-6 18 18)"/>
+
+    <use xlink:href="#window" transform="translate(36 164) rotate(-4 18 18)"/>
+    <use xlink:href="#bed" transform="translate(118 170)"/>
+    <use xlink:href="#tape" transform="translate(198 160) rotate(-12 18 18)"/>
+    <use xlink:href="#vase" transform="translate(272 176) rotate(8 18 18)"/>
+
+    <use xlink:href="#shelf" transform="translate(6 244) rotate(4 18 18)"/>
+    <use xlink:href="#door" transform="translate(88 252) rotate(-6 18 18)"/>
+    <use xlink:href="#swatch" transform="translate(164 236) rotate(10 18 18)"/>
+    <use xlink:href="#house" transform="translate(244 248) rotate(-4 18 18)"/>
+    <use xlink:href="#mirror" transform="translate(316 226) rotate(6 18 18)"/>
+
+    <use xlink:href="#table" transform="translate(46 314)"/>
+    <use xlink:href="#plant" transform="translate(126 312) rotate(8 18 18)"/>
+    <use xlink:href="#sofa" transform="translate(204 316) rotate(-6 18 18)"/>
+    <use xlink:href="#pendant" transform="translate(290 300) rotate(4 18 18)"/>
+
+    <use xlink:href="#spark" transform="translate(66 64)"/>
+    <use xlink:href="#spark" transform="translate(216 66)"/>
+    <use xlink:href="#spark" transform="translate(140 146)"/>
+    <use xlink:href="#spark" transform="translate(330 186)"/>
+    <use xlink:href="#spark" transform="translate(56 224)"/>
+    <use xlink:href="#spark" transform="translate(222 212)"/>
+    <use xlink:href="#spark" transform="translate(150 296)"/>
+    <use xlink:href="#spark" transform="translate(12 330)"/>
+    <circle cx="150" cy="60" r="1.6"/>
+    <circle cx="300" cy="96" r="1.6"/>
+    <circle cx="100" cy="226" r="1.6"/>
+    <circle cx="260" cy="226" r="1.6"/>
+    <circle cx="340" cy="290" r="1.6"/>
+    <circle cx="96" cy="140" r="1.6"/>
+  </g>
+</svg>

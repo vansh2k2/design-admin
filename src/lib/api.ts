@@ -182,6 +182,7 @@ const LIVE_API_PATTERNS = [
   /^\/admin\/chats\/workflow$/,
   /^\/admin\/chats\/visitors/,
   /^\/admin\/chats\/[a-f\d]{24}(?:\?|$)/i,
+  /^\/admin\/chats\/[a-f\d]{24}\/(?:takeover|release|reply|attach)$/i,
 ];
 export const isLivePath = (path: string) =>
   LIVE_API_PREFIXES.some((prefix) => path.startsWith(prefix)) || LIVE_API_PATTERNS.some((pattern) => pattern.test(path));

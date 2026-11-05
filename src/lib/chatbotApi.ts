@@ -7,11 +7,25 @@ export interface ChatLead {
 }
 
 export interface ChatMessage {
-  role: "user" | "assistant";
+  /** "agent": written by someone from the team after taking the chat over */
+  role: "user" | "assistant" | "agent";
   content: string;
   createdAt: string;
   /** Abusive message: kept for the record, not shown to the visitor */
   flagged?: boolean;
+  /** agent messages: the team member who wrote it */
+  by?: string;
+  /** agent messages: the team joined or left the chat */
+  event?: "joined" | "left";
+  /** Files with the message; the team's carry their type and size and a full URL */
+  files?: ChatFile[];
+}
+
+export interface ChatFile {
+  href: string;
+  label: string;
+  type?: string;
+  size?: number;
 }
 
 export interface ChatRequest {
@@ -70,6 +84,10 @@ export interface ChatSummary {
   visitor?: { ip?: string; userAgent?: string };
   /** Blocked after three abusive messages */
   blocked?: boolean;
+  /** Someone from the team has taken the chat over: DH Assist is not replying */
+  agent?: { active: boolean; by?: string; since?: string };
+  /** Closed by the team: the visitor's next message starts a new chat */
+  closed?: boolean;
   /** When the mobile number in `lead` was verified with the WhatsApp OTP */
   phoneVerifiedAt?: string;
   feedback?: "yes" | "no";
@@ -148,9 +166,21 @@ const toQuery = (q: ChatQuery) => {
 };
 
 export const chatbotApi = {
-  list: (q: ChatQuery = {}) => api.get<ChatListResponse>(`/admin/chats${toQuery(q)}`),
+  list: (q: ChatQuery = {}, fresh = false) => api.get<ChatListResponse>(`/admin/chats${toQuery(q)}`, { forceFresh: fresh }),
   stats: (q: Pick<ChatQuery, "from" | "to"> = {}) => api.get<ChatStats>(`/admin/chats/stats${toQuery(q)}`),
-  get: (id: string) => api.get<ChatDetail>(`/admin/chats/${id}`),
+  get: (id: string, fresh = false) => api.get<ChatDetail>(`/admin/chats/${id}`, { forceFresh: fresh }),
+  /** Live chat: DH Assist stops replying and the team writes to the visitor */
+  takeover: (id: string) => api.post<ChatDetail>(`/admin/chats/${id}/takeover`),
+  /** DH Assist replies to the visitor again */
+  release: (id: string) => api.post<ChatDetail>(`/admin/chats/${id}/release`),
+  reply: (id: string, text: string) => api.post<ChatDetail>(`/admin/chats/${id}/reply`, { text }),
+  /** A photo, PDF or document to the visitor, with an optional caption */
+  attach: (id: string, file: File, text?: string) => {
+    const form = new FormData();
+    form.append("file", file);
+    if (text) form.append("text", text);
+    return api.postForm<ChatDetail>(`/admin/chats/${id}/attach`, form, { timeoutMs: 120000 });
+  },
   saveWorkflow: (items: WorkflowUpdate[]) => api.put<{ matched: number; modified: number }>("/admin/chats/workflow", { items }),
   createManual: (enquiry: NewManualEnquiry) => api.post<{ id: string; createdAt: string }>("/admin/chats/manual", enquiry),
 };
