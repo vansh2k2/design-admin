@@ -344,9 +344,29 @@ async function requestBlob(path: string): Promise<Blob> {
   }
 }
 
+/** Downloads a file with the signed-in session (token renewed on 401). Throws on failure: no placeholder is ever returned. */
+async function requestFile(path: string, isRetry = false): Promise<{ blob: Blob; filename: string | null }> {
+  syncTokensFromStorage();
+  const headers: Record<string, string> = {};
+  if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+  const res = await fetch(`${getApiBaseUrl()}${path}`, { headers });
+  if (res.status === 401 && !isRetry) {
+    if (await refreshAccessToken()) return requestFile(path, true);
+    onRefreshFailed?.();
+  }
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    throw new ApiRequestError(res.status, body?.message || "Could not download the file.");
+  }
+  const disposition = res.headers.get("content-disposition") || "";
+  const m = /filename\*?=(?:UTF-8'')?"?([^";]+)"?/i.exec(disposition);
+  return { blob: await res.blob(), filename: m ? decodeURIComponent(m[1]) : null };
+}
+
 export const api = {
-  get: <T>(path: string, options?: { forceFresh?: boolean; ttlMs?: number }): Promise<T> => {
-    const isSeo = path.startsWith("/seo-audit") || path.startsWith("/seo") || path.startsWith("/page-seo");
+  get: <T>(path: string, options?: { forceFresh?: boolean; ttlMs?: number; timeoutMs?: number }): Promise<T> => {
+    // The audit (/seo-audit) changes whenever a job finishes or a fix is applied, so it only gets the short cache
+    const isSeo = !path.startsWith("/seo-audit") && (path.startsWith("/seo") || path.startsWith("/page-seo"));
     const ttl = options?.ttlMs ?? (isSeo ? SEO_CACHE_TTL_MS : GET_CACHE_TTL_MS);
 
     if (!options?.forceFresh) {
@@ -358,7 +378,7 @@ export const api = {
     const pending = getInFlight.get(path);
     if (pending && !options?.forceFresh) return pending as Promise<T>;
 
-    const next = request<T>(path)
+    const next = request<T>(path, options?.timeoutMs ? { timeoutMs: options.timeoutMs } : undefined)
       .then((value) => {
         getCache.set(path, { value, expiresAt: Date.now() + ttl });
         return value;
@@ -390,4 +410,5 @@ export const api = {
   putForm: <T>(path: string, formData: FormData) => request<T>(path, { method: "PUT", body: formData }),
   getHtml: requestHtml,
   getBlob: requestBlob,
+  getFile: requestFile,
 };

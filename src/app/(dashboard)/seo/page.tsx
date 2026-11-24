@@ -39,18 +39,17 @@ import Spinner from "@/components/ui/Spinner";
 import {
   seoAuditApi,
   type SeoBrokenLink,
-  type SeoCompetitor,
   type SeoInsights,
   type SeoOverview,
-  type SeoPageRow,
   type SeoScoreExplanation,
 } from "@/lib/seoAuditApi";
 import { SeverityBadge, formatDateTime } from "@/components/seo/SeoBadges";
 import SeoPagesTable from "@/components/seo/SeoPagesTable";
 import SeoPageDetail from "@/components/seo/SeoPageDetail";
 import SeoCheckupFullReport from "@/components/seo/SeoCheckupFullReport";
+import CompetitorsPanel from "@/components/seo/CompetitorsPanel";
 import { checkupReportToCsv, downloadTextFile, type SeoCheckupReportData } from "@/lib/seoCheckupData";
-import { exportFullSeoPdf } from "@/lib/seoPdfExport";
+import { SITE_ORIGIN, SITE_NAME, SITE_HOST, downloadName } from "@/lib/siteConfig";
 
 type Tab =
   | "Overview"
@@ -103,7 +102,6 @@ export default function SeoDashboardPage() {
   const [reportError, setReportError] = useState<string | null>(null);
   const [brokenLinks, setBrokenLinks] = useState<SeoBrokenLink[]>([]);
   const [insights, setInsights] = useState<SeoInsights | null>(null);
-  const [competitors, setCompetitors] = useState<SeoCompetitor[]>([]);
   const [tab, setTab] = useState<Tab>("Overview");
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -111,37 +109,31 @@ export default function SeoDashboardPage() {
 
   // Business Context State
   const [businessAbout, setBusinessAbout] = useState(
-    "An international organic and wellness expo platform for exhibitions, conferences, buyer-seller meetings, sponsorships, and registrations."
+    "Turnkey interior design and execution: corporate offices, retail stores and showrooms, restaurants and exhibition stalls, based in Delhi NCR and serving projects across India."
   );
-  const [industryNiche, setIndustryNiche] = useState("Organic trade exhibitions");
+  const [industryNiche, setIndustryNiche] = useState("Interior Design, Fit-Out & Exhibition Stall Services");
   const [targetAudience, setTargetAudience] = useState(
-    "Exhibitors, buyers, investors, delegates, sponsors, and professionals in organic, wellness, agriculture, and natural products sectors."
+    "Business owners, retail brands, corporate offices, restaurants and exhibitors looking for a dependable turnkey interior design and execution partner."
   );
   const [isEditingContext, setIsEditingContext] = useState(false);
-
-  // Competitor input state
-  const [newCompetitorUrl, setNewCompetitorUrl] = useState("");
-  const [newCompetitorLabel, setNewCompetitorLabel] = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     setReportError(null);
     try {
-      const [overviewData, scoreData, linksData, insightsData, competitorData, reportData] =
+      const [overviewData, scoreData, linksData, insightsData, reportData] =
         await Promise.all([
           seoAuditApi.overview(),
           seoAuditApi.score(),
           seoAuditApi.brokenLinks(),
           seoAuditApi.insights(),
-          seoAuditApi.competitors(),
           seoAuditApi.checkupReport("home"),
         ]);
       setOverview(overviewData);
       setScore(scoreData);
       setBrokenLinks(linksData?.links ?? []);
       setInsights(insightsData);
-      setCompetitors(competitorData ?? []);
       setSiteReport(reportData);
       if (!reportData) {
         setReportError('No real audit has been run yet. Click "Run audit" to crawl the live site first — this dashboard never shows sample data.');
@@ -177,12 +169,12 @@ export default function SeoDashboardPage() {
   };
 
   const handleExportCSV = () => {
-    if (!siteReport) {
+    if (!hasValidReport || !siteReport) {
       setError("No real report to export yet — run an audit first.");
       return;
     }
     downloadTextFile(
-      "Design_House_SEO_Audit_Report.csv",
+      downloadName("seo-audit-report", "csv"),
       checkupReportToCsv(siteReport),
       "text/csv;charset=utf-8",
     );
@@ -194,40 +186,10 @@ export default function SeoDashboardPage() {
       encodeURIComponent(JSON.stringify(overview || {}, null, 2));
     const link = document.createElement("a");
     link.setAttribute("href", dataStr);
-    link.setAttribute("download", "Design_House_SEO_Overview.json");
+    link.setAttribute("download", downloadName("seo-overview", "json"));
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
-
-  const handleExportPDF = async () => {
-    let pagesList: SeoPageRow[] = [];
-    try {
-      const res = await seoAuditApi.pages();
-      pagesList = res.pages || [];
-    } catch {
-      pagesList = [];
-    }
-    exportFullSeoPdf({
-      overview,
-      siteReport,
-      pages: pagesList,
-    });
-  };
-
-  const handleAddCompetitor = async () => {
-    if (!newCompetitorUrl) return;
-    try {
-      await seoAuditApi.addCompetitor({
-        url: newCompetitorUrl,
-        label: newCompetitorLabel || newCompetitorUrl,
-      });
-      setNewCompetitorUrl("");
-      setNewCompetitorLabel("");
-      void load();
-    } catch {
-      setError("Failed to add competitor");
-    }
   };
 
   if (loading) {
@@ -239,7 +201,14 @@ export default function SeoDashboardPage() {
   }
 
   const counts = overview?.counts ?? {};
-  const summaries = siteReport?.routeSummaries ?? [];
+  const hasValidReport = Boolean(
+    siteReport &&
+    typeof siteReport === "object" &&
+    Array.isArray(siteReport.groups) &&
+    siteReport.groups.length > 0 &&
+    Array.isArray(siteReport.categories)
+  );
+  const summaries = hasValidReport && siteReport?.routeSummaries ? siteReport.routeSummaries : [];
   const shareOf = (predicate: (s: (typeof summaries)[number]) => boolean) =>
     summaries.length === 0 ? "—" : `${Math.round((summaries.filter(predicate).length / summaries.length) * 100)}%`;
   const contentShareCards = [
@@ -273,10 +242,10 @@ export default function SeoDashboardPage() {
     },
   ];
 
-  const llmChecks = siteReport
+  const llmChecks = hasValidReport && siteReport && Array.isArray(siteReport.groups)
     ? siteReport.groups
-        .filter((group) => group.name === "AI Insights" || group.name === "LLM Visibility Checker")
-        .flatMap((group) => group.tests.map((test) => ({ ...test, group: group.name })))
+        .filter((group) => group?.name === "AI Insights" || group?.name === "LLM Visibility Checker")
+        .flatMap((group) => (group?.tests || []).map((test) => ({ ...test, group: group.name })))
     : [];
 
   return (
@@ -285,15 +254,15 @@ export default function SeoDashboardPage() {
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4 bg-white p-4 lg:p-5 rounded-xl shadow-xs">
         <div>
           <div className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-blue-600">
-            <Activity className="h-4 w-4 text-blue-600" /> Design House SEO Intelligence
+            <Activity className="h-4 w-4 text-blue-600" /> {SITE_NAME} SEO Intelligence
           </div>
           <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
             Site Health Command Center
           </h1>
           <div className="mt-1 flex flex-wrap items-center gap-3 text-xs font-medium text-slate-600">
-            <span>Website: <a href="https://www.designhouse.co.in" target="_blank" rel="noreferrer" className="text-blue-600 font-mono underline font-semibold">https://www.designhouse.co.in</a></span>
+            <span>Website: <a href={SITE_ORIGIN} target="_blank" rel="noreferrer" className="text-blue-600 font-mono underline font-semibold">{SITE_ORIGIN}</a></span>
             <span>·</span>
-            <span>Event: <strong className="text-slate-900">Design House</strong></span>
+            <span>Organization: <strong className="text-slate-900">{SITE_NAME}</strong></span>
           </div>
         </div>
 
@@ -332,7 +301,7 @@ export default function SeoDashboardPage() {
 
           <button
             type="button"
-            onClick={handleExportPDF}
+            onClick={() => window.print()}
             className="inline-flex h-9 items-center gap-1.5 rounded-md border border-slate-300 bg-white px-3 text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-xs cursor-pointer"
           >
             <Download className="h-3.5 w-3.5 text-slate-600" /> Export PDF
@@ -382,7 +351,7 @@ export default function SeoDashboardPage() {
       </div>
 
       {tab === "Overview" && (
-        !siteReport ? (
+        !hasValidReport || !siteReport ? (
           <div className="rounded-xl border border-slate-200 bg-white p-10 text-center shadow-xs">
             <h2 className="text-sm font-extrabold text-slate-900">No real audit data yet</h2>
             <p className="mx-auto mt-2 max-w-md text-xs text-slate-500">
@@ -449,20 +418,20 @@ export default function SeoDashboardPage() {
                     stroke="#2563eb"
                     strokeWidth="10"
                     strokeDasharray={2 * Math.PI * 52}
-                    strokeDashoffset={2 * Math.PI * 52 * (1 - (siteReport.aiScore ?? 74) / 100)}
+                    strokeDashoffset={2 * Math.PI * 52 * (1 - (siteReport.aiScore ?? 0) / 100)}
                     strokeLinecap="round"
                     fill="transparent"
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   <span className="text-3xl font-extrabold text-blue-900 tracking-tight">
-                    {siteReport.aiScore ?? 74}
+                    {siteReport.aiScore == null ? "n/a" : siteReport.aiScore}
                   </span>
-                  <span className="text-[11px] font-bold text-blue-600">/ 100</span>
+                  <span className="text-[11px] font-bold text-blue-400">{siteReport.aiScore == null ? "not tested" : "/ 100"}</span>
                 </div>
               </div>
               <p className="text-xs text-slate-600 font-medium">
-                Brand presence across Gemini, ChatGPT & Perplexity
+                AI visibility score reflects brand reach in AI.
               </p>
             </div>
 
@@ -500,7 +469,7 @@ export default function SeoDashboardPage() {
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {siteReport.categories.map((cat) => (
+              {(siteReport?.categories || []).map((cat) => (
                 <div key={cat.name} className="rounded-lg border border-slate-200 bg-slate-50 p-3 space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-xs text-slate-900">{cat.name}</span>
@@ -601,7 +570,7 @@ export default function SeoDashboardPage() {
                 LLM Visibility Checker
               </h3>
               <span className="text-xs bg-purple-100 text-purple-800 border border-purple-200 px-3 py-1 rounded-full font-bold">
-                Brand presence: {siteReport.aiScore ?? 74}% of tested prompts
+                Brand presence: {siteReport.aiScore == null ? "not tested" : `${siteReport.aiScore}% of tested prompts`}
               </span>
             </div>
 
@@ -677,7 +646,7 @@ export default function SeoDashboardPage() {
                 Full Site SEO Site Checkup Report
               </h2>
               <p className="text-xs text-slate-500">
-                Every check SEO Site Checkup runs against https://www.designhouse.co.in — grouped by audit category with
+                Every check SEO Site Checkup runs against {SITE_ORIGIN} — grouped by audit category with
                 remediation steps. Open any row in the <strong>Pages</strong> tab for the same report per route.
               </p>
             </div>
@@ -700,7 +669,7 @@ export default function SeoDashboardPage() {
             </div>
           </div>
 
-          {siteReport && (
+          {hasValidReport && siteReport && (
             <SeoCheckupFullReport
               scope="site"
               route="home"
@@ -751,7 +720,7 @@ export default function SeoDashboardPage() {
         <Panel title={`Broken links (${(brokenLinks ?? []).length})`} note="Grouped by target URL, with every page linking to it.">
           {(brokenLinks ?? []).length === 0 ? (
             <p className="flex items-center gap-2 text-xs font-semibold text-emerald-600">
-              <Check className="h-4 w-4" /> No broken links found across Design House routes.
+              <Check className="h-4 w-4" /> No broken links found across {SITE_NAME} routes.
             </p>
           ) : (
             (brokenLinks ?? []).map((link) => (
@@ -770,65 +739,18 @@ export default function SeoDashboardPage() {
       )}
 
       {tab === "Search insights" && (
-        <Panel title="Google Search Console Insights" note="Organic search queries and click-through performance">
-          <div className="space-y-4 text-xs text-slate-600">
+        <Panel title="Google Search Console Insights">
+          <div className="space-y-3 text-xs text-slate-600">
+            <p>
+              {siteReport?.site.searchConsoleConfigured
+                ? "Live Search Console metrics from the audited window."
+                : "Search Console is not connected. Set GSC_SERVICE_ACCOUNT_JSON and GSC_SITE_URL on the backend to enable real search metrics — no sample numbers are ever shown."}
+            </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-              <div className="p-3 bg-blue-50/60 rounded-lg border border-blue-200">
-                <span className="block text-xl font-extrabold text-blue-900">
-                  {siteReport?.gsc?.totals?.clicks ?? 1420}
-                </span>
-                <span className="text-[10px] text-blue-700 uppercase font-bold">Total Clicks (28d)</span>
+              <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
+                <span className="block text-sm font-bold text-amber-800">Not connected</span>
+                <span className="text-[10px] text-amber-700 uppercase font-bold">Totals need live Search Console</span>
               </div>
-              <div className="p-3 bg-emerald-50/60 rounded-lg border border-emerald-200">
-                <span className="block text-xl font-extrabold text-emerald-900">
-                  {(siteReport?.gsc?.totals?.impressions ?? 28400).toLocaleString("en-IN")}
-                </span>
-                <span className="text-[10px] text-emerald-700 uppercase font-bold">Total Impressions</span>
-              </div>
-              <div className="p-3 bg-purple-50/60 rounded-lg border border-purple-200">
-                <span className="block text-xl font-extrabold text-purple-900">
-                  {((siteReport?.gsc?.totals?.ctr ?? 5.0)).toFixed(2)}%
-                </span>
-                <span className="text-[10px] text-purple-700 uppercase font-bold">Average CTR</span>
-              </div>
-              <div className="p-3 bg-amber-50/60 rounded-lg border border-amber-200">
-                <span className="block text-xl font-extrabold text-amber-900">
-                  {siteReport?.gsc?.totals?.position ?? 6.4}
-                </span>
-                <span className="text-[10px] text-amber-700 uppercase font-bold">Average Position</span>
-              </div>
-            </div>
-
-            {/* Queries Table */}
-            <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
-              <table className="w-full text-left text-xs">
-                <thead className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold text-slate-700">
-                  <tr>
-                    <th className="px-3 py-2">Top Search Query</th>
-                    <th className="px-3 py-2 text-right">Clicks</th>
-                    <th className="px-3 py-2 text-right">Impressions</th>
-                    <th className="px-3 py-2 text-right">CTR</th>
-                    <th className="px-3 py-2 text-right">Avg Position</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 font-medium">
-                  {(siteReport?.gsc?.queries || [
-                    { query: "Interior Designer In Delhi", clicks: 340, impressions: 5200, ctr: 6.54, position: 3.2 },
-                    { query: "Retail Interior Projects Portfolio", clicks: 280, impressions: 4100, ctr: 6.83, position: 4.1 },
-                    { query: "Corporate Office Interior Design", clicks: 215, impressions: 3400, ctr: 6.32, position: 5.0 },
-                    { query: "Exhibition Stall Design & Build", clicks: 175, impressions: 2800, ctr: 6.25, position: 5.8 },
-                    { query: "Showroom Interior Fit-Outs", clicks: 140, impressions: 2100, ctr: 6.67, position: 6.5 },
-                  ]).map((q: { query: string; clicks: number; impressions: number; ctr: number; position: number }) => (
-                    <tr key={q.query} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="px-3 py-2 font-semibold text-slate-900">{q.query}</td>
-                      <td className="px-3 py-2 text-right text-blue-700 font-bold">{q.clicks}</td>
-                      <td className="px-3 py-2 text-right text-slate-700">{q.impressions.toLocaleString("en-IN")}</td>
-                      <td className="px-3 py-2 text-right text-purple-700">{typeof q.ctr === "number" ? q.ctr.toFixed(2) : q.ctr}%</td>
-                      <td className="px-3 py-2 text-right text-emerald-700 font-bold">#{q.position}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
             </div>
           </div>
         </Panel>
@@ -843,58 +765,15 @@ export default function SeoDashboardPage() {
       )}
 
       {tab === "Competitors" && (
-        <Panel title="Competitor Analysis & Domain Benchmarking">
-          <div className="space-y-4 text-xs">
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                placeholder="Competitor Label (e.g. Biofach India)"
-                value={newCompetitorLabel}
-                onChange={(e) => setNewCompetitorLabel(e.target.value)}
-                className="p-2 border border-slate-300 rounded text-xs w-48"
-              />
-              <input
-                type="text"
-                placeholder="Competitor Domain URL"
-                value={newCompetitorUrl}
-                onChange={(e) => setNewCompetitorUrl(e.target.value)}
-                className="p-2 border border-slate-300 rounded text-xs flex-1 max-w-sm"
-              />
-              <button
-                type="button"
-                onClick={() => void handleAddCompetitor()}
-                className="px-3 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 cursor-pointer"
-              >
-                Add Competitor
-              </button>
-            </div>
-
-            <table className="w-full border-collapse text-left">
-              <thead>
-                <tr className="border-b border-slate-200 bg-slate-50 text-slate-600">
-                  <th className="p-2 font-bold">Domain</th>
-                  <th className="p-2 font-bold">SEO Score</th>
-                  <th className="p-2 font-bold">AI Visibility</th>
-                  <th className="p-2 font-bold">Page Count</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                <tr>
-                  <td className="p-2 font-bold text-blue-600">designhouse.co.in (Primary)</td>
-                  <td className="p-2 font-bold text-emerald-600">{siteReport?.seoScore ?? 0} / 100</td>
-                  <td className="p-2 font-bold text-blue-600">{siteReport?.aiScore ?? 74}%</td>
-                  <td className="p-2 font-mono">{siteReport?.routeSummaries?.length ?? 0} Pages</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <Panel title="Competitor Analysis">
+          <CompetitorsPanel />
         </Panel>
       )}
 
       {tab === "AI plan" && (
         <Panel title="AI SEO Strategic Execution Plan">
           <p className="text-xs text-slate-600 leading-relaxed">
-            Automated execution roadmap powered by Gemini 2.5 Flash & GPT-4o Mini for Design House.
+            Automated execution roadmap powered by Gemini 2.5 Flash & GPT-4o Mini for {SITE_NAME}.
           </p>
         </Panel>
       )}

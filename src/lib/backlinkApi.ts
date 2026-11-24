@@ -1,5 +1,4 @@
-import { api, getAccessToken } from "./api";
-import { API_BASE_URL } from "./api";
+import { api, getAccessToken, API_BASE_URL } from "./api";
 
 export interface BacklinkItem {
   _id: string;
@@ -91,3 +90,4 @@ export const backlinkApi = {
     return api.delete<{ message: string }>(`/seo/backlinks/${id}`);
   },
 };
+

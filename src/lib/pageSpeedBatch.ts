@@ -2,7 +2,7 @@
 
 import { seoAuditApi, type PageSpeedAudit } from "./seoAuditApi";
 
-const STORAGE_KEY = "designHouse.pageSpeed.v1";
+const STORAGE_KEY = "designHouse.pageSpeed.v2";
 const TTL_MS = 6 * 60 * 60 * 1000;
 
 const memory = new Map<string, PageSpeedAudit>();
@@ -41,12 +41,19 @@ function persist(): void {
 }
 
 /**
- * Returns a REAL cached PageSpeed Insights run for the URL, or null when no
- * real run has happened yet. This module never synthesises scores — if no
- * measurement exists the caller must show an explicit "not run" state.
+ * A REAL PageSpeed Insights run saved in this browser for the page, or null when none exists. Scores are never
+ * made up: when there is no measurement the caller shows an explicit "not run" state.
  */
-export function getSavedPageSpeed(url: string): PageSpeedAudit | null {
+export function getSavedPageSpeed(url: string, strategy?: "mobile" | "desktop"): PageSpeedAudit | null {
   loadStorage();
+  if (strategy) {
+    const specific = memory.get(`${url}:${strategy}`);
+    if (specific && specific.strategy === strategy) return specific;
+    const direct = memory.get(url);
+    if (direct && direct.strategy === strategy) return direct;
+    // No real run was saved for this page: say so, never invent scores.
+    return null;
+  }
   return memory.get(url) ?? null;
 }
 
@@ -56,7 +63,11 @@ export function getSavedPageSpeedMap(): Map<string, PageSpeedAudit> {
 }
 
 export function savePageSpeed(url: string, audit: PageSpeedAudit): void {
+  const strategy = audit.strategy || "mobile";
   memory.set(url, audit);
+  if (!url.endsWith(`:${strategy}`)) {
+    memory.set(`${url}:${strategy}`, audit);
+  }
   persist();
 }
 

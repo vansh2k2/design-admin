@@ -200,15 +200,15 @@ export default function AdvancedSeoPage() {
       const data = response?.data || response;
       if (data) {
         setScripts({
-          headerScripts: data.headerScripts || "",
-          footerScripts: data.footerScripts || "",
+          headerScripts: data.headerScripts || (data as any).advancedSeo?.globalHeadCode || "",
+          footerScripts: data.footerScripts || (data as any).advancedSeo?.globalBodyCode || "",
         });
         setSeoFiles(data.seoFiles || []);
         setTrackingKeys({
-          ga4MeasurementId: data.ga4MeasurementId || "",
-          gtmContainerId: data.gtmContainerId || "",
+          ga4MeasurementId: data.ga4MeasurementId || (data as any).advancedSeo?.ga4MeasurementId || "",
+          gtmContainerId: data.gtmContainerId || (data as any).advancedSeo?.gtmContainerId || "",
           googleSearchConsoleVerification:
-            data.googleSearchConsoleVerification || "",
+            data.googleSearchConsoleVerification || (data as any).advancedSeo?.googleSearchConsoleVerification || "",
         });
         if (data.socialLinks) {
           setSocialLinks({
@@ -255,17 +255,15 @@ export default function AdvancedSeoPage() {
 
       if (data) {
         setScripts({
-          headerScripts: data.headerScripts ?? scripts.headerScripts,
-          footerScripts: data.footerScripts ?? scripts.footerScripts,
+          headerScripts: data.headerScripts ?? (data as any).advancedSeo?.globalHeadCode ?? scripts.headerScripts,
+          footerScripts: data.footerScripts ?? (data as any).advancedSeo?.globalBodyCode ?? scripts.footerScripts,
         });
-        if (data.ga4MeasurementId || data.gtmContainerId || data.googleSearchConsoleVerification) {
-          setTrackingKeys({
-            ga4MeasurementId: data.ga4MeasurementId || trackingKeys.ga4MeasurementId,
-            gtmContainerId: data.gtmContainerId || trackingKeys.gtmContainerId,
-            googleSearchConsoleVerification:
-              data.googleSearchConsoleVerification || trackingKeys.googleSearchConsoleVerification,
-          });
-        }
+        setTrackingKeys((prev) => ({
+          ga4MeasurementId: data.ga4MeasurementId || (data as any).advancedSeo?.ga4MeasurementId || prev.ga4MeasurementId,
+          gtmContainerId: data.gtmContainerId || (data as any).advancedSeo?.gtmContainerId || prev.gtmContainerId,
+          googleSearchConsoleVerification:
+            data.googleSearchConsoleVerification || (data as any).advancedSeo?.googleSearchConsoleVerification || prev.googleSearchConsoleVerification,
+        }));
         if (data.socialLinks) {
           setSocialLinks((prev) => ({
             ...prev,
