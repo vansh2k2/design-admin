@@ -129,16 +129,10 @@ export const dashboardApi = {
       }
     } catch {}
 
-    let totalPagesCount = 67;
-    let totalBlogsCount = 28;
-    let totalEnquiriesCount = 48;
-    let dynamicSubmissions: Array<{ id: string; name: string; type: string; city?: string; createdAt: string }> = [
-      { id: "1", name: "UrbanCart Retail Pvt. Ltd.", type: "Exhibitor Booking", city: "New Delhi", createdAt: new Date().toISOString() },
-      { id: "2", name: "Gulf Retail Fixtures LLC (Dubai)", type: "International Buyer", city: "Dubai", createdAt: new Date(Date.now() - 10 * 60000).toISOString() },
-      { id: "3", name: "Glow Cosmetics", type: "Sponsorship Enquiry", city: "Mumbai", createdAt: new Date(Date.now() - 30 * 60000).toISOString() },
-      { id: "4", name: "Dr. Rajesh Sharma", type: "Corporate Visitor", city: "Bengaluru", createdAt: new Date(Date.now() - 60 * 60000).toISOString() },
-      { id: "5", name: "Spice Bowl Restaurants", type: "Exhibitor Booking", city: "Pune", createdAt: new Date(Date.now() - 120 * 60000).toISOString() }
-    ];
+    let totalPagesCount = 0;
+    let totalBlogsCount = 0;
+    let totalEnquiriesCount = 0;
+    let dynamicSubmissions: Array<{ id: string; name: string; type: string; city?: string; createdAt: string }> = [];
 
     try {
       const [pagesRes, blogsRes, enqRes] = await Promise.allSettled([
@@ -149,28 +143,29 @@ export const dashboardApi = {
 
       if (pagesRes.status === "fulfilled" && pagesRes.value) {
         const pagesList = Array.isArray(pagesRes.value) ? pagesRes.value : (pagesRes.value.pages || []);
-        if (pagesList.length > 0) totalPagesCount = pagesList.length;
+        totalPagesCount = pagesList.length;
       }
 
       if (blogsRes.status === "fulfilled" && blogsRes.value) {
         const blogsList = Array.isArray(blogsRes.value) ? blogsRes.value : (blogsRes.value.blogs || []);
-        if (blogsList.length > 0) totalBlogsCount = blogsList.length;
+        totalBlogsCount = blogsList.length;
       }
 
       if (enqRes.status === "fulfilled" && enqRes.value) {
         const enqList = Array.isArray(enqRes.value) ? enqRes.value : [];
-        if (enqList.length > 0) {
-          totalEnquiriesCount = enqList.length;
-          dynamicSubmissions = enqList.slice(0, 5).map((e, index) => ({
-            id: e._id || e.id || `enquiry-${index}`,
-            name: e.name || e.organization || "Enquiry",
-            type: e.interest || e.category || "General Enquiry",
-            city: e.city || "India",
-            createdAt: e.createdAt ? new Date(e.createdAt).toISOString() : new Date().toISOString()
-          }));
-        }
+        totalEnquiriesCount = enqList.length;
+        dynamicSubmissions = enqList.slice(0, 5).map((e, index) => ({
+          id: e._id || e.id || `enquiry-${index}`,
+          name: e.name || e.organization || "Enquiry",
+          type: e.interest || e.category || "General Enquiry",
+          city: e.city || "Unknown",
+          createdAt: e.createdAt ? new Date(e.createdAt).toISOString() : new Date().toISOString()
+        }));
       }
     } catch {}
+
+    const statusError: DashboardSourceStatus = "error";
+    const statusNotConnected: DashboardSourceStatus = "not_connected";
 
     return {
       generatedAt: new Date().toISOString(),
@@ -179,140 +174,45 @@ export const dashboardApi = {
           status: statusConnected,
           updatedAt: new Date().toISOString(),
           data: {
-            totalPages: totalPagesCount || 67,
+            totalPages: totalPagesCount,
             totalPosts: totalBlogsCount,
-            totalEnquiries: 185,
+            totalEnquiries: totalEnquiriesCount,
             enquiriesMtd: totalEnquiriesCount,
-            totalRequests: 210,
-            growth: { posts: 15, enquiriesMtd: 22 },
+            totalRequests: totalEnquiriesCount,
+            growth: { posts: null, enquiriesMtd: null },
             recentSubmissions: dynamicSubmissions,
-            topLocations: [
-              { city: "New Delhi", count: 85 },
-              { city: "Mumbai", count: 62 },
-              { city: "Bengaluru", count: 44 },
-              { city: "Dubai (UAE)", count: 28 },
-              { city: "Singapore", count: 18 }
-            ]
+            topLocations: [],
           }
         },
         analytics: {
-          status: statusConnected,
+          status: statusNotConnected,
           updatedAt: new Date().toISOString(),
-          data: {
-            users: 2450,
-            sessions: 3820,
-            pageViews: 11400,
-            averageSessionSeconds: 165,
-            bounceRate: 38.5,
-            conversions: totalEnquiriesCount || 18,
-            daily: [
-              { date: "20261026", users: 380, pageViews: 1450 },
-              { date: "20261027", users: 410, pageViews: 1620 },
-              { date: "20261028", users: 445, pageViews: 1780 },
-              { date: "20261029", users: 490, pageViews: 1940 },
-              { date: "20261030", users: 520, pageViews: 2110 },
-              { date: "20261031", users: 560, pageViews: 2280 },
-            ],
-            pages: [
-              { path: "/", views: 4850, visitors: 2100, averageSessionSeconds: 165, bounceRate: 34.5 },
-              { path: "/portfolio/interior/retail-interior", views: 4320, visitors: 1860, averageSessionSeconds: 190, bounceRate: 36.1 },
-              { path: "/about-us", views: 3790, visitors: 1620, averageSessionSeconds: 140, bounceRate: 37.7 },
-              { path: "/services/office-interior", views: 3260, visitors: 1380, averageSessionSeconds: 165, bounceRate: 39.3 },
-              { path: "/portfolio", views: 2730, visitors: 1140, averageSessionSeconds: 190, bounceRate: 40.9 },
-            ],
-            growth: { users: 18.5, sessions: 14.2, pageViews: 22.0, averageSession: 8.5, bounceRate: -3.2, conversionRate: 12.4 },
-          },
-          message: "GA4 Traffic Data",
+          data: null,
+          message: "Dashboard backend unreachable",
         },
         searchConsole: {
-          status: statusConnected,
+          status: statusNotConnected,
           updatedAt: new Date().toISOString(),
-          data: {
-            clicks: 1420,
-            impressions: 28400,
-            ctr: 5.0,
-            position: 6.4,
-            growth: { clicks: 12.8, impressions: 18.4, ctr: 1.5, position: -0.8 },
-            queries: [
-              { query: "Interior Designer In Delhi", clicks: 340, impressions: 5200, ctr: 6.54, position: 3.2 },
-              { query: "Retail Interior Projects Portfolio", clicks: 280, impressions: 4100, ctr: 6.83, position: 4.1 },
-              { query: "Corporate Office Interior Design", clicks: 215, impressions: 3400, ctr: 6.32, position: 5.0 },
-              { query: "Exhibition Stall Design & Build", clicks: 175, impressions: 2800, ctr: 6.25, position: 5.8 },
-              { query: "Showroom Interior Fit-Outs", clicks: 140, impressions: 2100, ctr: 6.67, position: 6.5 },
-            ],
-          },
-          message: "Organic search ranking data derived from live indexed pages.",
+          data: null,
+          message: "Dashboard backend unreachable",
         },
         pageSpeed: {
-          status: statusConnected,
+          status: statusError,
           updatedAt: new Date().toISOString(),
-          data: {
-            strategy: "mobile",
-            lighthouseAvailable: true,
-            performanceScore: 78,
-            seoScore: 96,
-            lcp: 2750,
-            inp: 85,
-            cls: 0.025,
-            fcp: 1850,
-            ttfb: 198,
-            tbt: 160,
-            desktop: {
-              performanceScore: 92,
-              fcp: 850,
-              lcp: 1450,
-              cls: 0.015,
-              tbt: 40,
-              ttfb: 198,
-              inp: 85,
-            },
-            mobile: {
-              performanceScore: 78,
-              fcp: 1850,
-              lcp: 2750,
-              cls: 0.025,
-              tbt: 160,
-              ttfb: 210,
-              inp: 120,
-            },
-            seoChecks: [
-              { key: "meta-title", label: "Page title present", status: "good", score: 100 },
-              { key: "meta-desc", label: "Meta description present", status: "good", score: 100 },
-              { key: "canonical", label: "Canonical tag valid", status: "good", score: 100 },
-              { key: "opengraph", label: "Open Graph (OG) social tags active", status: "good", score: 100 },
-              { key: "sitemap", label: "Robots.txt & XML sitemap indexed", status: "good", score: 100 },
-            ],
-          },
-          message: "Measured Performance Benchmark",
+          data: null,
+          message: "Dashboard backend unreachable",
         },
         indexCoverage: {
-          status: statusConnected,
+          status: statusError,
           updatedAt: new Date().toISOString(),
-          data: {
-            total: totalPagesCount || 67,
-            indexed: totalPagesCount || 67,
-            notIndexed: 0,
-            urls: [],
-          },
-          message: `Sitemap Verified & 100% Indexed (${totalPagesCount || 67} Pages)`,
+          data: null,
+          message: "Dashboard backend unreachable",
         },
         siteStatus: {
-          status: statusConnected,
+          status: statusError,
           updatedAt: new Date().toISOString(),
-          data: {
-            online: true,
-            responseTimeMs: 198,
-            httpStatus: 200,
-            sslValid: true,
-            sslExpiresAt: null,
-            sslIssuer: "Let's Encrypt / Cloudflare",
-            certificateDaysRemaining: 89,
-            finalUrl: "https://www.designhouse.co.in",
-            redirected: false,
-            ipAddress: null,
-            securityHeaders: { present: 6, total: 6 },
-            nodeVersion: "v20",
-          },
+          data: null,
+          message: "Dashboard backend unreachable",
         },
       },
     };
@@ -325,75 +225,38 @@ export const dashboardApi = {
       }
     } catch {}
     return {
-      status: statusConnected,
+      status: "error",
       updatedAt: new Date().toISOString(),
-      data: {
-        strategy: "mobile" as const,
-        lighthouseAvailable: true,
-        performanceScore: 78,
-        seoScore: 96,
-        lcp: 2750,
-        inp: 85,
-        cls: 0.025,
-        fcp: 1850,
-        ttfb: 198,
-        tbt: 160,
-        desktop: {
-          performanceScore: 92,
-          fcp: 850,
-          lcp: 1450,
-          cls: 0.015,
-          tbt: 40,
-          ttfb: 198,
-          inp: 85,
-        },
-        mobile: {
-          performanceScore: 78,
-          fcp: 1850,
-          lcp: 2750,
-          cls: 0.025,
-          tbt: 160,
-          ttfb: 210,
-          inp: 120,
-        },
-        seoChecks: [
-          { key: "meta-title", label: "Page title present", status: "good" as const, score: 100 },
-          { key: "meta-desc", label: "Meta description present", status: "good" as const, score: 100 },
-          { key: "canonical", label: "Canonical tag valid", status: "good" as const, score: 100 },
-          { key: "opengraph", label: "Open Graph (OG) social tags active", status: "good" as const, score: 100 },
-          { key: "sitemap", label: "Robots.txt & XML sitemap indexed", status: "good" as const, score: 100 },
-        ],
-      },
-      message: "Measured Performance Benchmark",
+      data: null,
+      message: "PageSpeed Insights unavailable",
     };
   },
-  indexCoverage: async () => ({
-    status: statusConnected,
-    updatedAt: new Date().toISOString(),
-    data: {
-      total: 67,
-      indexed: 67,
-      notIndexed: 0,
-      urls: [],
-    },
-    message: "Sitemap Verified & 100% Indexed (67 Pages)",
-  }),
-  siteStatus: async () => ({
-    status: statusConnected,
-    updatedAt: new Date().toISOString(),
-    data: {
-      online: true,
-      responseTimeMs: 198,
-      httpStatus: 200,
-      sslValid: true,
-      sslExpiresAt: null,
-      sslIssuer: "Let's Encrypt / Cloudflare",
-      certificateDaysRemaining: 89,
-      finalUrl: "https://www.designhouse.co.in",
-      redirected: false,
-      ipAddress: null,
-      securityHeaders: { present: 6, total: 6 },
-      nodeVersion: "v20",
-    },
-  })
+  indexCoverage: async (): Promise<LiveDashboardOverview["sources"]["indexCoverage"]> => {
+    try {
+      const overview = await dashboardApi.overview();
+      if (overview?.sources?.indexCoverage) {
+        return overview.sources.indexCoverage;
+      }
+    } catch {}
+    return {
+      status: "error",
+      updatedAt: new Date().toISOString(),
+      data: null,
+      message: "Index coverage unavailable",
+    };
+  },
+  siteStatus: async (): Promise<LiveDashboardOverview["sources"]["siteStatus"]> => {
+    try {
+      const overview = await dashboardApi.overview();
+      if (overview?.sources?.siteStatus) {
+        return overview.sources.siteStatus;
+      }
+    } catch {}
+    return {
+      status: "error",
+      updatedAt: new Date().toISOString(),
+      data: null,
+      message: "Site status check unavailable",
+    };
+  },
 };

@@ -362,7 +362,7 @@ export default function PagesCmsPage() {
           inp: ps.inp != null ? `${Math.round(ps.inp)}ms` : "No Data",
           cls: ps.cls != null ? ps.cls.toFixed(2) : "0.00",
           fcp: ps.fcp != null ? `${(ps.fcp / 1000).toFixed(1)}s` : "No Data",
-          ttfb: "No Data",
+          ttfb: ps.ttfb != null ? `${Math.round(ps.ttfb)}ms` : "No Data",
           tbt: ps.tbt != null ? `${Math.round(ps.tbt)}ms` : "No Data",
         });
       }
@@ -388,22 +388,21 @@ export default function PagesCmsPage() {
     setIsFetchingPageSpeed(true);
     setPageSpeedError(null);
     try {
-      // Use the public Google PageSpeed Insights API
+      // Use server-side PageSpeed route so PAGESPEED_API_KEY is attached cleanly
       const url = encodeURIComponent(selectedPagePublicUrl);
-      const res = await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}&category=performance`);
-      if (!res.ok) {
-        throw new Error("Failed to fetch performance data");
-      }
+      const res = await fetch(`/pagespeed?url=${url}&strategy=mobile&refresh=1`);
       const data = await res.json();
-      const audits = data?.lighthouseResult?.audits || {};
-      
+      if (!res.ok || !data?.ok) {
+        throw new Error(data?.message || "Failed to fetch performance data");
+      }
+
       setPageSpeedData({
-        lcp: audits["largest-contentful-paint"]?.displayValue || "—",
-        cls: audits["cumulative-layout-shift"]?.displayValue || "—",
-        fcp: audits["first-contentful-paint"]?.displayValue || "—",
-        ttfb: audits["server-response-time"]?.displayValue || "—",
-        tbt: audits["total-blocking-time"]?.displayValue || "—",
-        score: Math.round((data?.lighthouseResult?.categories?.performance?.score || 0) * 100)
+        lcp: data.metrics?.lcpMs != null ? `${(data.metrics.lcpMs / 1000).toFixed(1)}s` : "—",
+        cls: data.metrics?.cls != null ? Number(data.metrics.cls).toFixed(2) : "—",
+        fcp: data.metrics?.fcpMs != null ? `${(data.metrics.fcpMs / 1000).toFixed(1)}s` : "—",
+        ttfb: data.metrics?.ttfbMs != null ? `${Math.round(data.metrics.ttfbMs)}ms` : "—",
+        tbt: data.metrics?.tbtMs != null ? `${Math.round(data.metrics.tbtMs)}ms` : "—",
+        score: data.scores?.performance ?? 0,
       });
     } catch (err) {
       setPageSpeedError((err instanceof Error ? err.message : "") || "An error occurred");

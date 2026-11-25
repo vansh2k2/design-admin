@@ -71,13 +71,12 @@ function noPageSpeed(url: string, strategy: "mobile" | "desktop", message?: stri
 function isAllowedUrl(raw: string): boolean {
   try {
     const parsed = new URL(raw);
-    const allowed = SITE_HOST;
+    const bare = (h: string) => h.toLowerCase().replace(/^www\./, "");
+    const host = bare(parsed.hostname);
+    const allowed = bare(SITE_HOST);
     return (
       (parsed.protocol === "https:" || parsed.protocol === "http:") &&
-      (parsed.hostname === allowed ||
-        parsed.hostname.endsWith(`.${allowed}`) ||
-        parsed.hostname === "localhost" ||
-        parsed.hostname === "127.0.0.1")
+      (host === allowed || host.endsWith(`.${allowed}`) || host === "localhost" || host === "127.0.0.1")
     );
   } catch {
     return false;
