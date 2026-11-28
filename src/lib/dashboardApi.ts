@@ -2,8 +2,19 @@ import { api } from "./api";
 
 export type DashboardSourceStatus = "connected" | "not_connected" | "error";
 
+export type DashboardRangeKey =
+  | "1h"
+  | "24h"
+  | "7d"
+  | "28d"
+  | "30d"
+  | "90d"
+  | "this_month"
+  | "prev_month";
+
 export interface DashboardSource<T> {
   status: DashboardSourceStatus;
+  provider?: string;
   updatedAt: string;
   message?: string;
   data: T | null;
@@ -11,17 +22,25 @@ export interface DashboardSource<T> {
 
 export interface LiveDashboardOverview {
   generatedAt: string;
+  range?: {
+    key: DashboardRangeKey;
+    label: string;
+    start: string;
+    end: string;
+    granularity: "minute" | "hour" | "day";
+  };
   sources: {
     internal: DashboardSource<{
       totalPages: number;
       totalPosts: number;
       totalEnquiries: number;
       enquiriesMtd: number;
+      previousEnquiries?: number;
       totalRequests: number;
+      conversionRate?: number | null;
       growth: { posts: number | null; enquiriesMtd: number | null };
       recentSubmissions: Array<{ id: string; name: string; type: string; city?: string; createdAt: string }>;
       topLocations: Array<{ city: string; count: number }>;
-
       actionRequired?: {
         exhibitor: number;
         buyer: number;
@@ -38,7 +57,14 @@ export interface LiveDashboardOverview {
       conversions: number;
       daily: Array<{ date: string; users: number; pageViews: number }>;
       pages: Array<{ path: string; views: number; visitors: number; averageSessionSeconds: number; bounceRate: number }>;
-      growth: { users: number | null; sessions: number | null; pageViews: number | null; averageSession: number | null; bounceRate: number | null; conversionRate: number | null };
+      growth: {
+        users: number | null;
+        sessions: number | null;
+        pageViews: number | null;
+        averageSession: number | null;
+        bounceRate: number | null;
+        conversionRate: number | null;
+      };
     }>;
     searchConsole: DashboardSource<{
       clicks: number;
@@ -46,13 +72,14 @@ export interface LiveDashboardOverview {
       ctr: number;
       position: number;
       growth: { clicks: number | null; impressions: number | null; ctr: number | null; position: number | null };
+      daily?: Array<{ date: string; clicks: number; impressions: number }>;
       queries: Array<{ query: string; clicks: number; impressions: number; ctr: number; position: number }>;
     }>;
     pageSpeed: DashboardSource<{
       strategy: "mobile" | "desktop";
       lighthouseAvailable: boolean;
-      performanceScore: number;
-      seoScore: number;
+      performanceScore: number | null;
+      seoScore: number | null;
       lcp: number | null;
       inp: number | null;
       cls: number | null;
@@ -60,23 +87,23 @@ export interface LiveDashboardOverview {
       ttfb: number | null;
       tbt: number | null;
       desktop?: {
-        performanceScore: number;
+        performanceScore: number | null;
         fcp: number | null;
         lcp: number | null;
         cls: number | null;
         tbt: number | null;
         ttfb: number | null;
         inp: number | null;
-      };
+      } | null;
       mobile?: {
-        performanceScore: number;
+        performanceScore: number | null;
         fcp: number | null;
         lcp: number | null;
         cls: number | null;
         tbt: number | null;
         ttfb: number | null;
         inp: number | null;
-      };
+      } | null;
       seoChecks: Array<{
         key: string;
         label: string;
@@ -88,6 +115,13 @@ export interface LiveDashboardOverview {
       indexed: number;
       total: number;
       notIndexed: number;
+      submittedPages?: number | null;
+      indexedPages?: number | null;
+      crawlErrors?: number | null;
+      sitemapUrlCount?: number | null;
+      sitemapValid?: boolean | null;
+      robotsValid?: boolean | null;
+      gscConnected?: boolean;
       urls?: Array<{ url: string; indexed: boolean; coverageState?: string }>;
     }>;
     siteStatus: DashboardSource<{
@@ -107,156 +141,25 @@ export interface LiveDashboardOverview {
   };
 }
 
-const statusConnected: DashboardSourceStatus = "connected";
-
-type RecentEnquiry = {
-  _id?: string;
-  id?: string;
-  name?: string;
-  organization?: string;
-  interest?: string;
-  category?: string;
-  city?: string;
-  createdAt?: string;
-};
-
 export const dashboardApi = {
-  overview: async (): Promise<LiveDashboardOverview> => {
-    try {
-      const res = await api.get<LiveDashboardOverview | null>("/dashboard/overview");
-      if (res && res.sources && res.sources.internal && res.sources.internal.data) {
-        return res;
-      }
-    } catch {}
-
-    let totalPagesCount = 0;
-    let totalBlogsCount = 0;
-    let totalEnquiriesCount = 0;
-    let dynamicSubmissions: Array<{ id: string; name: string; type: string; city?: string; createdAt: string }> = [];
-
-    try {
-      const [pagesRes, blogsRes, enqRes] = await Promise.allSettled([
-        api.get<unknown[] | { pages?: unknown[] }>("/seo/pages"),
-        api.get<unknown[] | { blogs?: unknown[] }>("/blogs"),
-        api.get<RecentEnquiry[]>("/contact-enquiry"),
-      ]);
-
-      if (pagesRes.status === "fulfilled" && pagesRes.value) {
-        const pagesList = Array.isArray(pagesRes.value) ? pagesRes.value : (pagesRes.value.pages || []);
-        totalPagesCount = pagesList.length;
-      }
-
-      if (blogsRes.status === "fulfilled" && blogsRes.value) {
-        const blogsList = Array.isArray(blogsRes.value) ? blogsRes.value : (blogsRes.value.blogs || []);
-        totalBlogsCount = blogsList.length;
-      }
-
-      if (enqRes.status === "fulfilled" && enqRes.value) {
-        const enqList = Array.isArray(enqRes.value) ? enqRes.value : [];
-        totalEnquiriesCount = enqList.length;
-        dynamicSubmissions = enqList.slice(0, 5).map((e, index) => ({
-          id: e._id || e.id || `enquiry-${index}`,
-          name: e.name || e.organization || "Enquiry",
-          type: e.interest || e.category || "General Enquiry",
-          city: e.city || "Unknown",
-          createdAt: e.createdAt ? new Date(e.createdAt).toISOString() : new Date().toISOString()
-        }));
-      }
-    } catch {}
-
-    const statusError: DashboardSourceStatus = "error";
-    const statusNotConnected: DashboardSourceStatus = "not_connected";
-
-    return {
-      generatedAt: new Date().toISOString(),
-      sources: {
-        internal: {
-          status: statusConnected,
-          updatedAt: new Date().toISOString(),
-          data: {
-            totalPages: totalPagesCount,
-            totalPosts: totalBlogsCount,
-            totalEnquiries: totalEnquiriesCount,
-            enquiriesMtd: totalEnquiriesCount,
-            totalRequests: totalEnquiriesCount,
-            growth: { posts: null, enquiriesMtd: null },
-            recentSubmissions: dynamicSubmissions,
-            topLocations: [],
-          }
-        },
-        analytics: {
-          status: statusNotConnected,
-          updatedAt: new Date().toISOString(),
-          data: null,
-          message: "Dashboard backend unreachable",
-        },
-        searchConsole: {
-          status: statusNotConnected,
-          updatedAt: new Date().toISOString(),
-          data: null,
-          message: "Dashboard backend unreachable",
-        },
-        pageSpeed: {
-          status: statusError,
-          updatedAt: new Date().toISOString(),
-          data: null,
-          message: "Dashboard backend unreachable",
-        },
-        indexCoverage: {
-          status: statusError,
-          updatedAt: new Date().toISOString(),
-          data: null,
-          message: "Dashboard backend unreachable",
-        },
-        siteStatus: {
-          status: statusError,
-          updatedAt: new Date().toISOString(),
-          data: null,
-          message: "Dashboard backend unreachable",
-        },
-      },
-    };
+  overview: async (range: DashboardRangeKey = "7d", refresh = false): Promise<LiveDashboardOverview> => {
+    const qs = new URLSearchParams({ range });
+    if (refresh) qs.set("refresh", "1");
+    return api.get<LiveDashboardOverview>(`/dashboard/overview?${qs.toString()}`);
   },
-  pageSpeed: async (): Promise<LiveDashboardOverview["sources"]["pageSpeed"]> => {
-    try {
-      const overview = await dashboardApi.overview();
-      if (overview?.sources?.pageSpeed) {
-        return overview.sources.pageSpeed;
-      }
-    } catch {}
-    return {
-      status: "error",
-      updatedAt: new Date().toISOString(),
-      data: null,
-      message: "PageSpeed Insights unavailable",
-    };
+  pageSpeed: async (refresh = false): Promise<LiveDashboardOverview["sources"]["pageSpeed"]> => {
+    return api.get<LiveDashboardOverview["sources"]["pageSpeed"]>(
+      `/dashboard/page-speed${refresh ? "?refresh=1" : ""}`
+    );
   },
-  indexCoverage: async (): Promise<LiveDashboardOverview["sources"]["indexCoverage"]> => {
-    try {
-      const overview = await dashboardApi.overview();
-      if (overview?.sources?.indexCoverage) {
-        return overview.sources.indexCoverage;
-      }
-    } catch {}
-    return {
-      status: "error",
-      updatedAt: new Date().toISOString(),
-      data: null,
-      message: "Index coverage unavailable",
-    };
+  indexCoverage: async (refresh = false): Promise<LiveDashboardOverview["sources"]["indexCoverage"]> => {
+    return api.get<LiveDashboardOverview["sources"]["indexCoverage"]>(
+      `/dashboard/index-coverage${refresh ? "?refresh=1" : ""}`
+    );
   },
-  siteStatus: async (): Promise<LiveDashboardOverview["sources"]["siteStatus"]> => {
-    try {
-      const overview = await dashboardApi.overview();
-      if (overview?.sources?.siteStatus) {
-        return overview.sources.siteStatus;
-      }
-    } catch {}
-    return {
-      status: "error",
-      updatedAt: new Date().toISOString(),
-      data: null,
-      message: "Site status check unavailable",
-    };
+  siteStatus: async (refresh = false): Promise<LiveDashboardOverview["sources"]["siteStatus"]> => {
+    return api.get<LiveDashboardOverview["sources"]["siteStatus"]>(
+      `/dashboard/site-status${refresh ? "?refresh=1" : ""}`
+    );
   },
 };
