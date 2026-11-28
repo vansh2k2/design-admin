@@ -842,7 +842,7 @@ export default function DashboardPage() {
     dashboardApi
       .overview(timeRange, true)
       .then((data) => setLiveDashboard(data))
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setIsRefreshing(false));
   };
 
@@ -1070,8 +1070,8 @@ export default function DashboardPage() {
           setEnquiriesList(res.enquiries);
         }
       })
-      .catch(() => {});
-      
+      .catch(() => { });
+
     return () => {
       active = false;
     };
@@ -1275,12 +1275,12 @@ export default function DashboardPage() {
         date: isNaN(item.dateObj.getTime())
           ? item.createdAt
           : item.dateObj.toLocaleDateString("en-IN", {
-              weekday: "short",
-              day: "2-digit",
-              month: "short",
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
+            weekday: "short",
+            day: "2-digit",
+            month: "short",
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
       };
     });
   }, [internal, submissionFilter]);
@@ -1420,319 +1420,319 @@ export default function DashboardPage() {
   const activeRangeLabel =
     RANGE_OPTIONS.find((opt) => opt.key === timeRange)?.label ?? "Last 7 Days";
 
-  const analyticsProvider = liveDashboard?.sources.analytics.provider;
-  const trafficBadge =
-    analyticsProvider === "cloudflare"
-      ? "Traffic: Cloudflare"
-      : analyticsProvider === "ga4"
-        ? "Traffic: Google Analytics 4"
-        : "Traffic: Site Tracker";
+        const analyticsProvider = liveDashboard?.sources.analytics.provider;
+        const trafficBadge =
+          analyticsProvider === "cloudflare"
+            ? "Traffic: Cloudflare"
+            : analyticsProvider === "ga4"
+              ? "Traffic: Google Analytics 4"
+              : "Traffic: Site Tracker";
 
-  const gscBadge =
-    liveDashboard?.sources.searchConsole.status === "connected"
-      ? "GSC: Connected"
-      : liveDashboard?.sources.searchConsole.status === "error"
-        ? "GSC: Auth / Quota Error"
-        : "GSC: Not Connected";
+        const gscBadge =
+          liveDashboard?.sources.searchConsole.status === "connected"
+            ? "GSC: Connected"
+            : liveDashboard?.sources.searchConsole.status === "error"
+              ? "GSC: Auth / Quota Error"
+              : "GSC: Not Connected";
 
-  const updatedTimeText = liveDashboard?.generatedAt
-    ? new Date(liveDashboard.generatedAt).toLocaleTimeString("en-IN", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : null;
+        const updatedTimeText = liveDashboard?.generatedAt
+          ? new Date(liveDashboard.generatedAt).toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+          : null;
 
-  const gscDaily = searchConsole?.daily ?? [];
-  const gscSamples =
-    gscDaily.length <= 5
-      ? gscDaily
-      : [0, 0.25, 0.5, 0.75, 1].map((r) => gscDaily[Math.round((gscDaily.length - 1) * r)]);
-  const gscMaxClicks = Math.max(1, ...gscSamples.map((d) => d.clicks));
-  const gscMaxImpr = Math.max(1, ...gscSamples.map((d) => d.impressions));
-  const gscChartPoints = gscSamples.map((d, idx) => {
-    const x = gscSamples.length <= 1 ? 215 : 44 + (idx * 342) / (gscSamples.length - 1);
-    const yClicks = 76 - (d.clicks / gscMaxClicks) * 52;
-    const yImpr = 80 - (d.impressions / gscMaxImpr) * 52;
-    const label =
-      d.date.length === 10
-        ? new Date(`${d.date}T00:00:00`).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })
-        : d.date;
-    return { x, yClicks, yImpr, label };
-  });
+        const gscDaily = searchConsole?.daily ?? [];
+        const gscSamples =
+          gscDaily.length <= 5
+            ? gscDaily
+            : [0, 0.25, 0.5, 0.75, 1].map((r) => gscDaily[Math.round((gscDaily.length - 1) * r)]);
+        const gscMaxClicks = Math.max(1, ...gscSamples.map((d) => d.clicks));
+        const gscMaxImpr = Math.max(1, ...gscSamples.map((d) => d.impressions));
+        const gscChartPoints = gscSamples.map((d, idx) => {
+          const x = gscSamples.length <= 1 ? 215 : 44 + (idx * 342) / (gscSamples.length - 1);
+          const yClicks = 76 - (d.clicks / gscMaxClicks) * 52;
+          const yImpr = 80 - (d.impressions / gscMaxImpr) * 52;
+          const label =
+            d.date.length === 10
+              ? new Date(`${d.date}T00:00:00`).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })
+              : d.date;
+          return { x, yClicks, yImpr, label };
+        });
 
-  const maxLocationCount = Math.max(
-    1,
-    ...(internal?.topLocations ?? []).map((item) => Number(item.count) || 0)
-  );
+        const maxLocationCount = Math.max(
+          1,
+          ...(internal?.topLocations ?? []).map((item) => Number(item.count) || 0)
+        );
 
-  const topStats = defaultTopStats.map((item) => {
-        if (
-          item.title ===
-          "SEO HEALTH SCORE" &&
-          pageSpeed
-        ) {
-          return {
-            ...item,
+        const topStats = defaultTopStats.map((item) => {
+          if (
+            item.title ===
+            "SEO HEALTH SCORE" &&
+            pageSpeed
+          ) {
+            return {
+              ...item,
 
-            value: String(
-              pageSpeed.seoScore ?? "—",
-            ),
+              value: String(
+                pageSpeed.seoScore ?? "—",
+              ),
 
-            note:
-              pageSpeed.seoScore == null
-                ? "No Live Data"
-                : pageSpeed.seoScore >=
-                    90
-                  ? "Excellent"
+              note:
+                pageSpeed.seoScore == null
+                  ? "No Live Data"
                   : pageSpeed.seoScore >=
+                    90
+                    ? "Excellent"
+                    : pageSpeed.seoScore >=
                       70
-                    ? "Good"
-                    : "Needs Work",
-          };
-        }
+                      ? "Good"
+                      : "Needs Work",
+            };
+          }
 
-        if (
-          item.title ===
-          "SEO HEALTH SCORE"
-        ) {
-          return {
-            ...item,
+          if (
+            item.title ===
+            "SEO HEALTH SCORE"
+          ) {
+            return {
+              ...item,
 
-            value: "—",
+              value: "—",
 
-            note:
-              pageSpeedSource?.message ??
-              "Connecting to PageSpeed",
-          };
-        }
+              note:
+                pageSpeedSource?.message ??
+                "Connecting to PageSpeed",
+            };
+          }
 
-        if (
-          item.title ===
-          "TOTAL PAGES" &&
-          internal
-        ) {
-          return {
-            ...item,
+          if (
+            item.title ===
+            "TOTAL PAGES" &&
+            internal
+          ) {
+            return {
+              ...item,
 
-            value: String(
-              internal.totalPages,
-            ),
+              value: String(
+                internal.totalPages,
+              ),
 
-            note:
-              "Live from CMS",
-          };
-        }
+              note:
+                "Live from CMS",
+            };
+          }
 
-        if (
-          item.title ===
-          "TOTAL POSTS" &&
-          internal
-        ) {
-          return {
-            ...item,
+          if (
+            item.title ===
+            "TOTAL POSTS" &&
+            internal
+          ) {
+            return {
+              ...item,
 
-            value: String(
-              internal.totalPosts,
-            ),
+              value: String(
+                internal.totalPosts,
+              ),
 
-            note:
-              internal.growth.posts != null
-                ? growthText(internal.growth.posts)
-                : "Live from CMS",
-          };
-        }
+              note:
+                internal.growth.posts != null
+                  ? growthText(internal.growth.posts)
+                  : "Live from CMS",
+            };
+          }
 
-        if (
-          item.title ===
-          "INDEXED PAGES" &&
-          indexCoverage
-        ) {
-          const idxCount = indexCoverage.indexedPages ?? (indexCoverage.gscConnected ? indexCoverage.indexed : null);
-          const subCount = indexCoverage.submittedPages ?? indexCoverage.sitemapUrlCount ?? (indexCoverage.total || null);
-          return {
-            ...item,
-            value:
-              idxCount != null
-                ? String(idxCount)
-                : subCount != null
-                  ? String(subCount)
-                  : "—",
-            suffix: idxCount != null && subCount != null ? `/${subCount}` : "",
-            note: indexCoverage.gscConnected
-              ? "Indexed (GSC)"
-              : indexCoverage.sitemapValid
-                ? "Sitemap · GSC Not Connected"
-                : "Checking sitemap...",
-          };
-        }
+          if (
+            item.title ===
+            "INDEXED PAGES" &&
+            indexCoverage
+          ) {
+            const idxCount = indexCoverage.indexedPages ?? (indexCoverage.gscConnected ? indexCoverage.indexed : null);
+            const subCount = indexCoverage.submittedPages ?? indexCoverage.sitemapUrlCount ?? (indexCoverage.total || null);
+            return {
+              ...item,
+              value:
+                idxCount != null
+                  ? String(idxCount)
+                  : subCount != null
+                    ? String(subCount)
+                    : "—",
+              suffix: idxCount != null && subCount != null ? `/${subCount}` : "",
+              note: indexCoverage.gscConnected
+                ? "Indexed (GSC)"
+                : indexCoverage.sitemapValid
+                  ? "Sitemap · GSC Not Connected"
+                  : "Checking sitemap...",
+            };
+          }
 
-        if (
-          item.title ===
-          "INDEXED PAGES"
-        ) {
-          return {
-            ...item,
+          if (
+            item.title ===
+            "INDEXED PAGES"
+          ) {
+            return {
+              ...item,
 
-            value: "—",
+              value: "—",
 
-            note:
-              indexCoverageSource?.message ??
-              "Connecting to Search Console",
-          };
-        }
+              note:
+                indexCoverageSource?.message ??
+                "Connecting to Search Console",
+            };
+          }
 
-        if (
-          item.title ===
-          "PROJECT ENQUIRIES (MTD)" &&
-          internal
-        ) {
-          return {
-            ...item,
-            title: `PROJECT ENQUIRIES (${activeRangeLabel.toUpperCase()})`,
-            value: String(
-              internal.enquiriesMtd,
-            ),
+          if (
+            item.title ===
+            "PROJECT ENQUIRIES (MTD)" &&
+            internal
+          ) {
+            return {
+              ...item,
+              title: `PROJECT ENQUIRIES (${activeRangeLabel.toUpperCase()})`,
+              value: String(
+                internal.enquiriesMtd,
+              ),
 
-            note:
-              internal.growth?.enquiriesMtd != null
-                ? growthText(internal.growth.enquiriesMtd)
-                : "Live from database",
-          };
-        }
+              note:
+                internal.growth?.enquiriesMtd != null
+                  ? growthText(internal.growth.enquiriesMtd)
+                  : "Live from database",
+            };
+          }
 
-        if (item.title === "CONVERSION RATE") {
-          const visitors = analytics?.users ?? 0;
-          const rate =
-            internal?.conversionRate != null
-              ? internal.conversionRate
-              : analytics && (analytics.sessions ?? 0) > 0
-                ? ((analytics.conversions ?? 0) / analytics.sessions) * 100
-                : 0;
+          if (item.title === "CONVERSION RATE") {
+            const visitors = analytics?.users ?? 0;
+            const rate =
+              internal?.conversionRate != null
+                ? internal.conversionRate
+                : analytics && (analytics.sessions ?? 0) > 0
+                  ? ((analytics.conversions ?? 0) / analytics.sessions) * 100
+                  : 0;
 
-          return {
-            ...item,
-            value: `${rate.toFixed(1)}%`,
-            note: visitors > 0 ? `${number(visitors)} visitors` : "No sessions yet",
-          };
-        }
+            return {
+              ...item,
+              value: `${rate.toFixed(1)}%`,
+              note: visitors > 0 ? `${number(visitors)} visitors` : "No sessions yet",
+            };
+          }
 
-        return item;
-      });
+          return item;
+        });
 
-  /* =========================================================
-     DROPDOWN
-  ========================================================= */
+        /* =========================================================
+           DROPDOWN
+        ========================================================= */
 
-  const toggleDropdown = (
-    key: DropdownKey,
-  ) => {
-    setOpenDropdown(
-      (current) =>
-        current === key
-          ? null
-          : key,
-    );
-  };
+        const toggleDropdown = (
+          key: DropdownKey,
+        ) => {
+          setOpenDropdown(
+            (current) =>
+              current === key
+                ? null
+                : key,
+          );
+        };
 
-  const [
-    searchConsoleRange,
-    setSearchConsoleRange,
-  ] = useState(
-    "Last 28 Days",
-  );
-
-  const [
-    analyticsRange,
-    setAnalyticsRange,
-  ] = useState(
-    "Last 30 Days",
-  );
-
-  const [
-    webVitalsRange,
-    setWebVitalsRange,
-  ] = useState(
-    "Last 28 Days",
-  );
-
-  const [
-    topPagesRange,
-    setTopPagesRange,
-  ] = useState(
-    "This Month",
-  );
-
-  const [
-    keywordRange,
-    setKeywordRange,
-  ] = useState(
-    "This Month",
-  );
-
-  const [
-    locationRange,
-    setLocationRange,
-  ] = useState(
-    "This Month",
-  );
-
-  useEffect(() => {
-    const handleMouseDown = (
-      event: MouseEvent,
-    ) => {
-      const target =
-        event.target as HTMLElement;
-
-      if (
-        !target.closest(
-          "[data-dashboard-dropdown]",
-        )
-      ) {
-        setOpenDropdown(
-          null,
+        const [
+          searchConsoleRange,
+          setSearchConsoleRange,
+        ] = useState(
+          "Last 28 Days",
         );
-      }
-    };
 
-    const handleKeyDown = (
-      event: KeyboardEvent,
-    ) => {
-      if (
-        event.key ===
-        "Escape"
-      ) {
-        setOpenDropdown(
-          null,
+        const [
+          analyticsRange,
+          setAnalyticsRange,
+        ] = useState(
+          "Last 30 Days",
         );
-      }
-    };
 
-    document.addEventListener(
-      "mousedown",
-      handleMouseDown,
-    );
+        const [
+          webVitalsRange,
+          setWebVitalsRange,
+        ] = useState(
+          "Last 28 Days",
+        );
 
-    document.addEventListener(
-      "keydown",
-      handleKeyDown,
-    );
+        const [
+          topPagesRange,
+          setTopPagesRange,
+        ] = useState(
+          "This Month",
+        );
 
-    return () => {
-      document.removeEventListener(
-        "mousedown",
-        handleMouseDown,
-      );
+        const [
+          keywordRange,
+          setKeywordRange,
+        ] = useState(
+          "This Month",
+        );
 
-      document.removeEventListener(
-        "keydown",
-        handleKeyDown,
-      );
-    };
-  }, []);
+        const [
+          locationRange,
+          setLocationRange,
+        ] = useState(
+          "This Month",
+        );
 
-  return (
-    <div
-      className={`
+        useEffect(() => {
+          const handleMouseDown = (
+            event: MouseEvent,
+          ) => {
+            const target =
+              event.target as HTMLElement;
+
+            if (
+              !target.closest(
+                "[data-dashboard-dropdown]",
+              )
+            ) {
+              setOpenDropdown(
+                null,
+              );
+            }
+          };
+
+          const handleKeyDown = (
+            event: KeyboardEvent,
+          ) => {
+            if (
+              event.key ===
+              "Escape"
+            ) {
+              setOpenDropdown(
+                null,
+              );
+            }
+          };
+
+          document.addEventListener(
+            "mousedown",
+            handleMouseDown,
+          );
+
+          document.addEventListener(
+            "keydown",
+            handleKeyDown,
+          );
+
+          return () => {
+            document.removeEventListener(
+              "mousedown",
+              handleMouseDown,
+            );
+
+            document.removeEventListener(
+              "keydown",
+              handleKeyDown,
+            );
+          };
+        }, []);
+
+        return (
+          <div
+            className={`
         ${typography.dashboard}
         min-h-full
         w-full
@@ -1740,29 +1740,29 @@ export default function DashboardPage() {
         bg-white
         text-[#13213d]
       `}
-    >
-      <div className="flex min-h-full flex-col overflow-visible">
+          >
+            <div className="flex min-h-full flex-col overflow-visible">
 
-        {/* ===================================================
+              {/* ===================================================
             HEADER
         =================================================== */}
 
-        <header className="hidden">
-          <div className="flex h-full items-center justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-2.5">
+              <header className="hidden">
+                <div className="flex h-full items-center justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-2.5">
 
-              <div
-                className="relative shrink-0"
-                data-dashboard-dropdown
-              >
-                <button
-                  type="button"
-                  onClick={() =>
-                    toggleDropdown(
-                      "menu",
-                    )
-                  }
-                  className="
+                    <div
+                      className="relative shrink-0"
+                      data-dashboard-dropdown
+                    >
+                      <button
+                        type="button"
+                        onClick={() =>
+                          toggleDropdown(
+                            "menu",
+                          )
+                        }
+                        className="
                     grid
                     h-10
                     w-10
@@ -1774,62 +1774,62 @@ export default function DashboardPage() {
                     transition
                     hover:bg-[#222b20]
                   "
-                >
-                  {openDropdown ===
-                    "menu" ? (
-                    <X className="h-5 w-5" />
-                  ) : (
-                    <Menu className="h-5 w-5" />
-                  )}
-                </button>
+                      >
+                        {openDropdown ===
+                          "menu" ? (
+                          <X className="h-5 w-5" />
+                        ) : (
+                          <Menu className="h-5 w-5" />
+                        )}
+                      </button>
 
-                {openDropdown ===
-                  "menu" && (
-                    <div className="absolute left-0 top-[48px] z-[120] w-[210px] overflow-hidden rounded-[12px] border border-[#e5e2da] bg-white p-2 shadow-[0_14px_40px_rgba(15,23,42,0.16)]">
-                      <div className="border-b border-[#ecece7] px-2.5 pb-2 pt-1">
-                        <p className="text-[9px] font-semibold uppercase tracking-[0.08em] text-[#8a92a0]">
-                          Navigation
-                        </p>
-                      </div>
+                      {openDropdown ===
+                        "menu" && (
+                          <div className="absolute left-0 top-[48px] z-[120] w-[210px] overflow-hidden rounded-[12px] border border-[#e5e2da] bg-white p-2 shadow-[0_14px_40px_rgba(15,23,42,0.16)]">
+                            <div className="border-b border-[#ecece7] px-2.5 pb-2 pt-1">
+                              <p className="text-[9px] font-semibold uppercase tracking-[0.08em] text-[#8a92a0]">
+                                Navigation
+                              </p>
+                            </div>
 
-                      {[
-                        "Dashboard",
-                        "Website Pages",
-                        "Blog Posts",
-                        "SEO Manager",
-                        "Analytics",
-                        "Form Submissions",
-                        "Media Library",
-                        "Settings",
-                      ].map(
-                        (item) => (
-                          <button
-                            key={
-                              item
-                            }
-                            type="button"
-                            onClick={() => {
-                              setActiveMenuItem(
-                                item,
-                              );
-                              setOpenDropdown(
-                                null,
-                              );
-                              const navRoutes: Record<string, string> = {
-                                "Dashboard": "/",
-                                "Website Pages": "/pages",
-                                "Blog Posts": "/blogs",
-                                "SEO Manager": "/seo",
-                                "Analytics": "/seo",
-                                "Form Submissions": "/general-enquiries",
-                                "Media Library": "/gallery",
-                                "Settings": "/settings",
-                              };
-                              if (navRoutes[item]) {
-                                router.push(navRoutes[item]);
-                              }
-                            }}
-                            className={`
+                            {[
+                              "Dashboard",
+                              "Website Pages",
+                              "Blog Posts",
+                              "SEO Manager",
+                              "Analytics",
+                              "Form Submissions",
+                              "Media Library",
+                              "Settings",
+                            ].map(
+                              (item) => (
+                                <button
+                                  key={
+                                    item
+                                  }
+                                  type="button"
+                                  onClick={() => {
+                                    setActiveMenuItem(
+                                      item,
+                                    );
+                                    setOpenDropdown(
+                                      null,
+                                    );
+                                    const navRoutes: Record<string, string> = {
+                                      "Dashboard": "/",
+                                      "Website Pages": "/pages",
+                                      "Blog Posts": "/blogs",
+                                      "SEO Manager": "/seo",
+                                      "Analytics": "/seo",
+                                      "Form Submissions": "/general-enquiries",
+                                      "Media Library": "/gallery",
+                                      "Settings": "/settings",
+                                    };
+                                    if (navRoutes[item]) {
+                                      router.push(navRoutes[item]);
+                                    }
+                                  }}
+                                  className={`
                             mt-1
                             flex
                             w-full
@@ -1844,61 +1844,61 @@ export default function DashboardPage() {
                             transition
 
                             ${activeMenuItem ===
-                                item
-                                ? "bg-[#30392d] text-white"
-                                : "text-[#33415a] hover:bg-[#f5f6f3]"
-                              }
+                                      item
+                                      ? "bg-[#30392d] text-white"
+                                      : "text-[#33415a] hover:bg-[#f5f6f3]"
+                                    }
                           `}
-                          >
-                            {item}
+                                >
+                                  {item}
 
-                            {activeMenuItem ===
-                              item && (
-                                <Check className="h-3.5 w-3.5" />
-                              )}
-                          </button>
-                        ),
-                      )}
+                                  {activeMenuItem ===
+                                    item && (
+                                      <Check className="h-3.5 w-3.5" />
+                                    )}
+                                </button>
+                              ),
+                            )}
+                          </div>
+                        )}
                     </div>
-                  )}
-              </div>
 
-              <div
-                className="min-w-0 rounded-md border border-black bg-white px-3 py-1.5"
-                style={{
-                  boxShadow:
-                    "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px",
-                }}
-              >
-                <h1 className="truncate text-[20px] font-semibold leading-tight tracking-[-0.025em]">
-                  Welcome back,{" "}
-                  {admin?.name || "Admin"}!{" "}
+                    <div
+                      className="min-w-0 rounded-md border border-black bg-white px-3 py-1.5"
+                      style={{
+                        boxShadow:
+                          "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px",
+                      }}
+                    >
+                      <h1 className="truncate text-[20px] font-semibold leading-tight tracking-[-0.025em]">
+                        Welcome back,{" "}
+                        {admin?.name || "Admin"}!{" "}
 
-                  <span className="text-[18px]">
-                    👋
-                  </span>
-                </h1>
+                        <span className="text-[18px]">
+                          👋
+                        </span>
+                      </h1>
 
-                <p className="truncate text-[11px] font-semibold leading-tight text-[#4a5261]">
-                  Here&apos;s an
-                  overview of your
-                  website today{" "}
+                      <p className="truncate text-[11px] font-semibold leading-tight text-[#4a5261]">
+                        Here&apos;s an
+                        overview of your
+                        website today{" "}
 
-                  <b className="font-semibold">
-                    designhouse.co.in
-                  </b>
-                </p>
-              </div>
-            </div>
-          </div>
-        </header>
+                        <b className="font-semibold">
+                          designhouse.co.in
+                        </b>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </header>
 
-        {/* ===================================================
+              {/* ===================================================
             MAIN
         =================================================== */}
 
-        <main
-          className="
+              <main
+                className="
             min-h-0
             flex-1
             overflow-visible
@@ -1907,64 +1907,62 @@ export default function DashboardPage() {
             pt-3
             pb-5
           "
-        >
-          {/* DASHBOARD PAGE TITLE (ABOVE SEO HEALTH SCORE & STAT CARDS) */}
-          <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-[22px] font-bold tracking-tight text-slate-900">
-                  Dashboard
-                </h1>
-                <span className="rounded-full bg-[#eef2f6] px-2.5 py-0.5 text-[10px] font-bold text-[#1f3b64]">
-                  {activeRangeLabel}
-                </span>
-                <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">
-                  {trafficBadge}
-                </span>
-                <span
-                  className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
-                    liveDashboard?.sources.searchConsole.status === "connected"
-                      ? "bg-blue-50 text-blue-700"
-                      : "bg-slate-100 text-slate-600"
-                  }`}
-                >
-                  {gscBadge}
-                </span>
-              </div>
-              <p className="mt-0.5 text-[12px] font-semibold text-slate-500">
-                Real-time website performance &amp; activity
-                {updatedTimeText ? ` · Updated ${updatedTimeText}` : ""}
-              </p>
-              <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                {RANGE_OPTIONS.map((opt) => (
-                  <button
-                    key={opt.key}
-                    type="button"
-                    onClick={() => setTimeRange(opt.key)}
-                    className={`rounded-[6px] border px-2.5 py-1 text-[10.5px] font-bold transition ${
-                      timeRange === opt.key
-                        ? "border-[#2563eb] bg-[#2563eb] text-white"
-                        : "border-[#dce3ec] bg-white text-[#334666] hover:bg-[#f4f7fb]"
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-                <button
-                  type="button"
-                  onClick={handleManualRefresh}
-                  disabled={isRefreshing}
-                  className="inline-flex items-center gap-1 rounded-[6px] border border-[#dce3ec] bg-white px-2.5 py-1 text-[10.5px] font-bold text-[#13213d] transition hover:bg-[#f4f7fb] disabled:opacity-60"
-                >
-                  <RefreshCw className={`h-3 w-3 ${isRefreshing ? "animate-spin" : ""}`} />
-                  Refresh
-                </button>
-              </div>
-            </div>
-            <ServiceRenewalChips />
-          </div>
+              >
+                {/* DASHBOARD PAGE TITLE (ABOVE SEO HEALTH SCORE & STAT CARDS) */}
+                <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h1 className="text-[22px] font-bold tracking-tight text-slate-900">
+                        Dashboard
+                      </h1>
+                      <span className="rounded-full bg-[#eef2f6] px-2.5 py-0.5 text-[10px] font-bold text-[#1f3b64]">
+                        {activeRangeLabel}
+                      </span>
+                      <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">
+                        {trafficBadge}
+                      </span>
+                      <span
+                        className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${liveDashboard?.sources.searchConsole.status === "connected"
+                            ? "bg-blue-50 text-blue-700"
+                            : "bg-slate-100 text-slate-600"
+                          }`}
+                      >
+                        {gscBadge}
+                      </span>
+                    </div>
+                    <p className="mt-0.5 text-[12px] font-semibold text-slate-500">
+                      Real-time website performance &amp; activity
+                      {updatedTimeText ? ` · Updated ${updatedTimeText}` : ""}
+                    </p>
+                    <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                      {RANGE_OPTIONS.map((opt) => (
+                        <button
+                          key={opt.key}
+                          type="button"
+                          onClick={() => setTimeRange(opt.key)}
+                          className={`rounded-[6px] border px-2.5 py-1 text-[10.5px] font-bold transition ${timeRange === opt.key
+                              ? "border-[#2563eb] bg-[#2563eb] text-white"
+                              : "border-[#dce3ec] bg-white text-[#334666] hover:bg-[#f4f7fb]"
+                            }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={handleManualRefresh}
+                        disabled={isRefreshing}
+                        className="inline-flex items-center gap-1 rounded-[6px] border border-[#dce3ec] bg-white px-2.5 py-1 text-[10.5px] font-bold text-[#13213d] transition hover:bg-[#f4f7fb] disabled:opacity-60"
+                      >
+                        <RefreshCw className={`h-3 w-3 ${isRefreshing ? "animate-spin" : ""}`} />
+                        Refresh
+                      </button>
+                    </div>
+                  </div>
+                  <ServiceRenewalChips />
+                </div>
 
-          {/* =================================================
+                {/* =================================================
               IMPORTANT HEIGHT CHANGE
 
               Top stats = 98px
@@ -1972,8 +1970,8 @@ export default function DashboardPage() {
               Bottom row = 160px
           ================================================= */}
 
-          <div
-            className="
+                <div
+                  className="
               grid
               h-full
               min-h-0
@@ -1981,24 +1979,24 @@ export default function DashboardPage() {
               grid-rows-[98px_260px_260px_160px]
               gap-2
             "
-          >
-            {/* =============================
+                >
+                  {/* =============================
                 TOP STATS
             ============================== */}
 
-            <div className="grid min-h-0 grid-cols-6 gap-2">
-              {topStats.map(
-                (item) => {
-                  const Icon =
-                    item.icon;
+                  <div className="grid min-h-0 grid-cols-6 gap-2">
+                    {topStats.map(
+                      (item) => {
+                        const Icon =
+                          item.icon;
 
-                  return (
-                    <Panel
-                      key={
-                        item.title
-                      }
-                      onClick={() => router.push(item.href || "/pages")}
-                      className="
+                        return (
+                          <Panel
+                            key={
+                              item.title
+                            }
+                            onClick={() => router.push(item.href || "/pages")}
+                            className="
                         flex
                         flex-col
                         !overflow-hidden
@@ -2009,20 +2007,20 @@ export default function DashboardPage() {
                         hover:shadow-md
                         transition-all
                       "
-                      style={{
-                        background:
-                          item.gradient,
+                            style={{
+                              background:
+                                item.gradient,
 
-                        borderColor:
-                          ("borderColor" in item && typeof item.borderColor === "string" ? item.borderColor : undefined),
+                              borderColor:
+                                ("borderColor" in item && typeof item.borderColor === "string" ? item.borderColor : undefined),
 
-                        boxShadow:
-                          "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px",
-                      }}
-                    >
-                      <div className="flex items-start gap-1.5">
-                        <div
-                          className={`
+                              boxShadow:
+                                "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px",
+                            }}
+                          >
+                            <div className="flex items-start gap-1.5">
+                              <div
+                                className={`
                             grid
                             h-[30px]
                             w-[30px]
@@ -2034,520 +2032,520 @@ export default function DashboardPage() {
                             shadow-xs
 
                             ${toneClass[
-                            item.tone as keyof typeof toneClass
-                            ]
-                            }
+                                  item.tone as keyof typeof toneClass
+                                  ]
+                                  }
                           `}
-                        >
-                          <Icon className="h-4 w-4" />
-                        </div>
+                              >
+                                <Icon className="h-4 w-4" />
+                              </div>
 
-                        <div className="min-w-0 flex-1">
-                          <p
-                            className="truncate text-[8.5px] !font-semibold tracking-[0.01em] text-slate-900"
-                            style={{
-                              fontWeight: 600,
-                              color:
-                                "#0f172a",
-                            }}
-                          >
-                            {
-                              item.title
-                            }
-                          </p>
+                              <div className="min-w-0 flex-1">
+                                <p
+                                  className="truncate text-[8.5px] !font-semibold tracking-[0.01em] text-slate-900"
+                                  style={{
+                                    fontWeight: 600,
+                                    color:
+                                      "#0f172a",
+                                  }}
+                                >
+                                  {
+                                    item.title
+                                  }
+                                </p>
 
-                          <div className="mt-1.5 flex items-end gap-1">
-                            <span
-                              className="text-[21px] !font-semibold leading-none tracking-[-0.04em]"
-                              style={{
-                                color:
-                                  item.numColor,
+                                <div className="mt-1.5 flex items-end gap-1">
+                                  <span
+                                    className="text-[21px] !font-semibold leading-none tracking-[-0.04em]"
+                                    style={{
+                                      color:
+                                        item.numColor,
 
-                                fontWeight: 600,
-                              }}
-                            >
-                              <AnimatedCounter
-                                value={
-                                  item.value
-                                }
-                              />
-                            </span>
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    <AnimatedCounter
+                                      value={
+                                        item.value
+                                      }
+                                    />
+                                  </span>
 
-                            {item.suffix && (
-                              <span className="mb-0.5 text-[9.5px] font-bold">
-                                {
-                                  item.suffix
-                                }
-                              </span>
-                            )}
-                          </div>
+                                  {item.suffix && (
+                                    <span className="mb-0.5 text-[9.5px] font-bold">
+                                      {
+                                        item.suffix
+                                      }
+                                    </span>
+                                  )}
+                                </div>
 
-                          <p
-                            className={`
+                                <p
+                                  className={`
                               mt-0.5
                               text-[8.5px]
                               font-bold
 
                               ${item.title ===
-                                "INDEXED PAGES"
-                                ? "text-blue-600"
-                                : "text-emerald-700"
-                              }
+                                      "INDEXED PAGES"
+                                      ? "text-blue-600"
+                                      : "text-emerald-700"
+                                    }
                             `}
-                          >
-                            {
-                              item.note
-                            }
-                          </p>
-                        </div>
-                      </div>
+                                >
+                                  {
+                                    item.note
+                                  }
+                                </p>
+                              </div>
+                            </div>
 
-                      <div
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          router.push(item.href || "/pages");
-                        }}
-                        className="absolute bottom-1 left-2 right-2 flex cursor-pointer items-center justify-center gap-1 text-[8px] font-semibold text-[#293957] transition group-hover:text-blue-600 hover:text-blue-600"
-                      >
-                        {
-                          item.footer
-                        }
+                            <div
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(item.href || "/pages");
+                              }}
+                              className="absolute bottom-1 left-2 right-2 flex cursor-pointer items-center justify-center gap-1 text-[8px] font-semibold text-[#293957] transition group-hover:text-blue-600 hover:text-blue-600"
+                            >
+                              {
+                                item.footer
+                              }
 
-                        <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-                      </div>
-                    </Panel>
-                  );
-                },
-              )}
-            </div>
+                              <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                            </div>
+                          </Panel>
+                        );
+                      },
+                    )}
+                  </div>
 
-            {/* =============================
+                  {/* =============================
                 ROW 2 — 260PX
             ============================== */}
 
-            <div
-              className="
+                  <div
+                    className="
                 grid
                 h-full
                 min-h-0
                 grid-cols-[0.92fr_1.12fr_1.06fr]
                 gap-2
               "
-            >
-              {/* =================================================
+                  >
+                    {/* =================================================
                   SEO HEALTH
               ================================================= */}
 
-              <Panel>
-                <PanelTitle
-                  right={
-                    <button
-                      type="button"
-                      onClick={() => router.push("/seo")}
-                      className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700"
-                    >
-                      View Data
+                    <Panel>
+                      <PanelTitle
+                        right={
+                          <button
+                            type="button"
+                            onClick={() => router.push("/seo")}
+                            className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700"
+                          >
+                            View Data
 
-                      <ArrowRight className="h-3.5 w-3.5 text-blue-600" />
-                    </button>
-                  }
-                >
-                  SEO Health
-                  Overview
-                </PanelTitle>
+                            <ArrowRight className="h-3.5 w-3.5 text-blue-600" />
+                          </button>
+                        }
+                      >
+                        SEO Health
+                        Overview
+                      </PanelTitle>
 
-                <div className="grid min-h-0 grid-cols-[110px_1fr] items-center gap-2 px-3 pt-3">
-                  <div className="relative mx-auto h-[96px] w-[96px]">
-                    <svg
-                      className="pointer-events-none absolute inset-0 z-0 h-full w-full -rotate-90"
-                    >
-                      <defs>
-                        <mask id="seo-donut-mask">
-                          <circle
-                            cx="48"
-                            cy="48"
-                            r="40"
-                            fill="none"
-                            stroke="#ffffff"
-                            strokeWidth="16"
-                            className="animate-donut-fill"
+                      <div className="grid min-h-0 grid-cols-[110px_1fr] items-center gap-2 px-3 pt-3">
+                        <div className="relative mx-auto h-[96px] w-[96px]">
+                          <svg
+                            className="pointer-events-none absolute inset-0 z-0 h-full w-full -rotate-90"
+                          >
+                            <defs>
+                              <mask id="seo-donut-mask">
+                                <circle
+                                  cx="48"
+                                  cy="48"
+                                  r="40"
+                                  fill="none"
+                                  stroke="#ffffff"
+                                  strokeWidth="16"
+                                  className="animate-donut-fill"
+                                />
+                              </mask>
+                            </defs>
+                          </svg>
+
+                          <div
+                            className="absolute inset-0 rounded-full"
+                            style={{
+                              background: `conic-gradient(#148151 0deg ${seoScore *
+                                3.6
+                                }deg, #edf0ea ${seoScore *
+                                3.6
+                                }deg 360deg)`,
+
+                              mask:
+                                "url(#seo-donut-mask)",
+
+                              WebkitMask:
+                                "url(#seo-donut-mask)",
+                            }}
                           />
-                        </mask>
-                      </defs>
-                    </svg>
 
-                    <div
-                      className="absolute inset-0 rounded-full"
-                      style={{
-                        background: `conic-gradient(#148151 0deg ${seoScore *
-                          3.6
-                          }deg, #edf0ea ${seoScore *
-                          3.6
-                          }deg 360deg)`,
+                          <div className="absolute inset-[9px] z-10 grid place-items-center rounded-full bg-white text-center">
+                            <div>
+                              <div className="text-[22px] font-semibold leading-none text-emerald-600">
+                                <AnimatedCounter
+                                  value={
+                                    pageSpeed
+                                      ? seoScore
+                                      : "—"
+                                  }
+                                  duration={
+                                    2500
+                                  }
+                                />
+                              </div>
 
-                        mask:
-                          "url(#seo-donut-mask)",
-
-                        WebkitMask:
-                          "url(#seo-donut-mask)",
-                      }}
-                    />
-
-                    <div className="absolute inset-[9px] z-10 grid place-items-center rounded-full bg-white text-center">
-                      <div>
-                        <div className="text-[22px] font-semibold leading-none text-emerald-600">
-                          <AnimatedCounter
-                            value={
-                              pageSpeed
-                                ? seoScore
-                                : "—"
-                            }
-                            duration={
-                              2500
-                            }
-                          />
+                              <div className="mt-0.5 text-[9px] font-bold text-emerald-700">
+                                {pageSpeed
+                                  ? seoScore >=
+                                    90
+                                    ? "Excellent"
+                                    : seoScore >=
+                                      70
+                                      ? "Good"
+                                      : "Needs Work"
+                                  : "No Live Data"}
+                              </div>
+                            </div>
+                          </div>
                         </div>
 
-                        <div className="mt-0.5 text-[9px] font-bold text-emerald-700">
-                          {pageSpeed
-                            ? seoScore >=
-                              90
-                              ? "Excellent"
-                              : seoScore >=
-                                70
-                                ? "Good"
-                                : "Needs Work"
-                            : "No Live Data"}
+                        <div
+                          className="space-y-[5px] text-[11.5px] font-semibold text-slate-900"
+                          style={{
+                            fontSize:
+                              "11.5px",
+
+                            fontWeight: 600,
+
+                            color:
+                              "#0f172a",
+                          }}
+                        >
+                          {(pageSpeed?.seoChecks ?? [
+                            { key: "meta-title", label: "Page title present", status: "good" as const },
+                            { key: "meta-desc", label: "Meta description present", status: "good" as const },
+                            { key: "canonical", label: "Canonical tag valid", status: "good" as const },
+                            { key: "opengraph", label: "Open Graph (OG) social tags active", status: "good" as const },
+                            { key: "sitemap", label: "Robots.txt & XML sitemap indexed", status: "good" as const },
+                          ]).map(
+                            (check) => (
+                              <div
+                                key={check.key}
+                                className="grid grid-cols-[14px_1fr_auto] items-center gap-1"
+                              >
+                                {check.status === "good" ? (
+                                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-700" />
+                                ) : (
+                                  <AlertCircle className={`h-3.5 w-3.5 ${check.status === "needs_work" ? "text-amber-500" : "text-slate-400"}`} />
+                                )}
+
+                                <span
+                                  className="font-semibold text-slate-900"
+                                  style={{
+                                    color:
+                                      "#0f172a",
+
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  {check.label}
+                                </span>
+
+                                <span
+                                  className={
+                                    check.status === "good"
+                                      ? "text-emerald-700"
+                                      : check.status === "needs_work"
+                                        ? "text-amber-500"
+                                        : "text-slate-400"
+                                  }
+                                >
+                                  {check.status === "good"
+                                    ? "Good"
+                                    : check.status === "needs_work"
+                                      ? "Needs Work"
+                                      : "Not Checked"}
+                                </span>
+                              </div>
+                            ),
+                          )}
                         </div>
                       </div>
-                    </div>
-                  </div>
+                    </Panel>
 
-                  <div
-                    className="space-y-[5px] text-[11.5px] font-semibold text-slate-900"
-                    style={{
-                      fontSize:
-                        "11.5px",
-
-                      fontWeight: 600,
-
-                      color:
-                        "#0f172a",
-                    }}
-                  >
-                    {(pageSpeed?.seoChecks ?? [
-                      { key: "meta-title", label: "Page title present", status: "good" as const },
-                      { key: "meta-desc", label: "Meta description present", status: "good" as const },
-                      { key: "canonical", label: "Canonical tag valid", status: "good" as const },
-                      { key: "opengraph", label: "Open Graph (OG) social tags active", status: "good" as const },
-                      { key: "sitemap", label: "Robots.txt & XML sitemap indexed", status: "good" as const },
-                    ]).map(
-                      (check) => (
-                        <div
-                          key={check.key}
-                          className="grid grid-cols-[14px_1fr_auto] items-center gap-1"
-                        >
-                          {check.status === "good" ? (
-                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-700" />
-                          ) : (
-                            <AlertCircle className={`h-3.5 w-3.5 ${check.status === "needs_work" ? "text-amber-500" : "text-slate-400"}`} />
-                          )}
-
-                          <span
-                            className="font-semibold text-slate-900"
-                            style={{
-                              color:
-                                "#0f172a",
-
-                              fontWeight: 600,
-                            }}
-                          >
-                            {check.label}
-                          </span>
-
-                          <span
-                            className={
-                              check.status === "good"
-                                ? "text-emerald-700"
-                                : check.status === "needs_work"
-                                  ? "text-amber-500"
-                                  : "text-slate-400"
-                            }
-                          >
-                            {check.status === "good"
-                              ? "Good"
-                              : check.status === "needs_work"
-                                ? "Needs Work"
-                                : "Not Checked"}
-                          </span>
-                        </div>
-                      ),
-                    )}
-                  </div>
-                </div>
-              </Panel>
-
-              {/* =================================================
+                    {/* =================================================
                   SEARCH CONSOLE
               ================================================= */}
 
-              <Panel>
-                <PanelTitle
-                  right={
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => router.push("/seo")}
-                        className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700"
-                      >
-                        View Console
+                    <Panel>
+                      <PanelTitle
+                        right={
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => router.push("/seo")}
+                              className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700"
+                            >
+                              View Console
 
-                        <ArrowRight className="h-3.5 w-3.5 text-blue-600" />
-                      </button>
-                    </div>
-                  }
-                >
-                  Google Search
-                  Console Summary
-                </PanelTitle>
-
-                <div className="grid grid-cols-4 gap-1.5 px-3 pt-3">
-                  {[
-                    {
-                      label: "Total Clicks",
-                      value: searchConsole ? number(searchConsole.clicks) : "—",
-                      change: searchConsole ? growthText(searchConsole.growth?.clicks) : "Not Connected",
-                      bg: "bg-[#eff6ff] border-[#dbeafe]",
-                      valColor: "text-blue-900",
-                    },
-                    {
-                      label: "Total Impressions",
-                      value: searchConsole ? number(searchConsole.impressions) : "—",
-                      change: searchConsole ? growthText(searchConsole.growth?.impressions) : "Not Connected",
-                      bg: "bg-[#f0fdf4] border-[#dcfce7]",
-                      valColor: "text-emerald-900",
-                    },
-                    {
-                      label: "Average CTR",
-                      value: searchConsole ? `${searchConsole.ctr.toFixed(2)}%` : "—",
-                      change: searchConsole ? growthText(searchConsole.growth?.ctr) : "Not Connected",
-                      bg: "bg-[#faf5ff] border-[#f3e8ff]",
-                      valColor: "text-purple-900",
-                    },
-                    {
-                      label: "Average Position",
-                      value: searchConsole ? searchConsole.position.toFixed(1) : "—",
-                      change: searchConsole ? growthText(searchConsole.growth?.position, true) : "Not Connected",
-                      bg: "bg-[#fff7ed] border-[#ffedd5]",
-                      valColor: "text-amber-900",
-                    },
-                  ].map(
-                    (item) => (
-                      <div
-                        key={
-                          item.label
+                              <ArrowRight className="h-3.5 w-3.5 text-blue-600" />
+                            </button>
+                          </div>
                         }
-                        className={`
+                      >
+                        Google Search
+                        Console Summary
+                      </PanelTitle>
+
+                      <div className="grid grid-cols-4 gap-1.5 px-3 pt-3">
+                        {[
+                          {
+                            label: "Total Clicks",
+                            value: searchConsole ? number(searchConsole.clicks) : "—",
+                            change: searchConsole ? growthText(searchConsole.growth?.clicks) : "Not Connected",
+                            bg: "bg-[#eff6ff] border-[#dbeafe]",
+                            valColor: "text-blue-900",
+                          },
+                          {
+                            label: "Total Impressions",
+                            value: searchConsole ? number(searchConsole.impressions) : "—",
+                            change: searchConsole ? growthText(searchConsole.growth?.impressions) : "Not Connected",
+                            bg: "bg-[#f0fdf4] border-[#dcfce7]",
+                            valColor: "text-emerald-900",
+                          },
+                          {
+                            label: "Average CTR",
+                            value: searchConsole ? `${searchConsole.ctr.toFixed(2)}%` : "—",
+                            change: searchConsole ? growthText(searchConsole.growth?.ctr) : "Not Connected",
+                            bg: "bg-[#faf5ff] border-[#f3e8ff]",
+                            valColor: "text-purple-900",
+                          },
+                          {
+                            label: "Average Position",
+                            value: searchConsole ? searchConsole.position.toFixed(1) : "—",
+                            change: searchConsole ? growthText(searchConsole.growth?.position, true) : "Not Connected",
+                            bg: "bg-[#fff7ed] border-[#ffedd5]",
+                            valColor: "text-amber-900",
+                          },
+                        ].map(
+                          (item) => (
+                            <div
+                              key={
+                                item.label
+                              }
+                              className={`
                           rounded-[7px]
                           border
                           px-2
                           py-1.5
                           ${item.bg}
                         `}
-                        style={{
-                          boxShadow:
-                            "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.08) 0px 0px 0px 1px",
-                        }}
-                      >
-                        <p className="text-[9px] font-bold text-[#334666]">
-                          {
-                            item.label
-                          }
-                        </p>
+                              style={{
+                                boxShadow:
+                                  "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.08) 0px 0px 0px 1px",
+                              }}
+                            >
+                              <p className="text-[9px] font-bold text-[#334666]">
+                                {
+                                  item.label
+                                }
+                              </p>
 
-                        <p
-                          className={`
+                              <p
+                                className={`
                             mt-1
                             text-[18px]
                             font-semibold
                             ${item.valColor}
                           `}
-                        >
-                          <AnimatedCounter
-                            value={
-                              item.value
-                            }
-                          />
-                        </p>
+                              >
+                                <AnimatedCounter
+                                  value={
+                                    item.value
+                                  }
+                                />
+                              </p>
 
-                        {item.change && (
-                          <p className="mt-0.5 text-[9px] font-bold text-emerald-700">
-                            {
-                              item.change
-                            }
-                          </p>
+                              {item.change && (
+                                <p className="mt-0.5 text-[9px] font-bold text-emerald-700">
+                                  {
+                                    item.change
+                                  }
+                                </p>
+                              )}
+                            </div>
+                          ),
                         )}
                       </div>
-                    ),
-                  )}
-                </div>
 
-                <div className="w-full min-h-0 px-3 pt-2 pb-1">
-                  {searchConsole && gscChartPoints.length > 0 ? (
-                    <svg
-                      viewBox="0 0 430 120"
-                      preserveAspectRatio="none"
-                      className="block h-[90px] w-full overflow-visible"
-                    >
-                      {[20, 50, 80].map((y) => (
-                        <line
-                          key={y}
-                          x1="12"
-                          x2="418"
-                          y1={y}
-                          y2={y}
-                          stroke="#e2e8f0"
-                          strokeWidth="1"
-                          strokeDasharray="3 3"
-                        />
-                      ))}
-
-                      <line
-                        x1="12"
-                        x2="418"
-                        y1="90"
-                        y2="90"
-                        stroke="#cbd5e1"
-                        strokeWidth="1.2"
-                      />
-
-                      {gscChartPoints.length > 1 && (
-                        <>
-                          <polyline
-                            fill="none"
-                            stroke="#059669"
-                            strokeWidth="2.4"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            points={gscChartPoints.map((p) => `${p.x},${p.yImpr}`).join(" ")}
-                          />
-                          <polyline
-                            fill="none"
-                            stroke="#2563eb"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            points={gscChartPoints.map((p) => `${p.x},${p.yClicks}`).join(" ")}
-                          />
-                        </>
-                      )}
-
-                      {gscChartPoints.map((p, idx) => (
-                        <g key={`${p.label}-${idx}`}>
-                          <circle cx={p.x} cy={p.yClicks} r="3" fill="#2563eb" stroke="#fff" strokeWidth="1" />
-                          <circle cx={p.x} cy={p.yImpr} r="2.6" fill="#059669" stroke="#fff" strokeWidth="1" />
-                          <text
-                            x={p.x}
-                            y="114"
-                            fontSize="10.5"
-                            fontWeight="600"
-                            fill="#2563eb"
-                            textAnchor="middle"
+                      <div className="w-full min-h-0 px-3 pt-2 pb-1">
+                        {searchConsole && gscChartPoints.length > 0 ? (
+                          <svg
+                            viewBox="0 0 430 120"
+                            preserveAspectRatio="none"
+                            className="block h-[90px] w-full overflow-visible"
                           >
-                            {p.label}
-                          </text>
-                        </g>
-                      ))}
-                    </svg>
-                  ) : (
-                    <div className="flex h-[90px] items-center justify-center rounded-[7px] border border-dashed border-slate-200 bg-slate-50/70 px-3 text-center text-[10px] font-semibold text-slate-500">
-                      {liveDashboard?.sources.searchConsole.message ??
-                        "Google Search Console not connected."}
-                    </div>
-                  )}
-                </div>
-              </Panel>
+                            {[20, 50, 80].map((y) => (
+                              <line
+                                key={y}
+                                x1="12"
+                                x2="418"
+                                y1={y}
+                                y2={y}
+                                stroke="#e2e8f0"
+                                strokeWidth="1"
+                                strokeDasharray="3 3"
+                              />
+                            ))}
 
-              {/* =================================================
+                            <line
+                              x1="12"
+                              x2="418"
+                              y1="90"
+                              y2="90"
+                              stroke="#cbd5e1"
+                              strokeWidth="1.2"
+                            />
+
+                            {gscChartPoints.length > 1 && (
+                              <>
+                                <polyline
+                                  fill="none"
+                                  stroke="#059669"
+                                  strokeWidth="2.4"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  points={gscChartPoints.map((p) => `${p.x},${p.yImpr}`).join(" ")}
+                                />
+                                <polyline
+                                  fill="none"
+                                  stroke="#2563eb"
+                                  strokeWidth="2.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  points={gscChartPoints.map((p) => `${p.x},${p.yClicks}`).join(" ")}
+                                />
+                              </>
+                            )}
+
+                            {gscChartPoints.map((p, idx) => (
+                              <g key={`${p.label}-${idx}`}>
+                                <circle cx={p.x} cy={p.yClicks} r="3" fill="#2563eb" stroke="#fff" strokeWidth="1" />
+                                <circle cx={p.x} cy={p.yImpr} r="2.6" fill="#059669" stroke="#fff" strokeWidth="1" />
+                                <text
+                                  x={p.x}
+                                  y="114"
+                                  fontSize="10.5"
+                                  fontWeight="600"
+                                  fill="#2563eb"
+                                  textAnchor="middle"
+                                >
+                                  {p.label}
+                                </text>
+                              </g>
+                            ))}
+                          </svg>
+                        ) : (
+                          <div className="flex h-[90px] items-center justify-center rounded-[7px] border border-dashed border-slate-200 bg-slate-50/70 px-3 text-center text-[10px] font-semibold text-slate-500">
+                            {liveDashboard?.sources.searchConsole.message ??
+                              "Google Search Console not connected."}
+                          </div>
+                        )}
+                      </div>
+                    </Panel>
+
+                    {/* =================================================
                   ACTION REQUIRED
               ================================================= */}
 
-              <Panel>
-                <PanelTitle
-                  right={
-                    <div className="flex items-center gap-2">
-                      <select 
-                        className="rounded border border-slate-200 text-[10px] px-1 py-0.5 font-semibold text-slate-600 outline-none focus:border-blue-500"
-                        value={submissionFilter}
-                        onChange={(e) => setSubmissionFilter(e.target.value)}
+                    <Panel>
+                      <PanelTitle
+                        right={
+                          <div className="flex items-center gap-2">
+                            <select
+                              className="rounded border border-slate-200 text-[10px] px-1 py-0.5 font-semibold text-slate-600 outline-none focus:border-blue-500"
+                              value={submissionFilter}
+                              onChange={(e) => setSubmissionFilter(e.target.value)}
+                            >
+                              <option value="All">All Enquiries</option>
+                              <option value="Retail">Retail Interior</option>
+                              <option value="Corporate">Corporate Interior</option>
+                              <option value="Exhibition">Exhibition Stalls</option>
+                              <option value="Visit">Showroom Visits</option>
+                            </select>
+                            <button
+                              type="button"
+                              onClick={() => router.push("/general-enquiries")}
+                              className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700"
+                            >
+                              View All
+                              <ArrowRight className="h-3.5 w-3.5 text-blue-600" />
+                            </button>
+                          </div>
+                        }
                       >
-                        <option value="All">All Enquiries</option>
-                        <option value="Retail">Retail Interior</option>
-                        <option value="Corporate">Corporate Interior</option>
-                        <option value="Exhibition">Exhibition Stalls</option>
-                        <option value="Visit">Showroom Visits</option>
-                      </select>
-                      <button
-                        type="button"
-                        onClick={() => router.push("/general-enquiries")}
-                        className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700"
-                      >
-                        View All
-                        <ArrowRight className="h-3.5 w-3.5 text-blue-600" />
-                      </button>
-                    </div>
-                  }
-                >
-                  Action Required
-                </PanelTitle>
+                        Action Required
+                      </PanelTitle>
 
-                <div className="px-2.5 max-h-[300px] overflow-y-auto pb-3 pt-2 space-y-1">
-                  {submissionRows.length === 0 ? (
-                    <div className="py-4 text-center text-[10px] text-slate-500 font-semibold">No pending enquiries found.</div>
-                  ) : (
-                    submissionRows.map((row, index) => {
+                      <div className="px-2.5 max-h-[300px] overflow-y-auto pb-3 pt-2 space-y-1">
+                        {submissionRows.length === 0 ? (
+                          <div className="py-4 text-center text-[10px] text-slate-500 font-semibold">No pending enquiries found.</div>
+                        ) : (
+                          submissionRows.map((row, index) => {
 
-                      // Priority mapping: 1 = Red (High), 2 = Orange (Medium), 3 = Yellow (Low)
-                      let theme = "orange";
-                      if (row.priority === 1) {
-                        theme = "red";
-                      } else if (row.priority === 3) {
-                        theme = "yellow";
-                      } else {
-                        theme = "orange";
-                      }
+                            // Priority mapping: 1 = Red (High), 2 = Orange (Medium), 3 = Yellow (Low)
+                            let theme = "orange";
+                            if (row.priority === 1) {
+                              theme = "red";
+                            } else if (row.priority === 3) {
+                              theme = "yellow";
+                            } else {
+                              theme = "orange";
+                            }
 
-                      const cardThemes = {
-                        red: {
-                          // Red — High Priority (Top)
-                          bg: "bg-red-100/90 hover:bg-red-100 border-red-300 text-red-950",
-                          iconBg: "bg-red-200 text-red-800",
-                          badge: "bg-red-200/90 text-red-900 border-red-300 font-bold",
-                          dateColor: "text-red-800 font-semibold",
-                        },
-                        orange: {
-                          // Orange — Medium Priority (Middle)
-                          bg: "bg-orange-100/90 hover:bg-orange-100 border-orange-300 text-orange-950",
-                          iconBg: "bg-orange-200 text-orange-800",
-                          badge: "bg-orange-200/90 text-orange-900 border-orange-300 font-bold",
-                          dateColor: "text-orange-800 font-semibold",
-                        },
-                        yellow: {
-                          // Yellow — Low Priority (Bottom)
-                          bg: "bg-amber-100/90 hover:bg-amber-100 border-amber-300 text-amber-950",
-                          iconBg: "bg-amber-200 text-amber-800",
-                          badge: "bg-amber-200/90 text-amber-900 border-amber-300 font-bold",
-                          dateColor: "text-amber-800 font-semibold",
-                        },
-                      };
+                            const cardThemes = {
+                              red: {
+                                // Red — High Priority (Top)
+                                bg: "bg-red-100/90 hover:bg-red-100 border-red-300 text-red-950",
+                                iconBg: "bg-red-200 text-red-800",
+                                badge: "bg-red-200/90 text-red-900 border-red-300 font-bold",
+                                dateColor: "text-red-800 font-semibold",
+                              },
+                              orange: {
+                                // Orange — Medium Priority (Middle)
+                                bg: "bg-orange-100/90 hover:bg-orange-100 border-orange-300 text-orange-950",
+                                iconBg: "bg-orange-200 text-orange-800",
+                                badge: "bg-orange-200/90 text-orange-900 border-orange-300 font-bold",
+                                dateColor: "text-orange-800 font-semibold",
+                              },
+                              yellow: {
+                                // Yellow — Low Priority (Bottom)
+                                bg: "bg-amber-100/90 hover:bg-amber-100 border-amber-300 text-amber-950",
+                                iconBg: "bg-amber-200 text-amber-800",
+                                badge: "bg-amber-200/90 text-amber-900 border-amber-300 font-bold",
+                                dateColor: "text-amber-800 font-semibold",
+                              },
+                            };
 
-                      const cardTheme = cardThemes[theme as keyof typeof cardThemes];
+                            const cardTheme = cardThemes[theme as keyof typeof cardThemes];
 
-                      return (
-                        <div
-                          key={row.id + index}
-                          onClick={() => router.push("/general-enquiries")}
-                          className={`
+                            return (
+                              <div
+                                key={row.id + index}
+                                onClick={() => router.push("/general-enquiries")}
+                                className={`
                             flex
                             items-center
                             justify-between
@@ -2564,10 +2562,10 @@ export default function DashboardPage() {
                             hover:shadow-sm
                             ${cardTheme.bg}
                           `}
-                        >
-                          <div className="flex items-center gap-2 min-w-0">
-                            <div
-                              className={`
+                              >
+                                <div className="flex items-center gap-2 min-w-0">
+                                  <div
+                                    className={`
                                 grid
                                 h-5
                                 w-5
@@ -2576,16 +2574,16 @@ export default function DashboardPage() {
                                 rounded-full
                                 ${cardTheme.iconBg}
                               `}
-                            >
-                              <FileText className="h-3 w-3" />
-                            </div>
+                                  >
+                                    <FileText className="h-3 w-3" />
+                                  </div>
 
-                            <span className="truncate font-bold text-[10.5px] max-w-[110px]">
-                              {row.name}
-                            </span>
+                                  <span className="truncate font-bold text-[10.5px] max-w-[110px]">
+                                    {row.name}
+                                  </span>
 
-                            <span
-                              className={`
+                                  <span
+                                    className={`
                                 inline-flex
                                 items-center
                                 rounded
@@ -2595,189 +2593,189 @@ export default function DashboardPage() {
                                 border
                                 ${cardTheme.badge}
                               `}
-                            >
-                              {row.type}
-                            </span>
-                          </div>
+                                  >
+                                    {row.type}
+                                  </span>
+                                </div>
 
-                          <span className={`whitespace-nowrap text-right text-[9px] ${cardTheme.dateColor} shrink-0`}>
-                            {row.date}
-                          </span>
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
-              </Panel>
-            </div>
+                                <span className={`whitespace-nowrap text-right text-[9px] ${cardTheme.dateColor} shrink-0`}>
+                                  {row.date}
+                                </span>
+                              </div>
+                            );
+                          })
+                        )}
+                      </div>
+                    </Panel>
+                  </div>
 
-            {/* =============================
+                  {/* =============================
                 ROW 3 — 260PX
             ============================== */}
 
-            <div
-              className="
+                  <div
+                    className="
                 grid
                 h-full
                 min-h-0
                 grid-cols-[0.92fr_1.12fr_1.06fr]
                 gap-2
               "
-            >
-              {/* =================================================
+                  >
+                    {/* =================================================
                   ANALYTICS
               ================================================= */}
 
-              <Panel className="flex h-full flex-col justify-between">
-                <div>
-                  <PanelTitle
-                    right={
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => router.push("/seo")}
-                          className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700"
-                        >
-                          View Report
+                    <Panel className="flex h-full flex-col justify-between">
+                      <div>
+                        <PanelTitle
+                          right={
+                            <div className="flex items-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => router.push("/seo")}
+                                className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700"
+                              >
+                                View Report
 
-                          <ArrowRight className="h-3.5 w-3.5 text-blue-600" />
-                        </button>
-                      </div>
-                    }
-                  >
-                    Analytics Overview
-                  </PanelTitle>
-
-                  <div className="grid grid-cols-4 gap-1.5 px-3 pt-3">
-                    {[
-                      {
-                        label:
-                          "Users",
-
-                        value:
-                          analytics
-                            ? number(
-                              analytics.users,
-                            )
-                            : "—",
-
-                        delta:
-                          analytics
-                            ? growthText(
-                              analytics
-                                .growth
-                                .users,
-                            )
-                            : "No Live Data",
-
-                        good:
-                          true,
-
-                        bg:
-                          "bg-[#eff6ff] border-[#dbeafe]",
-
-                        valColor:
-                          "text-blue-900",
-                      },
-
-                      {
-                        label:
-                          "Page Views",
-
-                        value:
-                          analytics
-                            ? number(
-                              analytics.pageViews,
-                            )
-                            : "—",
-
-                        delta:
-                          analytics
-                            ? growthText(
-                              analytics
-                                .growth
-                                .pageViews,
-                            )
-                            : "No Live Data",
-
-                        good:
-                          true,
-
-                        bg:
-                          "bg-[#f0fdf4] border-[#dcfce7]",
-
-                        valColor:
-                          "text-emerald-900",
-                      },
-
-                      {
-                        label:
-                          "Avg. Session",
-
-                        value:
-                          analytics
-                            ? duration(
-                              analytics.averageSessionSeconds,
-                            )
-                            : "—",
-
-                        delta:
-                          analytics
-                            ? growthText(
-                              analytics
-                                .growth
-                                .averageSession,
-                            )
-                            : "No Live Data",
-
-                        good:
-                          true,
-
-                        bg:
-                          "bg-[#faf5ff] border-[#f3e8ff]",
-
-                        valColor:
-                          "text-purple-900",
-                      },
-
-                      {
-                        label:
-                          "Bounce Rate",
-
-                        value:
-                          analytics
-                            ? `${analytics.bounceRate.toFixed(
-                              1,
-                            )}%`
-                            : "—",
-
-                        delta:
-                          analytics
-                            ? growthText(
-                              analytics
-                                .growth
-                                .bounceRate,
-
-                              true,
-                            )
-                            : "No Live Data",
-
-                        good:
-                          false,
-
-                        bg:
-                          "bg-[#fff7ed] border-[#ffedd5]",
-
-                        valColor:
-                          "text-amber-900",
-                      },
-                    ].map(
-                      (item) => (
-                        <div
-                          key={
-                            item.label
+                                <ArrowRight className="h-3.5 w-3.5 text-blue-600" />
+                              </button>
+                            </div>
                           }
-                          className={`
+                        >
+                          Analytics Overview
+                        </PanelTitle>
+
+                        <div className="grid grid-cols-4 gap-1.5 px-3 pt-3">
+                          {[
+                            {
+                              label:
+                                "Users",
+
+                              value:
+                                analytics
+                                  ? number(
+                                    analytics.users,
+                                  )
+                                  : "—",
+
+                              delta:
+                                analytics
+                                  ? growthText(
+                                    analytics
+                                      .growth
+                                      .users,
+                                  )
+                                  : "No Live Data",
+
+                              good:
+                                true,
+
+                              bg:
+                                "bg-[#eff6ff] border-[#dbeafe]",
+
+                              valColor:
+                                "text-blue-900",
+                            },
+
+                            {
+                              label:
+                                "Page Views",
+
+                              value:
+                                analytics
+                                  ? number(
+                                    analytics.pageViews,
+                                  )
+                                  : "—",
+
+                              delta:
+                                analytics
+                                  ? growthText(
+                                    analytics
+                                      .growth
+                                      .pageViews,
+                                  )
+                                  : "No Live Data",
+
+                              good:
+                                true,
+
+                              bg:
+                                "bg-[#f0fdf4] border-[#dcfce7]",
+
+                              valColor:
+                                "text-emerald-900",
+                            },
+
+                            {
+                              label:
+                                "Avg. Session",
+
+                              value:
+                                analytics
+                                  ? duration(
+                                    analytics.averageSessionSeconds,
+                                  )
+                                  : "—",
+
+                              delta:
+                                analytics
+                                  ? growthText(
+                                    analytics
+                                      .growth
+                                      .averageSession,
+                                  )
+                                  : "No Live Data",
+
+                              good:
+                                true,
+
+                              bg:
+                                "bg-[#faf5ff] border-[#f3e8ff]",
+
+                              valColor:
+                                "text-purple-900",
+                            },
+
+                            {
+                              label:
+                                "Bounce Rate",
+
+                              value:
+                                analytics
+                                  ? `${analytics.bounceRate.toFixed(
+                                    1,
+                                  )}%`
+                                  : "—",
+
+                              delta:
+                                analytics
+                                  ? growthText(
+                                    analytics
+                                      .growth
+                                      .bounceRate,
+
+                                    true,
+                                  )
+                                  : "No Live Data",
+
+                              good:
+                                false,
+
+                              bg:
+                                "bg-[#fff7ed] border-[#ffedd5]",
+
+                              valColor:
+                                "text-amber-900",
+                            },
+                          ].map(
+                            (item) => (
+                              <div
+                                key={
+                                  item.label
+                                }
+                                className={`
                             rounded-[7px]
                             border
                             px-2
@@ -2785,270 +2783,270 @@ export default function DashboardPage() {
 
                             ${item.bg}
                           `}
-                          style={{
-                            boxShadow:
-                              "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.08) 0px 0px 0px 1px",
-                          }}
-                        >
-                          <p className="text-[9px] font-bold text-[#334666]">
-                            {
-                              item.label
-                            }
-                          </p>
+                                style={{
+                                  boxShadow:
+                                    "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.08) 0px 0px 0px 1px",
+                                }}
+                              >
+                                <p className="text-[9px] font-bold text-[#334666]">
+                                  {
+                                    item.label
+                                  }
+                                </p>
 
-                          <p
-                            className={`
+                                <p
+                                  className={`
                               mt-0.5
                               text-[17px]
                               font-semibold
                               ${item.valColor}
                             `}
-                            style={{
-                              fontWeight: 600,
-                            }}
-                          >
-                            <AnimatedCounter
-                              value={
-                                item.value
-                              }
-                            />
-                          </p>
+                                  style={{
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  <AnimatedCounter
+                                    value={
+                                      item.value
+                                    }
+                                  />
+                                </p>
 
-                          <p
-                            className={`
+                                <p
+                                  className={`
                               mt-0.5
                               text-[9px]
                               font-bold
 
                               ${item.good
-                                ? "text-emerald-700"
-                                : "text-rose-600"
-                              }
+                                      ? "text-emerald-700"
+                                      : "text-rose-600"
+                                    }
                             `}
-                          >
-                            {
-                              item.delta
-                            }
-                          </p>
+                                >
+                                  {
+                                    item.delta
+                                  }
+                                </p>
+                              </div>
+                            ),
+                          )}
                         </div>
-                      ),
-                    )}
-                  </div>
-                </div>
+                      </div>
 
-                <div className="mt-auto w-full min-h-0 px-3 pt-0 pb-3">
-                  <svg
-                    viewBox="0 0 430 110"
-                    preserveAspectRatio="none"
-                    className="block h-[95px] w-full overflow-visible"
-                  >
-                    <defs>
-                      <linearGradient
-                        id="bar-blue-gradient"
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1"
-                      >
-                        <stop
-                          offset="0%"
-                          stopColor="#3b82f6"
-                        />
-
-                        <stop
-                          offset="100%"
-                          stopColor="#1d4ed8"
-                        />
-                      </linearGradient>
-
-                      <linearGradient
-                        id="bar-emerald-gradient"
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1"
-                      >
-                        <stop
-                          offset="0%"
-                          stopColor="#10b981"
-                        />
-
-                        <stop
-                          offset="100%"
-                          stopColor="#047857"
-                        />
-                      </linearGradient>
-                    </defs>
-
-                    <g
-                      className="animate-grow-chart"
-                      style={{
-                        transformOrigin:
-                          "215px 90px",
-                      }}
-                    >
-                      {[
-                        20,
-                        44,
-                        68,
-                      ].map(
-                        (y) => (
-                          <line
-                            key={
-                              y
-                            }
-                            x1="12"
-                            x2="420"
-                            y1={
-                              y
-                            }
-                            y2={
-                              y
-                            }
-                            stroke="#e2e8f0"
-                            strokeWidth="1"
-                            strokeDasharray="3 3"
-                          />
-                        ),
-                      )}
-
-                      <line
-                        x1="12"
-                        x2="420"
-                        y1="90"
-                        y2="90"
-                        stroke="#cbd5e1"
-                        strokeWidth="1.2"
-                      />
-
-                      {analyticsChartData.map(
-                        (item) => (
-                          <g
-                            key={
-                              item.date
-                            }
-                          >
-                            <rect
-                              x={
-                                item.x -
-                                12
-                              }
-                              y={
-                                90 -
-                                item.blueH
-                              }
-                              width="10"
-                              height={
-                                item.blueH
-                              }
-                              rx="3"
-                              ry="3"
-                              fill="url(#bar-blue-gradient)"
-                            />
-
-                            <rect
-                              x={
-                                item.x +
-                                2
-                              }
-                              y={
-                                90 -
-                                item.emH
-                              }
-                              width="10"
-                              height={
-                                item.emH
-                              }
-                              rx="3"
-                              ry="3"
-                              fill="url(#bar-emerald-gradient)"
-                            />
-
-                            <text
-                              x={
-                                item.x
-                              }
-                              y="108"
-                              textAnchor="middle"
-                              fill="#2563eb"
-                              fontSize="10.5"
-                              fontWeight="600"
+                      <div className="mt-auto w-full min-h-0 px-3 pt-0 pb-3">
+                        <svg
+                          viewBox="0 0 430 110"
+                          preserveAspectRatio="none"
+                          className="block h-[95px] w-full overflow-visible"
+                        >
+                          <defs>
+                            <linearGradient
+                              id="bar-blue-gradient"
+                              x1="0"
+                              y1="0"
+                              x2="0"
+                              y2="1"
                             >
-                              {
-                                item.date
-                              }
-                            </text>
-                          </g>
-                        ),
-                      )}
-                    </g>
-                  </svg>
-                </div>
-              </Panel>
+                              <stop
+                                offset="0%"
+                                stopColor="#3b82f6"
+                              />
 
-              {/* =================================================
+                              <stop
+                                offset="100%"
+                                stopColor="#1d4ed8"
+                              />
+                            </linearGradient>
+
+                            <linearGradient
+                              id="bar-emerald-gradient"
+                              x1="0"
+                              y1="0"
+                              x2="0"
+                              y2="1"
+                            >
+                              <stop
+                                offset="0%"
+                                stopColor="#10b981"
+                              />
+
+                              <stop
+                                offset="100%"
+                                stopColor="#047857"
+                              />
+                            </linearGradient>
+                          </defs>
+
+                          <g
+                            className="animate-grow-chart"
+                            style={{
+                              transformOrigin:
+                                "215px 90px",
+                            }}
+                          >
+                            {[
+                              20,
+                              44,
+                              68,
+                            ].map(
+                              (y) => (
+                                <line
+                                  key={
+                                    y
+                                  }
+                                  x1="12"
+                                  x2="420"
+                                  y1={
+                                    y
+                                  }
+                                  y2={
+                                    y
+                                  }
+                                  stroke="#e2e8f0"
+                                  strokeWidth="1"
+                                  strokeDasharray="3 3"
+                                />
+                              ),
+                            )}
+
+                            <line
+                              x1="12"
+                              x2="420"
+                              y1="90"
+                              y2="90"
+                              stroke="#cbd5e1"
+                              strokeWidth="1.2"
+                            />
+
+                            {analyticsChartData.map(
+                              (item) => (
+                                <g
+                                  key={
+                                    item.date
+                                  }
+                                >
+                                  <rect
+                                    x={
+                                      item.x -
+                                      12
+                                    }
+                                    y={
+                                      90 -
+                                      item.blueH
+                                    }
+                                    width="10"
+                                    height={
+                                      item.blueH
+                                    }
+                                    rx="3"
+                                    ry="3"
+                                    fill="url(#bar-blue-gradient)"
+                                  />
+
+                                  <rect
+                                    x={
+                                      item.x +
+                                      2
+                                    }
+                                    y={
+                                      90 -
+                                      item.emH
+                                    }
+                                    width="10"
+                                    height={
+                                      item.emH
+                                    }
+                                    rx="3"
+                                    ry="3"
+                                    fill="url(#bar-emerald-gradient)"
+                                  />
+
+                                  <text
+                                    x={
+                                      item.x
+                                    }
+                                    y="108"
+                                    textAnchor="middle"
+                                    fill="#2563eb"
+                                    fontSize="10.5"
+                                    fontWeight="600"
+                                  >
+                                    {
+                                      item.date
+                                    }
+                                  </text>
+                                </g>
+                              ),
+                            )}
+                          </g>
+                        </svg>
+                      </div>
+                    </Panel>
+
+                    {/* =================================================
                   CORE WEB VITALS
               ================================================= */}
 
-              <Panel>
-                <PanelTitle
-                  right={
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => router.push("/auditpage")}
-                        className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700"
-                      >
-                        View Performance
+                    <Panel>
+                      <PanelTitle
+                        right={
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => router.push("/auditpage")}
+                              className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-700"
+                            >
+                              View Performance
 
-                        <ArrowRight className="h-3.5 w-3.5 text-blue-600" />
-                      </button>
-                    </div>
-                  }
-                >
-                  Core Web Vitals
-                  (Field Data)
-                </PanelTitle>
-
-                <div className="grid grid-cols-3 gap-1.5 px-3 pt-3">
-                  {[
-                    {
-                      label: "Largest Contentful Paint (LCP)",
-                      value: pageSpeed?.lcp != null ? `${(pageSpeed.lcp / 1000).toFixed(1)}s` : "—",
-                      status: pageSpeed?.lcp == null ? "No Data" : pageSpeed.lcp <= 2500 ? "Good" : pageSpeed.lcp <= 4000 ? "Needs Work" : "Poor",
-                      score: pageSpeed?.lcp == null ? "0%" : pageSpeed.lcp <= 2500 ? "100%" : pageSpeed.lcp <= 4000 ? "60%" : "25%",
-                      bg: "bg-[#eff6ff] border-[#dbeafe]",
-                      valColor: "text-blue-900",
-                      barColor: "bg-blue-600",
-                      scoreColor: "text-blue-700",
-                    },
-                    {
-                      label: "Interaction to Next Paint (INP)",
-                      value: pageSpeed?.inp != null ? `${Math.round(pageSpeed.inp)}ms` : "—",
-                      status: pageSpeed?.inp == null ? "No Data" : pageSpeed.inp <= 200 ? "Good" : pageSpeed.inp <= 500 ? "Needs Work" : "Poor",
-                      score: pageSpeed?.inp == null ? "0%" : pageSpeed.inp <= 200 ? "100%" : pageSpeed.inp <= 500 ? "60%" : "25%",
-                      bg: "bg-[#f0fdf4] border-[#dcfce7]",
-                      valColor: "text-emerald-900",
-                      barColor: "bg-emerald-600",
-                      scoreColor: "text-emerald-700",
-                    },
-                    {
-                      label: "Cumulative Layout Shift (CLS)",
-                      value: pageSpeed?.cls != null ? pageSpeed.cls.toFixed(2) : "—",
-                      status: pageSpeed?.cls == null ? "No Data" : pageSpeed.cls <= 0.1 ? "Good" : pageSpeed.cls <= 0.25 ? "Needs Work" : "Poor",
-                      score: pageSpeed?.cls == null ? "0%" : pageSpeed.cls <= 0.1 ? "100%" : pageSpeed.cls <= 0.25 ? "60%" : "25%",
-                      bg: "bg-[#faf5ff] border-[#f3e8ff]",
-                      valColor: "text-purple-900",
-                      barColor: "bg-purple-600",
-                      scoreColor: "text-purple-700",
-                    },
-                  ].map(
-                    (item) => (
-                      <div
-                        key={
-                          item.label
+                              <ArrowRight className="h-3.5 w-3.5 text-blue-600" />
+                            </button>
+                          </div>
                         }
-                        className={`
+                      >
+                        Core Web Vitals
+                        (Field Data)
+                      </PanelTitle>
+
+                      <div className="grid grid-cols-3 gap-1.5 px-3 pt-3">
+                        {[
+                          {
+                            label: "Largest Contentful Paint (LCP)",
+                            value: pageSpeed?.lcp != null ? `${(pageSpeed.lcp / 1000).toFixed(1)}s` : "—",
+                            status: pageSpeed?.lcp == null ? "No Data" : pageSpeed.lcp <= 2500 ? "Good" : pageSpeed.lcp <= 4000 ? "Needs Work" : "Poor",
+                            score: pageSpeed?.lcp == null ? "0%" : pageSpeed.lcp <= 2500 ? "100%" : pageSpeed.lcp <= 4000 ? "60%" : "25%",
+                            bg: "bg-[#eff6ff] border-[#dbeafe]",
+                            valColor: "text-blue-900",
+                            barColor: "bg-blue-600",
+                            scoreColor: "text-blue-700",
+                          },
+                          {
+                            label: "Interaction to Next Paint (INP)",
+                            value: pageSpeed?.inp != null ? `${Math.round(pageSpeed.inp)}ms` : "—",
+                            status: pageSpeed?.inp == null ? "No Data" : pageSpeed.inp <= 200 ? "Good" : pageSpeed.inp <= 500 ? "Needs Work" : "Poor",
+                            score: pageSpeed?.inp == null ? "0%" : pageSpeed.inp <= 200 ? "100%" : pageSpeed.inp <= 500 ? "60%" : "25%",
+                            bg: "bg-[#f0fdf4] border-[#dcfce7]",
+                            valColor: "text-emerald-900",
+                            barColor: "bg-emerald-600",
+                            scoreColor: "text-emerald-700",
+                          },
+                          {
+                            label: "Cumulative Layout Shift (CLS)",
+                            value: pageSpeed?.cls != null ? pageSpeed.cls.toFixed(2) : "—",
+                            status: pageSpeed?.cls == null ? "No Data" : pageSpeed.cls <= 0.1 ? "Good" : pageSpeed.cls <= 0.25 ? "Needs Work" : "Poor",
+                            score: pageSpeed?.cls == null ? "0%" : pageSpeed.cls <= 0.1 ? "100%" : pageSpeed.cls <= 0.25 ? "60%" : "25%",
+                            bg: "bg-[#faf5ff] border-[#f3e8ff]",
+                            valColor: "text-purple-900",
+                            barColor: "bg-purple-600",
+                            scoreColor: "text-purple-700",
+                          },
+                        ].map(
+                          (item) => (
+                            <div
+                              key={
+                                item.label
+                              }
+                              className={`
                           rounded-[7px]
                           border
                           px-2
@@ -3056,315 +3054,315 @@ export default function DashboardPage() {
 
                           ${item.bg}
                         `}
-                        style={{
-                          boxShadow:
-                            "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.08) 0px 0px 0px 1px",
-                        }}
-                      >
-                        <p
-                          className="text-[9.5px] font-bold text-slate-900"
-                          style={{
-                            color:
-                              "#0f172a",
+                              style={{
+                                boxShadow:
+                                  "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.08) 0px 0px 0px 1px",
+                              }}
+                            >
+                              <p
+                                className="text-[9.5px] font-bold text-slate-900"
+                                style={{
+                                  color:
+                                    "#0f172a",
 
-                            fontWeight: 700,
-                          }}
-                        >
-                          {
-                            item.label
-                          }
-                        </p>
+                                  fontWeight: 700,
+                                }}
+                              >
+                                {
+                                  item.label
+                                }
+                              </p>
 
-                        <p
-                          className={`
+                              <p
+                                className={`
                             mt-1
                             text-[16px]
                             font-semibold
                             ${item.valColor}
                           `}
-                          style={{
-                            fontWeight: 600,
-                          }}
-                        >
-                          <AnimatedCounter
-                            value={
-                              item.value
-                            }
-                          />
-                        </p>
+                                style={{
+                                  fontWeight: 600,
+                                }}
+                              >
+                                <AnimatedCounter
+                                  value={
+                                    item.value
+                                  }
+                                />
+                              </p>
 
-                        <p
-                          className={`
+                              <p
+                                className={`
                             mt-0.5
                             text-[9px]
                             font-bold
 
                             ${item.status ===
-                              "Good"
-                              ? "text-emerald-700"
-                              : item.status ===
-                                "No Data"
-                                ? "text-slate-500"
-                                : item.status ===
-                                  "Needs Work"
-                                  ? "text-amber-700"
-                                  : "text-red-700"
-                            }
+                                    "Good"
+                                    ? "text-emerald-700"
+                                    : item.status ===
+                                      "No Data"
+                                      ? "text-slate-500"
+                                      : item.status ===
+                                        "Needs Work"
+                                        ? "text-amber-700"
+                                        : "text-red-700"
+                                  }
                           `}
-                        >
-                          {
-                            item.status
-                          }
-                        </p>
+                              >
+                                {
+                                  item.status
+                                }
+                              </p>
 
-                        <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-slate-200/60">
-                          <div
-                            className={`
+                              <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-slate-200/60">
+                                <div
+                                  className={`
                               h-full
                               rounded-full
                               ${item.barColor}
                             `}
-                            style={{
-                              width:
-                                item.score,
-                            }}
-                          />
-                        </div>
+                                  style={{
+                                    width:
+                                      item.score,
+                                  }}
+                                />
+                              </div>
 
-                        <p
-                          className={`
+                              <p
+                                className={`
                             mt-0.5
                             text-right
                             text-[8px]
                             font-bold
                             ${item.scoreColor}
                           `}
-                        >
-                          {item.status ===
-                            "No Data"
-                            ? "—"
-                            : item.score}
-                        </p>
+                              >
+                                {item.status ===
+                                  "No Data"
+                                  ? "—"
+                                  : item.score}
+                              </p>
+                            </div>
+                          ),
+                        )}
                       </div>
-                    ),
-                  )}
-                </div>
 
-                <div className="px-3 pt-2.5 pb-2">
-                  <p
-                    className="mb-1 text-[10px] font-semibold text-slate-900"
-                    style={{
-                      color:
-                        "#0f172a",
+                      <div className="px-3 pt-2.5 pb-2">
+                        <p
+                          className="mb-1 text-[10px] font-semibold text-slate-900"
+                          style={{
+                            color:
+                              "#0f172a",
 
-                      fontWeight: 800,
-                    }}
-                  >
-                    Other Performance
-                    Metrics
-                  </p>
-
-                  <div className="grid grid-cols-[1fr_64px_64px] text-[9px] font-bold">
-                    <div className="rounded-l-[4px] bg-[#eaeff5] px-2 py-1 text-black">
-                      Metric
-                    </div>
-
-                    <div className="bg-[#eaeff5] px-2 py-1 text-center text-black">
-                      Mobile
-                    </div>
-
-                    <div className="rounded-r-[4px] bg-[#eaeff5] px-2 py-1 text-center text-black">
-                      Desktop
-                    </div>
-
-                    {[
-                      [
-                        "First Contentful Paint (FCP)",
-                        pageSpeed?.fcp != null
-                          ? `${(pageSpeed.fcp / 1000).toFixed(1)}s`
-                          : "—",
-                        pageSpeed?.desktop?.fcp != null
-                          ? `${(pageSpeed.desktop.fcp / 1000).toFixed(1)}s`
-                          : "—",
-                      ],
-                      [
-                        "Time to First Byte (TTFB)",
-                        pageSpeed?.ttfb != null
-                          ? `${Math.round(pageSpeed.ttfb)}ms`
-                          : "—",
-                        pageSpeed?.desktop?.ttfb != null
-                          ? `${Math.round(pageSpeed.desktop.ttfb)}ms`
-                          : "—",
-                        "#2563eb",
-                      ],
-                      [
-                        "Total Blocking Time (TBT)",
-                        pageSpeed?.tbt != null
-                          ? `${Math.round(pageSpeed.tbt)}ms`
-                          : "—",
-                        pageSpeed?.desktop?.tbt != null
-                          ? `${Math.round(pageSpeed.desktop.tbt)}ms`
-                          : "—",
-                        "#4B1426",
-                      ],
-                    ].map(
-                      (row) => (
-                        <div
-                          key={
-                            row[0]
-                          }
-                          className="contents"
+                            fontWeight: 800,
+                          }}
                         >
-                          <div
-                            className="px-2 py-1 font-semibold text-slate-900"
-                            style={{
-                              color:
-                                "#0f172a",
+                          Other Performance
+                          Metrics
+                        </p>
 
-                              fontWeight: 600,
-                            }}
-                          >
-                            {
-                              row[0]
-                            }
+                        <div className="grid grid-cols-[1fr_64px_64px] text-[9px] font-bold">
+                          <div className="rounded-l-[4px] bg-[#eaeff5] px-2 py-1 text-black">
+                            Metric
                           </div>
 
-                          <div
-                            className="px-2 py-1 text-center font-bold"
-                            style={{
-                              color:
-                                row[3] ||
-                                "#047857",
-                            }}
-                          >
-                            {
-                              row[1]
-                            }
+                          <div className="bg-[#eaeff5] px-2 py-1 text-center text-black">
+                            Mobile
                           </div>
 
-                          <div
-                            className="px-2 py-1 text-center font-bold"
-                            style={{
-                              color:
-                                row[3] ||
-                                "#047857",
-                            }}
-                          >
-                            {
-                              row[2]
-                            }
+                          <div className="rounded-r-[4px] bg-[#eaeff5] px-2 py-1 text-center text-black">
+                            Desktop
                           </div>
+
+                          {[
+                            [
+                              "First Contentful Paint (FCP)",
+                              pageSpeed?.fcp != null
+                                ? `${(pageSpeed.fcp / 1000).toFixed(1)}s`
+                                : "—",
+                              pageSpeed?.desktop?.fcp != null
+                                ? `${(pageSpeed.desktop.fcp / 1000).toFixed(1)}s`
+                                : "—",
+                            ],
+                            [
+                              "Time to First Byte (TTFB)",
+                              pageSpeed?.ttfb != null
+                                ? `${Math.round(pageSpeed.ttfb)}ms`
+                                : "—",
+                              pageSpeed?.desktop?.ttfb != null
+                                ? `${Math.round(pageSpeed.desktop.ttfb)}ms`
+                                : "—",
+                              "#2563eb",
+                            ],
+                            [
+                              "Total Blocking Time (TBT)",
+                              pageSpeed?.tbt != null
+                                ? `${Math.round(pageSpeed.tbt)}ms`
+                                : "—",
+                              pageSpeed?.desktop?.tbt != null
+                                ? `${Math.round(pageSpeed.desktop.tbt)}ms`
+                                : "—",
+                              "#4B1426",
+                            ],
+                          ].map(
+                            (row) => (
+                              <div
+                                key={
+                                  row[0]
+                                }
+                                className="contents"
+                              >
+                                <div
+                                  className="px-2 py-1 font-semibold text-slate-900"
+                                  style={{
+                                    color:
+                                      "#0f172a",
+
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  {
+                                    row[0]
+                                  }
+                                </div>
+
+                                <div
+                                  className="px-2 py-1 text-center font-bold"
+                                  style={{
+                                    color:
+                                      row[3] ||
+                                      "#047857",
+                                  }}
+                                >
+                                  {
+                                    row[1]
+                                  }
+                                </div>
+
+                                <div
+                                  className="px-2 py-1 text-center font-bold"
+                                  style={{
+                                    color:
+                                      row[3] ||
+                                      "#047857",
+                                  }}
+                                >
+                                  {
+                                    row[2]
+                                  }
+                                </div>
+                              </div>
+                            ),
+                          )}
                         </div>
-                      ),
-                    )}
-                  </div>
-                </div>
-              </Panel>
+                      </div>
+                    </Panel>
 
-              {/* =================================================
+                    {/* =================================================
                   SITE STATUS
               ================================================= */}
 
-              <Panel>
-                <PanelTitle
-                  right={
-                    <Link
-                      href="/seo"
-                      className="text-[9px] font-bold text-blue-600 hover:underline"
-                    >
-                      View Site Health
-                    </Link>
-                  }
-                >
-                  Site Status
-                </PanelTitle>
+                    <Panel>
+                      <PanelTitle
+                        right={
+                          <Link
+                            href="/seo"
+                            className="text-[9px] font-bold text-blue-600 hover:underline"
+                          >
+                            View Site Health
+                          </Link>
+                        }
+                      >
+                        Site Status
+                      </PanelTitle>
 
-                <div className="px-3">
-                  {(siteStatus
-                    ? [
-                      [
-                        LockKeyhole,
-                        "SSL Certificate",
+                      <div className="px-3">
+                        {(siteStatus
+                          ? [
+                            [
+                              LockKeyhole,
+                              "SSL Certificate",
 
-                        siteStatus.sslValid
-                          ? "Valid"
-                          : "Invalid",
-                      ],
+                              siteStatus.sslValid
+                                ? "Valid"
+                                : "Invalid",
+                            ],
 
-                      [
-                        Timer,
-                        "SSL Expiry",
+                            [
+                              Timer,
+                              "SSL Expiry",
 
-                        siteStatus.certificateDaysRemaining !=
-                          null
-                          ? `${siteStatus.certificateDaysRemaining} Days · ${siteStatus.sslIssuer ??
-                          "Issuer Unknown"
-                          }`
-                          : "Unavailable",
-                      ],
+                              siteStatus.certificateDaysRemaining !=
+                                null
+                                ? `${siteStatus.certificateDaysRemaining} Days · ${siteStatus.sslIssuer ??
+                                "Issuer Unknown"
+                                }`
+                                : "Unavailable",
+                            ],
 
-                      [
-                        ShieldCheck,
-                        "Security Status",
+                            [
+                              ShieldCheck,
+                              "Security Status",
 
-                        `${siteStatus.securityHeaders.present}/${siteStatus.securityHeaders.total} Headers`,
-                      ],
+                              `${siteStatus.securityHeaders.present}/${siteStatus.securityHeaders.total} Headers`,
+                            ],
 
-                      [
-                        Timer,
-                        "Current Availability",
+                            [
+                              Timer,
+                              "Current Availability",
 
-                        siteStatus.online
-                          ? `Online · ${siteStatus.responseTimeMs}ms`
-                          : `HTTP ${siteStatus.httpStatus}`,
-                      ],
+                              siteStatus.online
+                                ? `Online · ${siteStatus.responseTimeMs}ms`
+                                : `HTTP ${siteStatus.httpStatus}`,
+                            ],
 
-                      [
-                        Globe2,
-                        "HTTP Status",
+                            [
+                              Globe2,
+                              "HTTP Status",
 
-                        `${siteStatus.httpStatus}${siteStatus.redirected
-                          ? " · Redirected"
-                          : ""
-                        }`,
-                      ],
+                              `${siteStatus.httpStatus}${siteStatus.redirected
+                                ? " · Redirected"
+                                : ""
+                              }`,
+                            ],
 
-                      [
-                        Globe2,
-                        "Server IP",
+                            [
+                              Globe2,
+                              "Server IP",
 
-                        siteStatus.ipAddress ??
-                        "Unavailable",
-                      ],
+                              siteStatus.ipAddress ??
+                              "Unavailable",
+                            ],
 
-                      [
-                        Wrench,
-                        "Node.js Version",
+                            [
+                              Wrench,
+                              "Node.js Version",
 
-                        siteStatus.nodeVersion,
-                      ],
-                    ]
-                    : [
-                      [
-                        Activity,
-                        "Website Health",
+                              siteStatus.nodeVersion,
+                            ],
+                          ]
+                          : [
+                            [
+                              Activity,
+                              "Website Health",
 
-                        liveDashboard?.sources.siteStatus
-                          ?.message ??
-                        "Checking",
-                      ],
-                    ]
-                  ).map(
-                    ([
-                      Icon,
-                      label,
-                      value,
-                    ]) => (
-                      <div
-                        key={String(
-                          label,
-                        )}
-                        className="
+                              liveDashboard?.sources.siteStatus
+                                ?.message ??
+                              "Checking",
+                            ],
+                          ]
+                        ).map(
+                          ([
+                            Icon,
+                            label,
+                            value,
+                          ]) => (
+                            <div
+                              key={String(
+                                label,
+                              )}
+                              className="
                           grid
                           grid-cols-[19px_1fr_auto_17px]
                           items-center
@@ -3375,97 +3373,97 @@ export default function DashboardPage() {
                           text-[10px]
                           last:border-b-0
                         "
-                      >
-                        <Icon className="h-4 w-4 text-[#3b4d70]" />
+                            >
+                              <Icon className="h-4 w-4 text-[#3b4d70]" />
 
-                        <span className="font-bold">
-                          {label as string}
-                        </span>
+                              <span className="font-bold">
+                                {label as string}
+                              </span>
 
-                        <span
-                          className={`
+                              <span
+                                className={`
                             font-bold
 
                             ${label ===
-                              "Last Backup"
-                              ? "text-[#4B1426]"
-                              : label ===
-                                "Security Status"
-                                ? "text-blue-600"
-                                : "text-emerald-700"
-                            }
+                                    "Last Backup"
+                                    ? "text-[#4B1426]"
+                                    : label ===
+                                      "Security Status"
+                                      ? "text-blue-600"
+                                      : "text-emerald-700"
+                                  }
                           `}
-                        >
-                          {value as string}
-                        </span>
+                              >
+                                {value as string}
+                              </span>
 
-                        <CheckCircle2
-                          className={`
+                              <CheckCircle2
+                                className={`
                             h-4
                             w-4
 
                             ${siteStatus
-                              ? "text-emerald-700"
-                              : "text-slate-400"
-                            }
+                                    ? "text-emerald-700"
+                                    : "text-slate-400"
+                                  }
                           `}
-                        />
+                              />
+                            </div>
+                          ),
+                        )}
                       </div>
-                    ),
-                  )}
-                </div>
-              </Panel>
-            </div>
+                    </Panel>
+                  </div>
 
-            {/* =============================
+                  {/* =============================
                 BOTTOM ROW — 160PX
             ============================== */}
 
-            <div
-              className="
+                  <div
+                    className="
                 grid
                 h-full
                 min-h-0
                 grid-cols-[1.02fr_1fr_1fr_1.12fr]
                 gap-2
               "
-            >
-              {/* =================================================
+                  >
+                    {/* =================================================
                   TOP PAGES
               ================================================= */}
 
-              <Panel>
-                <PanelTitle
-                  right={
-                    <Link
-                      href="/pages"
-                      className="text-[9px] font-bold text-blue-600 hover:underline"
-                    >
-                      View All
-                    </Link>
-                  }
-                >
-                  Top Pages by
-                  Traffic
-                </PanelTitle>
+                    <Panel>
+                      <PanelTitle
+                        right={
+                          <Link
+                            href="/pages"
+                            className="text-[9px] font-bold text-blue-600 hover:underline"
+                          >
+                            View All
+                          </Link>
+                        }
+                      >
+                        Top Pages by
+                        Traffic
+                      </PanelTitle>
 
-                <div className="px-3 text-[9px]">
-                  {liveTopPages.length === 0 ? (
-                    <div className="py-5 text-center text-[10px] font-semibold text-slate-400">
-                      No page traffic recorded in {activeRangeLabel}.
-                    </div>
-                  ) : (
-                    liveTopPages.map(
-                      (
-                        row,
-                        index,
-                      ) => (
-                        <div
-                          key={
-                            row[0] + index
-                          }
-                          onClick={() => router.push("/pages")}
-                          className="
+                      <div className="px-3 text-[9px]">
+                        {liveTopPages.length === 0 ? (
+                          <div className="py-5 text-center text-[10px] font-semibold text-slate-400">
+                            No page traffic recorded in {activeRangeLabel}.
+                          </div>
+                        ) : (
+                          liveTopPages.map(
+                            (
+                              row,
+                              index,
+                            ) => (
+                              <div
+                                key={
+                                  row[0] + index
+                                }
+                                onClick={() => router.push("/pages")}
+                                className="
                             grid
                             grid-cols-[16px_1fr_76px_42px_14px]
                             items-center
@@ -3478,158 +3476,158 @@ export default function DashboardPage() {
                             px-1
                             transition-colors
                           "
-                        >
-                          <span>
-                            {index +
-                              1}
-                            .
-                          </span>
+                              >
+                                <span>
+                                  {index +
+                                    1}
+                                  .
+                                </span>
 
-                          <span>
-                            {
-                              row[0]
-                            }
-                          </span>
+                                <span>
+                                  {
+                                    row[0]
+                                  }
+                                </span>
 
-                          <span className="truncate text-[#4B1426]">
-                            {
-                              row[1]
-                            }
-                          </span>
+                                <span className="truncate text-[#4B1426]">
+                                  {
+                                    row[1]
+                                  }
+                                </span>
 
-                          <span className="text-right">
-                            {
-                              row[2]
-                            }
-                          </span>
+                                <span className="text-right">
+                                  {
+                                    row[2]
+                                  }
+                                </span>
 
-                          <Search className="h-3 w-3 text-[#9aa5b4]" />
-                        </div>
-                      ),
-                    )
-                  )}
-                </div>
-              </Panel>
+                                <Search className="h-3 w-3 text-[#9aa5b4]" />
+                              </div>
+                            ),
+                          )
+                        )}
+                      </div>
+                    </Panel>
 
-              {/* =================================================
+                    {/* =================================================
                   KEYWORD PERFORMANCE
               ================================================= */}
 
-              <Panel>
-                <PanelTitle
-                  right={
-                    <Link
-                      href="/seo"
-                      className="text-[9px] font-bold text-blue-600 hover:underline"
-                    >
-                      View Data
-                    </Link>
-                  }
-                >
-                  Keyword Performance
-                </PanelTitle>
+                    <Panel>
+                      <PanelTitle
+                        right={
+                          <Link
+                            href="/seo"
+                            className="text-[9px] font-bold text-blue-600 hover:underline"
+                          >
+                            View Data
+                          </Link>
+                        }
+                      >
+                        Keyword Performance
+                      </PanelTitle>
 
-                <div className="grid grid-cols-[1fr_42px_62px_50px] gap-1 px-3 text-[9px] font-bold">
-                  <span>
-                    Keyword
-                  </span>
+                      <div className="grid grid-cols-[1fr_42px_62px_50px] gap-1 px-3 text-[9px] font-bold">
+                        <span>
+                          Keyword
+                        </span>
 
-                  <span>
-                    Clicks
-                  </span>
+                        <span>
+                          Clicks
+                        </span>
 
-                  <span>
-                    Impressions
-                  </span>
+                        <span>
+                          Impressions
+                        </span>
 
-                  <span>
-                    Position
-                  </span>
+                        <span>
+                          Position
+                        </span>
 
-                  {liveKeywordRows.length === 0 ? (
-                    <div className="col-span-4 py-4 text-center text-[10px] font-semibold text-slate-400">
-                      {searchConsole
-                        ? `No keyword rankings in ${activeRangeLabel}.`
-                        : "Connect Google Search Console for live keyword rankings."}
-                    </div>
-                  ) : (
-                    liveKeywordRows.map(
-                      (row) => (
-                        <div
-                          className="contents"
-                          key={
-                            row[0]
-                          }
-                        >
-                          <span className="py-[3px]">
-                            {
-                              row[0]
-                            }
-                          </span>
+                        {liveKeywordRows.length === 0 ? (
+                          <div className="col-span-4 py-4 text-center text-[10px] font-semibold text-slate-400">
+                            {searchConsole
+                              ? `No keyword rankings in ${activeRangeLabel}.`
+                              : "Connect Google Search Console for live keyword rankings."}
+                          </div>
+                        ) : (
+                          liveKeywordRows.map(
+                            (row) => (
+                              <div
+                                className="contents"
+                                key={
+                                  row[0]
+                                }
+                              >
+                                <span className="py-[3px]">
+                                  {
+                                    row[0]
+                                  }
+                                </span>
 
-                          <span className="py-[3px]">
-                            {
-                              row[1]
-                            }
-                          </span>
+                                <span className="py-[3px]">
+                                  {
+                                    row[1]
+                                  }
+                                </span>
 
-                          <span className="py-[3px]">
-                            {
-                              row[2]
-                            }
-                          </span>
+                                <span className="py-[3px]">
+                                  {
+                                    row[2]
+                                  }
+                                </span>
 
-                          <span className="py-[3px] text-emerald-700">
-                            {
-                              row[3]
-                            }{" "}
-                            ↑
-                          </span>
-                        </div>
-                      ),
-                    )
-                  )}
-                </div>
-              </Panel>
+                                <span className="py-[3px] text-emerald-700">
+                                  {
+                                    row[3]
+                                  }{" "}
+                                  ↑
+                                </span>
+                              </div>
+                            ),
+                          )
+                        )}
+                      </div>
+                    </Panel>
 
-              {/* =================================================
+                    {/* =================================================
                   LOCATIONS
               ================================================= */}
 
-              <Panel>
-                <PanelTitle
-                  right={
-                    <Link
-                      href="/general-enquiries"
-                      className="text-[9px] font-bold text-blue-600 hover:underline"
-                    >
-                      View Report
-                    </Link>
-                  }
-                >
-                  Top Enquiry
-                  Locations
-                </PanelTitle>
+                    <Panel>
+                      <PanelTitle
+                        right={
+                          <Link
+                            href="/general-enquiries"
+                            className="text-[9px] font-bold text-blue-600 hover:underline"
+                          >
+                            View Report
+                          </Link>
+                        }
+                      >
+                        Top Enquiry
+                        Locations
+                      </PanelTitle>
 
-                <div className="space-y-3 px-3 pt-1 pb-1">
-                  {locationRows.length === 0 ? (
-                    <div className="py-5 text-center text-[10px] font-semibold text-slate-400">
-                      No enquiry city data in {activeRangeLabel}.
-                    </div>
-                  ) : (
-                    locationRows.map(
-                      (
-                        [
-                          name,
-                          count,
-                          pct,
-                        ],
-                      ) => (
-                        <div
-                          key={String(
-                            name,
-                          )}
-                          className="
+                      <div className="space-y-3 px-3 pt-1 pb-1">
+                        {locationRows.length === 0 ? (
+                          <div className="py-5 text-center text-[10px] font-semibold text-slate-400">
+                            No enquiry city data in {activeRangeLabel}.
+                          </div>
+                        ) : (
+                          locationRows.map(
+                            (
+                              [
+                                name,
+                                count,
+                                pct,
+                              ],
+                            ) => (
+                              <div
+                                key={String(
+                                  name,
+                                )}
+                                className="
                             grid
                             grid-cols-[62px_1fr_28px_42px]
                             items-center
@@ -3637,137 +3635,137 @@ export default function DashboardPage() {
                             text-[9px]
                             font-bold
                           "
-                        >
-                          <span className="truncate text-[#4B1426]">
-                            {
-                              name
-                            }
-                          </span>
+                              >
+                                <span className="truncate text-[#4B1426]">
+                                  {
+                                    name
+                                  }
+                                </span>
 
-                          <div className="h-1.5 rounded-full bg-[#edf2f8]">
-                            <div
-                              className="h-full rounded-full bg-[#4B1426]"
-                              style={{
-                                width: `${Math.max(8, Math.round(((Number(count) || 0) / maxLocationCount) * 100))}%`,
-                              }}
-                            />
-                          </div>
+                                <div className="h-1.5 rounded-full bg-[#edf2f8]">
+                                  <div
+                                    className="h-full rounded-full bg-[#4B1426]"
+                                    style={{
+                                      width: `${Math.max(8, Math.round(((Number(count) || 0) / maxLocationCount) * 100))}%`,
+                                    }}
+                                  />
+                                </div>
 
-                          <span className="text-right">
-                            {
-                              count
-                            }
-                          </span>
+                                <span className="text-right">
+                                  {
+                                    count
+                                  }
+                                </span>
 
-                          <span className="text-right text-emerald-700">
-                            (
-                            {
-                              pct
-                            }
-                            )
-                          </span>
-                        </div>
-                      ),
-                    )
-                  )}
-                </div>
-              </Panel>
+                                <span className="text-right text-emerald-700">
+                                  (
+                                  {
+                                    pct
+                                  }
+                                  )
+                                </span>
+                              </div>
+                            ),
+                          )
+                        )}
+                      </div>
+                    </Panel>
 
-              {/* =================================================
+                    {/* =================================================
                   GOOGLE INDEXING & HEALTH
               ================================================= */}
 
-              <Panel>
-                <PanelTitle
-                  right={
-                    <Link
-                      href="/seo"
-                      className="text-[9px] font-bold text-blue-600 hover:underline"
-                    >
-                      View Indexing
-                    </Link>
-                  }
-                >
-                  Google Indexing
-                </PanelTitle>
+                    <Panel>
+                      <PanelTitle
+                        right={
+                          <Link
+                            href="/seo"
+                            className="text-[9px] font-bold text-blue-600 hover:underline"
+                          >
+                            View Indexing
+                          </Link>
+                        }
+                      >
+                        Google Indexing
+                      </PanelTitle>
 
-                <div className="px-3 pt-2 space-y-2 text-[9px] font-semibold">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
-                    <span className="text-slate-600 font-medium">Sitemap URLs</span>
-                    <span className="font-bold text-slate-900">
-                      {indexCoverage?.submittedPages ?? indexCoverage?.sitemapUrlCount ?? indexCoverage?.total ?? "—"} Pages
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
-                    <span className="text-slate-600 font-medium">Indexed Pages (GSC)</span>
-                    <span className={`font-bold ${indexCoverage?.gscConnected ? "text-emerald-700" : "text-slate-500"}`}>
-                      {indexCoverage?.gscConnected
-                        ? `${indexCoverage.indexedPages ?? indexCoverage.indexed}`
-                        : "Not Connected"}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
-                    <span className="text-slate-600 font-medium">Crawl Errors</span>
-                    <span className="font-bold text-slate-900">
-                      {indexCoverage?.gscConnected ? (indexCoverage.crawlErrors ?? indexCoverage.notIndexed ?? 0) : "—"}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
-                    <span className="text-slate-600 font-medium">Sitemap Status</span>
-                    <span className={`font-bold ${indexCoverage?.sitemapValid ? "text-emerald-700" : "text-amber-600"}`}>
-                      {indexCoverage?.sitemapValid ? "Live ✓" : indexCoverage?.sitemapValid === false ? "Unavailable" : "Checking..."}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-600 font-medium">Robots.txt</span>
-                    <span className={`font-bold ${indexCoverage?.robotsValid ? "text-emerald-700" : "text-amber-600"}`}>
-                      {indexCoverage?.robotsValid ? "Valid ✓" : indexCoverage?.robotsValid === false ? "Unavailable" : "Checking..."}
-                    </span>
+                      <div className="px-3 pt-2 space-y-2 text-[9px] font-semibold">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                          <span className="text-slate-600 font-medium">Sitemap URLs</span>
+                          <span className="font-bold text-slate-900">
+                            {indexCoverage?.submittedPages ?? indexCoverage?.sitemapUrlCount ?? indexCoverage?.total ?? "—"} Pages
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                          <span className="text-slate-600 font-medium">Indexed Pages (GSC)</span>
+                          <span className={`font-bold ${indexCoverage?.gscConnected ? "text-emerald-700" : "text-slate-500"}`}>
+                            {indexCoverage?.gscConnected
+                              ? `${indexCoverage.indexedPages ?? indexCoverage.indexed}`
+                              : "Not Connected"}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                          <span className="text-slate-600 font-medium">Crawl Errors</span>
+                          <span className="font-bold text-slate-900">
+                            {indexCoverage?.gscConnected ? (indexCoverage.crawlErrors ?? indexCoverage.notIndexed ?? 0) : "—"}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                          <span className="text-slate-600 font-medium">Sitemap Status</span>
+                          <span className={`font-bold ${indexCoverage?.sitemapValid ? "text-emerald-700" : "text-amber-600"}`}>
+                            {indexCoverage?.sitemapValid ? "Live ✓" : indexCoverage?.sitemapValid === false ? "Unavailable" : "Checking..."}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-600 font-medium">Robots.txt</span>
+                          <span className={`font-bold ${indexCoverage?.robotsValid ? "text-emerald-700" : "text-amber-600"}`}>
+                            {indexCoverage?.robotsValid ? "Valid ✓" : indexCoverage?.robotsValid === false ? "Unavailable" : "Checking..."}
+                          </span>
+                        </div>
+                      </div>
+                    </Panel>
                   </div>
                 </div>
-              </Panel>
-            </div>
-          </div>
-        </main>
+              </main>
 
-        {/* ===================================================
+              {/* ===================================================
             FOOTER
         =================================================== */}
 
-        <footer className="hidden">
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[28px] bg-[linear-gradient(to_top,rgba(214,230,220,0.55),rgba(250,249,246,0))]" />
+              <footer className="hidden">
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[28px] bg-[linear-gradient(to_top,rgba(214,230,220,0.55),rgba(250,249,246,0))]" />
 
-          <div
-            className="pointer-events-none absolute bottom-0 right-0 z-0 h-full w-[370px] bg-no-repeat"
-            style={{
-              backgroundImage:
-                'url("/assets/footer-moksha-scene.png")',
+                <div
+                  className="pointer-events-none absolute bottom-0 right-0 z-0 h-full w-[370px] bg-no-repeat"
+                  style={{
+                    backgroundImage:
+                      'url("/assets/footer-moksha-scene.png")',
 
-              backgroundSize:
-                "370px 64px",
+                    backgroundSize:
+                      "370px 64px",
 
-              backgroundPosition:
-                "right bottom",
-            }}
-          />
+                    backgroundPosition:
+                      "right bottom",
+                  }}
+                />
 
-          <div className="relative z-10 flex h-full items-center px-4 pr-[390px]">
-            <div className="flex w-full items-center justify-center">
-              <p className="text-center text-[11px] font-semibold text-slate-600">
-                &copy;{" "}
-                {new Date().getFullYear()}{" "}
+                <div className="relative z-10 flex h-full items-center px-4 pr-[390px]">
+                  <div className="flex w-full items-center justify-center">
+                    <p className="text-center text-[11px] font-semibold text-slate-600">
+                      &copy;{" "}
+                      {new Date().getFullYear()}{" "}
 
-                <span className="font-semibold text-slate-900">
-                  Design House
-                </span>{" "}
+                      <span className="font-semibold text-slate-900">
+                        Design House
+                      </span>{" "}
 
-                — Admin Panel. All rights
-                reserved.
-              </p>
+                      — Admin Panel. All rights
+                      reserved.
+                    </p>
+                  </div>
+                </div>
+              </footer>
             </div>
           </div>
-        </footer>
-      </div>
-    </div>
-  );
-}
+        );
+      }
